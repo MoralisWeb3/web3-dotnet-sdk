@@ -81,6 +81,8 @@ namespace Moralis.Web3Api.Integrated.Tests
             }
             else
             {
+                
+                
                 testResults.FailedTests.Add("RunContractFunction", "FAILED");
             }
 
@@ -112,23 +114,14 @@ namespace Moralis.Web3Api.Integrated.Tests
             try
             {
                 // Function ABI input parameters
-                object[] inputParams = new object[1];
-                inputParams[0] = new { internalType = "uint256", name = "id", type = "uint256" };
-                // Function ABI Output parameters
-                object[] outputParams = new object[1];
-                outputParams[0] = new { internalType = "string", name = "", type = "string" };
+                object[] inputParams = new object[3];
+                inputParams[0] = new { index = true, internalType = "bytes32", name = "role", type = "bytes32" };
+                inputParams[1] = new { index = true, internalType = "address", name = "account", type = "address" };
+                inputParams[2] = new { index = true, internalType = "address", name = "sender", type = "address" };
                 // Function ABI
-                object[] abi = new object[1];
-                abi[0] = new { inputs = inputParams, name = "uri", outputs = outputParams, stateMutability = "view", type = "function" };
+                object abi = new { anonymous = false, inputs = inputParams, name = "RoleGranted", type = "event" };
 
-                // Define request object
-                RunContractDto rcd = new RunContractDto()
-                {
-                    Abi = abi,
-                    Params = new { id = "15310200874782" }
-                };
-
-                List<LogEvent> logEvents = await web3Api.Native.GetContractEvents("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "totalSupply", rcd, ChainList.eth);
+                List<LogEvent> logEvents = await web3Api.Native.GetContractEvents("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", abi, ChainList.mumbai);
 
                 result = logEvents is { };
             }
@@ -224,13 +217,24 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                RunContractDto dto = new RunContractDto()
-                { 
-                    Abi = "{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\",\"constant\":true}"
+                // Function ABI input parameters
+                object[] inputParams = new object[1];
+                inputParams[0] = new { internalType = "uint256", name = "id", type = "uint256" };
+                // Function ABI Output parameters
+                object[] outputParams = new object[1];
+                outputParams[0] = new { internalType = "string", name = "", type = "string" };
+                // Function ABI
+                object[] abi = new object[1];
+                abi[0] = new { inputs = inputParams, name = "uri", outputs = outputParams, stateMutability = "view", type = "function" };
 
+                // Define request object
+                RunContractDto rcd = new RunContractDto()
+                {
+                    Abi = abi,
+                    Params = new { id = "15310200874782" }
                 };
 
-                string resp  = await web3Api.Native.RunContractFunction("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "totalSupply", dto, ChainList.eth);
+                string resp  = await web3Api.Native.RunContractFunction("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", rcd, ChainList.mumbai);
 
                 result = resp is { };
             }
