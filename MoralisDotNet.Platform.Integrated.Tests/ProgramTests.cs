@@ -1,27 +1,27 @@
-﻿using Moralis.Web3Api.Interfaces;
+﻿using Moralis;
+using Moralis.Platform;
+using Moralis.SolanaApi.Client;
+using Moralis.Web3Api.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Moralis.Web3Api.Integrated.Tests
+namespace MoralisDotNet.Platform.Integrated.Tests
 {
     class ProgramTests
     {
-
         static void Main(string[] args)
         {
             List<IIntegratedTest> testGroups = TestGroups();
 
             foreach (IIntegratedTest test in testGroups)
             {
-                MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
-                //MoralisClient.Initialize( "https://arw2wxg84h6b.moralishost.com:2053/server");
-                string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7".ToLower();
+                MoralisClient moralis = new MoralisClient(new ServerConnectionData() { ApplicationID = "tNJatzsHirx4V2VAep6sc923OYGxvkpBeJttR7Ks", ServerURI = "https://arw2wxg84h6b.moralishost.com:2053/server" }, new Web3ApiClient(), new SolanaApiClient(), new NewtonsoftJsonSerializer());
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");
 
                 Task<IntegratedTestResult> testTask =
-                    Task.Run(() => test.RunTests(MoralisClient.Web3Api, addr));
+                    Task.Run(() => test.RunTests(moralis));
                 testTask.Wait();
                 IntegratedTestResult result = testTask.Result;
 
@@ -35,12 +35,7 @@ namespace Moralis.Web3Api.Integrated.Tests
         {
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
-            //groups.Add(new AccountTests());
-            //groups.Add(new DefiTests());
-            groups.Add(new NativeTests());
-            //groups.Add(new ResolveTests());
-            //groups.Add(new StorageTests());
-            //groups.Add(new TokenTests());
+            groups.Add(new UserServiceTests());
 
             return groups;
         }

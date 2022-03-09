@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <ApplicationIcon />
+
+    <OutputType>Exe</OutputType>
+
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoralisDotNet\Moralis.csproj" />
+  </ItemGroup>
+
+</Project>

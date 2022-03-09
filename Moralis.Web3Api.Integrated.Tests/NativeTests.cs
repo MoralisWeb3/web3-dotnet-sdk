@@ -80,10 +80,18 @@ namespace Moralis.Web3Api.Integrated.Tests
                 testResults.PassedTests.Add("RunContractFunction", "PASSED");
             }
             else
-            {
-                
-                
+            {              
                 testResults.FailedTests.Add("RunContractFunction", "FAILED");
+            }
+
+            Console.WriteLine("Running test RunContractFunction1");
+            if (await RunContractFunction1(web3Api))
+            {
+                testResults.PassedTests.Add("RunContractFunction1", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("RunContractFunction1", "FAILED");
             }
 
             return testResults;
@@ -235,6 +243,47 @@ namespace Moralis.Web3Api.Integrated.Tests
                 };
 
                 string resp  = await web3Api.Native.RunContractFunction("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", rcd, ChainList.mumbai);
+
+                result = resp is { };
+            }
+            catch (Exception exp)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+        private async Task<bool> RunContractFunction1(IWeb3Api web3Api)
+        {
+            bool result = true;
+
+            try
+            {
+                // Function ABI input parameters
+                object[] inputParams = new object[1];
+                inputParams[0] = new { internalType = "uint256", name = "id", type = "uint256" };
+
+                // Function ABI Output parameters
+                object[] outputParams = new object[5];
+                outputParams[0] = new { internalType = "uint256", name = "offerId", type = "uint256" };
+                outputParams[1] = new { internalType = "uint256", name = "id", type = "uint256" };
+                outputParams[2] = new { internalType = "address", name = "user", type = "address" };
+                outputParams[3] = new { internalType = "uint256", name = "price", type = "uint256" };
+                outputParams[4] = new { internalType = "bool", name = "fulfilled", type = "bool" };
+
+                // Function ABI
+                object[] abi = new object[1];
+                abi[0] = new { inputs = inputParams, name = "offers", outputs = outputParams, stateMutability = "view", type = "function" };
+
+
+                // Define request object
+                RunContractDto rcd = new RunContractDto()
+                {
+                    Abi = abi,
+                    Params = new { id="1" }
+                };
+
+                string resp = await web3Api.Native.RunContractFunction("0x383cAe6B39ad82305242EFcfDa6EC5B2a52B4620", "offers", rcd, ChainList.mumbai);
 
                 result = resp is { };
             }
