@@ -123,13 +123,16 @@ namespace Moralis.Web3Api.Integrated.Tests
             {
                 // Function ABI input parameters
                 object[] inputParams = new object[3];
-                inputParams[0] = new { index = true, internalType = "bytes32", name = "role", type = "bytes32" };
-                inputParams[1] = new { index = true, internalType = "address", name = "account", type = "address" };
-                inputParams[2] = new { index = true, internalType = "address", name = "sender", type = "address" };
+                inputParams[0] = new { indexed = true, internalType = "bytes32", name = "role", type = "bytes32" };
+                inputParams[1] = new { indexed = true, internalType = "address", name = "account", type = "address" };
+                inputParams[2] = new { indexed = true, internalType = "address", name = "sender", type = "address" };
                 // Function ABI
                 object abi = new { anonymous = false, inputs = inputParams, name = "RoleGranted", type = "event" };
 
-                List<LogEvent> logEvents = await web3Api.Native.GetContractEvents("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", abi, ChainList.mumbai);
+                List<LogEvent> logEvents = await web3Api.Native.GetContractEvents("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", 
+                    "0x2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d", 
+                    //"bob",
+                    abi, ChainList.mumbai);
 
                 result = logEvents is { };
             }
@@ -253,6 +256,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             return result;
         }
+        
         private async Task<bool> RunContractFunction1(IWeb3Api web3Api)
         {
             bool result = true;

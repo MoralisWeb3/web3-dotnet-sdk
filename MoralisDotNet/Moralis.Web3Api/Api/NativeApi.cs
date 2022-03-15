@@ -378,11 +378,14 @@ namespace Moralis.Web3Api.Api
 			var fileParams = new Dictionary<String, FileParameter>();
 
 			var path = "/{address}/events";
+			//var path = "/{address}/events?chain={chain}&topic={topic}";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if (topic != null) queryParams.Add("topic", ApiClient.ParameterToString(topic));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
-			if(subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
+			//path = path.Replace("{" + "chain" + "}", chain.ToString());
+            //path = path.Replace("{" + "topic" + "}", topic);
+            if (chain != null) queryParams.Add("chain", chain.ToString());
+            if (topic != null) queryParams.Add("topic", topic);
+            if (subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
 			if(providerUrl != null) queryParams.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
 			if(fromBlock != null) queryParams.Add("from_block", ApiClient.ParameterToString(fromBlock));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
