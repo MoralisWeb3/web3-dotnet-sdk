@@ -373,8 +373,9 @@ namespace Moralis.Web3Api.CloudApi
 
 			var path = "/functions/getContractEvents";
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
+			if (chain != null) postBody.Add("chain", ApiClient.ParameterToHex((long)chain)); // ApiClient.ParameterToString(chain.ToString()));
 			if (topic != null) postBody.Add("topic", ApiClient.ParameterToString(topic));
-			if (abi != null) postBody.Add("abi", abi);
+			if (abi != null) postBody.Add("abi", abi); // ApiClient.ParameterToString(abi));
 			if (subdomain != null) postBody.Add("subdomain", ApiClient.ParameterToString(subdomain));
 			if (providerUrl != null) postBody.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
 			if (fromBlock != null) postBody.Add("from_block", ApiClient.ParameterToString(fromBlock));
@@ -383,7 +384,6 @@ namespace Moralis.Web3Api.CloudApi
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
 			if (offset != null) postBody.Add("offset", ApiClient.ParameterToString(offset));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
-			if(chain != null) postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
@@ -413,36 +413,6 @@ namespace Moralis.Web3Api.CloudApi
 		/// <returns>Returns response of the function executed</returns>
 		public async Task<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
-
-			//// Verify the required parameter 'address' is set
-			//if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling RunContractFunction");
-
-			//// Verify the required parameter 'functionName' is set
-			//if (functionName == null) throw new ApiException(400, "Missing required parameter 'functionName' when calling RunContractFunction");
-
-			//// Verify the required parameter 'abi' is set
-			//if (abi == null) throw new ApiException(400, "Missing required parameter 'abi' when calling RunContractFunction");
-
-			//var postBody = new Dictionary<String, object>();
-			//var queryParams = new Dictionary<String, String>();
-			//var headerParams = new Dictionary<String, String>();
-			//var formParams = new Dictionary<String, String>();
-			//var fileParams = new Dictionary<String, FileParameter>();
-
-			//var path = "/functions/runContractFunction";
-			//if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
-			//if (functionName != null) postBody.Add("function_name", ApiClient.ParameterToString(functionName));
-			//if (abi != null) postBody.Add("abi", abi.Abi);
-			//if (abi != null) postBody.Add("params", abi.Params);
-			//if (abi != null) postBody.Add("params", ApiClient.ParameterToString(abi.Params));
-			//if (subdomain != null) postBody.Add("subdomain", ApiClient.ParameterToString(subdomain));
-			//if (providerUrl != null) postBody.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
-			//if(chain != null) postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
-
-			//// Authentication setting, if any
-			//String[] authSettings = new String[] { "ApiKeyAuth" };
-
-			//string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling RunContractFunction");
 
@@ -482,7 +452,9 @@ namespace Moralis.Web3Api.CloudApi
 			else if (((int)response.StatusCode) == 0)
 				throw new ApiException((int)response.StatusCode, "Error calling RunContractFunction: " + response.ErrorMessage, response.ErrorMessage);
 
-			return ((CloudFunctionResult<string>)ApiClient.Deserialize(response.Content, typeof(CloudFunctionResult<string>), response.Headers)).Result;
+			object respObject = ((CloudFunctionResult<object>)ApiClient.Deserialize(response.Content, typeof(CloudFunctionResult<object>), response.Headers)).Result;
+
+			return JsonConvert.SerializeObject(respObject);
 		}
 	}
 }

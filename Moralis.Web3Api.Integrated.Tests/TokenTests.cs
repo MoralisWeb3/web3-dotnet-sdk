@@ -196,7 +196,6 @@ namespace Moralis.Web3Api.Integrated.Tests
             return result;
         }
 
-
         private async Task<bool> GetContractNFTTransfers(IWeb3Api web3Api)
         {
             bool result = true;
@@ -214,7 +213,6 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             return result;
         }
-
 
         private async Task<bool> GetNFTLowestPrice(IWeb3Api web3Api)
         {
