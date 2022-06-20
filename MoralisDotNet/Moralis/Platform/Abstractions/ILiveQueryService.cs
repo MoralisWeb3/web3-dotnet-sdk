@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
@@ -23,5 +22,12 @@ namespace Moralis.Platform.Abstractions
         /// </summary>
         /// <returns>Task</returns>
         void UnsubscribeAll();
+
+#if UNITY_WEBGL
+        /// <summary>
+        /// For WebGL Only should be called on Unity Update.
+        /// </summary>
+        void HandleUpdateEvent();
+#endif
     }
 }

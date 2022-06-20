@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
@@ -17,8 +16,7 @@ namespace Moralis.Web3Api.Models
 		[DataMember(Name = "balance", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "balance")]
 		public string Balance { get; set; }
-
-
+		
 		/// <summary>
 		/// Get the string presentation of the object
 		/// </summary>

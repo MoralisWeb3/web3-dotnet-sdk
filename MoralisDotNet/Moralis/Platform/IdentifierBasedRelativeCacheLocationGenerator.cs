@@ -37,7 +37,7 @@ namespace Moralis.Platform
         }
 
         /// <summary>
-        /// Generates a path for use in the <see cref="GetRelativeCacheFilePath(IServiceHub)"/> method.
+        /// Generates a path for use in the <see cref="GetRelativeCacheFilePath(IServiceHub{TUser})"/> method.
         /// </summary>
         /// <returns>A potential path to the cachefile</returns>
         string GeneratePath() => Path.Combine(nameof(Moralis), IsFallback ? "_fallback" : "_global", $"{(IsFallback ? new Random { }.Next().ToString() : Identifier)}.cachefile");

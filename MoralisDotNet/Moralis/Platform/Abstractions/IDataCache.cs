@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
@@ -16,14 +16,14 @@ namespace Moralis.Platform.Abstractions
         /// <param name="key">The key to insert.</param>
         /// <param name="value">The value to insert.</param>
         /// <returns></returns>
-        Task AddAsync(TKey key, TValue value);
+        UniTask AddAsync(TKey key, TValue value);
 
         /// <summary>
         /// Removes a key from this dictionary, and saves it asynchronously.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task RemoveAsync(TKey key);
+        UniTask RemoveAsync(TKey key);
     }
 
 }

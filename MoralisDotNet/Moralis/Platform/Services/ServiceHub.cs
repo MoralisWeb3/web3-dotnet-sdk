@@ -1,10 +1,10 @@
-﻿using Moralis.Platform.Abstractions;
-using Moralis.Platform.Services.Infrastructure;
-using Moralis.Platform.Services.ClientServices;
-using Moralis.Platform.Objects;
-using Moralis.Platform.Utilities;
-using System;
+﻿using System;
 using System.Net.Http;
+using Moralis.Platform.Abstractions;
+using Moralis.Platform.Objects;
+using Moralis.Platform.Services.ClientServices;
+using Moralis.Platform.Services.Infrastructure;
+using Moralis.Platform.Utilities;
 
 namespace Moralis.Platform.Services
 {
@@ -27,8 +27,8 @@ namespace Moralis.Platform.Services
 
         public ServiceHub(IServerConnectionData connectionData, IJsonSerializer jsonSerializer, HttpClient httpClient = null)
         {
-            httpClient = httpClient is { } ? httpClient : new HttpClient();
-            webClient = new UniversalWebClient(httpClient);
+            //httpClient = httpClient is { } ? httpClient : new HttpClient();
+            webClient = new UniversalWebClient();
             httpClient.DefaultRequestHeaders.Remove("IfModifiedSince");
             ServerConnectionData ??= connectionData;
             JsonSerializer = jsonSerializer is { } ? jsonSerializer : throw new ArgumentException("jsonSerializer cannot be null.");

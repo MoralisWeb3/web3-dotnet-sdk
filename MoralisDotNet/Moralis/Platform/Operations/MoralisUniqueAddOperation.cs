@@ -5,6 +5,7 @@ using System.Linq;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Utilities;
+
 namespace Moralis.Platform.Operations
 {
     class MoralisUniqueAddOperation : IMoralisFieldOperation

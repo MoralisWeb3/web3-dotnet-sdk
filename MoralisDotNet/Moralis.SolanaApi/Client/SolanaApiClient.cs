@@ -1,4 +1,5 @@
-﻿using Moralis.SolanaApi.Interfaces;
+﻿using Moralis.SolanaApi.Api;
+using Moralis.SolanaApi.Interfaces;
 
 namespace Moralis.SolanaApi.Client
 {
@@ -52,15 +53,15 @@ namespace Moralis.SolanaApi.Client
             // use the direct Web3Api server.
             if (Configuration.ApiKey.ContainsKey("X-API-Key"))
             {
-                this.Account = new Moralis.SolanaApi.Api.AccountApi(client);
-                this.Nft = new Moralis.SolanaApi.Api.NftApi(client);
+                this.Account = new AccountApi(client);
+                this.Nft = new NftApi(client);
             }
             // Api key not set assume the url is for moralis personal server
             // and Cloud Function API should be used.
             else
             {
-                this.Account = new Moralis.SolanaApi.CloudApi.AccountApi(client);
-                this.Nft = new Moralis.SolanaApi.CloudApi.NftApi(client);
+                this.Account = new CloudApi.AccountApi(client);
+                this.Nft = new CloudApi.NftApi(client);
             }
 
             // Indicate that the client is initialized.

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using Moralis.Web3Api.Models;
 using Newtonsoft.Json;
 
 namespace Moralis.Web3Api.Models

@@ -1,17 +1,16 @@
-﻿
+﻿using Moralis.Platform.Services.Infrastructure;
 using Moralis.Platform.Abstractions;
-using Moralis.Platform.Services.Infrastructure;
 using Moralis.Platform.Objects;
 
 namespace Moralis.Platform.Services
 {
     /// <summary>
-    /// An <see cref="IServiceHubMutator"/> implementation which changes the <see cref="IServiceHub.CacheController"/>'s <see cref="IDiskFileCacheService.AbsoluteCacheFilePath"/> if available.
+    /// An <see cref="IServiceHubMutator"/> implementation which changes the <see cref="IServiceHub{TUser}.CacheController"/>'s <see cref="IDiskFileCacheService.AbsoluteCacheFilePath"/> if available.
     /// </summary>
-    public class AbsoluteCacheLocationMutator<TUser> : IServiceHubMutator
+    public class AbsoluteCacheLocationMutator : IServiceHubMutator
     {
         /// <summary>
-        /// A custom absolute cache file path to be set on the active <see cref="IServiceHub.CacheController"/> if it implements <see cref="IDiskFileCacheService"/>.
+        /// A custom absolute cache file path to be set on the active <see cref="IServiceHub{TUser}.CacheController"/> if it implements <see cref="IDiskFileCacheService"/>.
         /// </summary>
         public string CustomAbsoluteCacheFilePath { get; set; }
 

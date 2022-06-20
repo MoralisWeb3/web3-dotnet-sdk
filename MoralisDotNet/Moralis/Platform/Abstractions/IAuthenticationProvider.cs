@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
@@ -10,7 +10,7 @@ namespace Moralis.Platform.Abstractions
         /// Authenticates with the service.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        Task<IDictionary<string, object>> AuthenticateAsync(CancellationToken cancellationToken);
+        UniTask<IDictionary<string, object>> AuthenticateAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Deauthenticates (logs out) the user associated with this provider. This

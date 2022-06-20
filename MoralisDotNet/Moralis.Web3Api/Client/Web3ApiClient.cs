@@ -1,4 +1,5 @@
-﻿using Moralis.Web3Api.Interfaces;
+﻿using Moralis.Web3Api.Api;
+using Moralis.Web3Api.Interfaces;
 
 namespace Moralis.Web3Api.Client
 {
@@ -72,23 +73,23 @@ namespace Moralis.Web3Api.Client
             // use the direct Web3Api server.
             if (Configuration.ApiKey.ContainsKey("X-API-Key"))
             {
-                this.Account = new Moralis.Web3Api.Api.AccountApi(client);
-                this.Defi = new Moralis.Web3Api.Api.DefiApi(client);
-                this.Native = new Moralis.Web3Api.Api.NativeApi(client);
-                this.Resolve = new Moralis.Web3Api.Api.ResolveApi(client);
-                this.Storage = new Moralis.Web3Api.Api.StorageApi(client);
-                this.Token = new Moralis.Web3Api.Api.TokenApi(client);
+                this.Account = new AccountApi(client);
+                this.Defi = new DefiApi(client);
+                this.Native = new NativeApi(client);
+                this.Resolve = new ResolveApi(client);
+                this.Storage = new StorageApi(client);
+                this.Token = new TokenApi(client);
             }
             // Api key not set assume the url is for moralis personal server
             // and Cloud Function API should be used.
             else
             {
-                this.Account = new Moralis.Web3Api.CloudApi.AccountApi(client);
-                this.Defi = new Moralis.Web3Api.CloudApi.DefiApi(client);
-                this.Native = new Moralis.Web3Api.CloudApi.NativeApi(client);
-                this.Resolve = new Moralis.Web3Api.CloudApi.ResolveApi(client);
-                this.Storage = new Moralis.Web3Api.CloudApi.StorageApi(client);
-                this.Token = new Moralis.Web3Api.CloudApi.TokenApi(client);
+                this.Account = new CloudApi.AccountApi(client);
+                this.Defi = new CloudApi.DefiApi(client);
+                this.Native = new CloudApi.NativeApi(client);
+                this.Resolve = new CloudApi.ResolveApi(client);
+                this.Storage = new CloudApi.StorageApi(client);
+                this.Token = new CloudApi.TokenApi(client);
             }
 
             // Indicate that the client is initialized.

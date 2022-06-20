@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using Moralis.Platform.Objects;
 
 namespace Moralis.Platform.Abstractions
@@ -10,8 +8,8 @@ namespace Moralis.Platform.Abstractions
     {
         TUser CurrentUser { get; set; }
 
-        Task<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
+        UniTask<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
 
-        Task LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
+        UniTask LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
     }
 }

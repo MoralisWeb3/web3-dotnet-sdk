@@ -48,14 +48,6 @@ namespace Moralis.Web3Api.Models
 		[JsonProperty(PropertyName = "block_exists")]
 		public bool? BlockExists { get; set; }
 
-		/// <summary>
-		/// Indicator if the block is fully indexed
-		/// example: True
-		/// </summary>
-		[DataMember(Name = "index_complete", EmitDefaultValue = false)]
-		[JsonProperty(PropertyName = "index_complete")]
-		public bool? IndexComplete { get; set; }
-
 
 		/// <summary>
 		/// Get the string presentation of the object
@@ -70,7 +62,6 @@ namespace Moralis.Web3Api.Models
 			sb.Append("  PageSize ").Append(PageSize).Append("\n");
 			sb.Append("  Result ").Append(Result).Append("\n");
 			sb.Append("  BlockExists ").Append(BlockExists).Append("\n");
-			sb.Append("  IndexComplete ").Append(IndexComplete).Append("\n");
 			sb.Append("}");
 
 			return sb.ToString();

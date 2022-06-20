@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Queries;
@@ -48,11 +48,11 @@ namespace Moralis.Platform.Services.ClientServices
         /// </summary>
         public void UnsubscribeAll()
         {
-            List<Task> tasks = new List<Task>();
+            List<UniTask> tasks = new List<UniTask>();
 
             foreach (ILiveQueryClient c in clients)
             {
-                tasks.Add(Task.Run(() =>
+                tasks.Add(UniTask.Run(() =>
                 {
                     long ticks = DateTime.Now.Ticks;
                     c.Unsubscribe();
@@ -61,8 +61,21 @@ namespace Moralis.Platform.Services.ClientServices
                 }));
             }
 
-            Task.WaitAll(tasks.ToArray());
+            UniTask.WhenAll(tasks.ToArray());
         }
+
+        #if UNITY_WEBGL
+        /// <summary>
+        /// For WebGL Only should be called on Unity Update.
+        /// </summary>
+        public void HandleUpdateEvent()
+        {
+            foreach (ILiveQueryClient c in clients)
+            {
+                c.HandleUpdateEvent();
+            }
+        }
+        #endif
 
         /// <summary>
         /// Create and return a subscription to the specified query.
@@ -91,5 +104,12 @@ namespace Moralis.Platform.Services.ClientServices
         {
             instance.Dispose();
         }
+
+        #if UNITY_WEBGL
+        public static void UpdateWebSockets()
+        {
+            instance.HandleUpdateEvent();
+        }
+        #endif
     }
 }

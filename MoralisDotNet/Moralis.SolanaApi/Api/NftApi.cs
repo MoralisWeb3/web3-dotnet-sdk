@@ -1,10 +1,10 @@
-﻿using Moralis.SolanaApi.Client;
+﻿using System;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using System.Net;
+using Moralis.SolanaApi.Client;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Moralis.SolanaApi.Api
 {
@@ -59,7 +59,7 @@ namespace Moralis.SolanaApi.Api
 		public ApiClient ApiClient { get; set; }
 
 
-		public async Task<NftMetadata> GetNFTMetadata(NetworkTypes network, string address)
+		public async UniTask<NftMetadata> GetNFTMetadata(NetworkTypes network, string address)
         {
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");
@@ -73,14 +73,14 @@ namespace Moralis.SolanaApi.Api
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTMetadata: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTMetadata: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
 
-			return (NftMetadata)ApiClient.Deserialize(response.Content, typeof(NftMetadata), response.Headers);
+			return ((CloudFunctionResult<NftMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadata>), response.Item2)).Result;
 		}
 	}
 }

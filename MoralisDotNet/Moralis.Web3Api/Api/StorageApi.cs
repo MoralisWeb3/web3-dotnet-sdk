@@ -27,13 +27,15 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/ 
-            using System;
+*/
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using RestSharp;
 using Newtonsoft.Json;
+using System.Net;
+using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
+using Moralis.Web3Api.Core;
+using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -99,7 +101,7 @@ namespace Moralis.Web3Api.Api
 		/// </summary>
 		/// <param name="abi">Array of JSON and Base64 Supported</param>
 		/// <returns>Returns the path to the uploaded files</returns>
-		public async Task<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
+		public async UniTask<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
 		{
 
 			// Verify the required parameter 'abi' is set
@@ -121,14 +123,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling UploadFolder: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling UploadFolder: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
 
-			return (List<IpfsFile>)ApiClient.Deserialize(response.Content, typeof(List<IpfsFile>), response.Headers);
+			return (List<IpfsFile>)ApiClient.Deserialize(response.Item3, typeof(List<IpfsFile>), response.Item2);
 		}
 	}
 }

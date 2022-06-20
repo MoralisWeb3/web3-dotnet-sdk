@@ -27,13 +27,15 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/ 
-            using System;
+*/
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using RestSharp;
 using Newtonsoft.Json;
+using System.Net;
+using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
+using Moralis.Web3Api.Core;
+using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -100,7 +102,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="domain">Domain to be resolved</param>
 		/// <param name="currency">The currency to query</param>
 		/// <returns>Returns an address</returns>
-		public async Task<Resolve> ResolveDomain (string domain, string currency=null)
+		public async UniTask<Resolve> ResolveDomain (string domain, string currency=null)
 		{
 
 			// Verify the required parameter 'domain' is set
@@ -122,14 +124,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling ResolveDomain: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling ResolveDomain: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
 
-			return (Resolve)ApiClient.Deserialize(response.Content, typeof(Resolve), response.Headers);
+			return (Resolve)ApiClient.Deserialize(response.Item3, typeof(Resolve), response.Item2);
 		}
 		/// <summary>
 		/// Resolves an ETH address and find the ENS name
@@ -137,7 +140,7 @@ namespace Moralis.Web3Api.Api
 		/// </summary>
 		/// <param name="address">The address to be resolved</param>
 		/// <returns>Returns an ENS</returns>
-		public async Task<Ens> ResolveAddress (string address)
+		public async UniTask<Ens> ResolveAddress (string address)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -158,14 +161,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling ResolveAddress: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling ResolveAddress: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
 
-			return (Ens)ApiClient.Deserialize(response.Content, typeof(Ens), response.Headers);
+			return (Ens)ApiClient.Deserialize(response.Item3, typeof(Ens), response.Item2);
 		}
 	}
 }

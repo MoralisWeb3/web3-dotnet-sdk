@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Moralis.Platform.Abstractions;
 using Moralis.Platform.Utilities;
+using Cysharp.Threading.Tasks;
+using Moralis.Platform.Abstractions;
 
 namespace Moralis.Platform.Services.Infrastructure
 {
@@ -18,42 +18,50 @@ namespace Moralis.Platform.Services.Infrastructure
 
         public InstallationService(ICacheService storageController) => StorageController = storageController;
 
-        public Task SetAsync(Guid? installationId)
+        public async UniTask SetAsync(Guid? installationId)
+        {
+            //lock (Mutex)
+            //{
+
+            if (installationId != null)
+            {
+                IDataCache<string, object> storage = await StorageController.LoadAsync();
+
+                await storage.AddAsync(InstallationIdKey, installationId.ToString());
+            }
+            else
+            {
+                IDataCache<string, object> storage = await StorageController.LoadAsync();
+                
+                await storage.RemoveAsync(InstallationIdKey);
+            }
+
+            InstallationId = installationId;
+        }
+
+        public async UniTask<Guid?> GetAsync()
         {
             lock (Mutex)
+                if (InstallationId != null)
+                    return InstallationId;
+
+            IDataCache<string, object> storage = await StorageController.LoadAsync();
+
+            storage.TryGetValue(InstallationIdKey, out object id);
+
+            try
             {
-
-                Task saveTask = installationId is { } ? StorageController.LoadAsync().OnSuccess(storage => storage.Result.AddAsync(InstallationIdKey, installationId.ToString())).Unwrap() : StorageController.LoadAsync().OnSuccess(storage => storage.Result.RemoveAsync(InstallationIdKey)).Unwrap();
-
-                InstallationId = installationId;
-                return saveTask;
+                lock (Mutex)
+                    return InstallationId = new Guid(id as string);
+            }
+            catch (Exception)
+            {
+                Guid newInstallationId = Guid.NewGuid();
+                await SetAsync(newInstallationId);
+                return newInstallationId;
             }
         }
 
-        public Task<Guid?> GetAsync()
-        {
-            lock (Mutex)
-                if (InstallationId is { })
-                    return Task.FromResult(InstallationId);
-
-            return StorageController.LoadAsync().OnSuccess(storageTask =>
-            {
-                storageTask.Result.TryGetValue(InstallationIdKey, out object id);
-
-                try
-                {
-                    lock (Mutex)
-                        return Task.FromResult(InstallationId = new Guid(id as string));
-                }
-                catch (Exception)
-                {
-                    Guid newInstallationId = Guid.NewGuid();
-                    return SetAsync(newInstallationId).OnSuccess<Guid?>(_ => newInstallationId);
-                }
-            })
-            .Unwrap();
-        }
-
-        public Task ClearAsync() => SetAsync(null);
+        public async UniTask ClearAsync() => await SetAsync(null);
     }
 }

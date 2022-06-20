@@ -27,13 +27,15 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/ 
-            using System;
+*/
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using RestSharp;
 using Newtonsoft.Json;
+using System.Net;
+using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
+using Moralis.Web3Api.Core;
+using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -101,7 +103,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
-		public async Task<List<Erc20Metadata>> GetTokenMetadata (List<String> addresses, ChainList chain, string subdomain=null, string providerUrl=null)
+		public async UniTask<List<Erc20Metadata>> GetTokenMetadata (List<String> addresses, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'addresses' is set
@@ -117,7 +119,7 @@ namespace Moralis.Web3Api.Api
 			path = path.Replace("{format}", "json");
 
 			if(addresses != null) queryParams.Add("addresses", ApiClient.ParameterToString(addresses));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
 			if(providerUrl != null) queryParams.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
 
@@ -126,14 +128,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenMetadata: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenMetadata: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
 
-			return (List<Erc20Metadata>)ApiClient.Deserialize(response.Content, typeof(List<Erc20Metadata>), response.Headers);
+			return (List<Erc20Metadata>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20Metadata>), response.Item2);
 		}
 		/// <summary>
 		/// Get the nft trades for a given contracts and marketplace
@@ -158,7 +161,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the trades</returns>
-		public async Task<TradeCollection> GetNFTTrades (string address, ChainList chain, int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, int? offset=null, int? limit=null)
+		public async UniTask<TradeCollection> GetNFTTrades (string address, ChainList chain, int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -173,14 +176,14 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/trades";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(fromBlock != null) queryParams.Add("from_block", ApiClient.ParameterToString(fromBlock));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if(fromDate != null) queryParams.Add("from_date", ApiClient.ParameterToString(fromDate));
 			if(toDate != null) queryParams.Add("to_date", ApiClient.ParameterToString(toDate));
 			if(providerUrl != null) queryParams.Add("provider_url", ApiClient.ParameterToString(providerUrl));
 			if(marketplace != null) queryParams.Add("marketplace", ApiClient.ParameterToString(marketplace));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 
 			// Authentication setting, if any
@@ -188,14 +191,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTTrades: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTTrades: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
 
-			return (TradeCollection)ApiClient.Deserialize(response.Content, typeof(TradeCollection), response.Headers);
+			return (TradeCollection)ApiClient.Deserialize(response.Item3, typeof(TradeCollection), response.Item2);
 		}
 		/// <summary>
 		/// Get the lowest price found for a nft token contract for the last x days (only trades paid in ETH)
@@ -208,7 +212,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <param name="marketplace">marketplace from where to get the trades (only opensea is supported at the moment)</param>
 		/// <returns>Returns the trade with the lowest price</returns>
-		public async Task<Trade> GetNFTLowestPrice (string address, ChainList chain, int? days=null, string providerUrl=null, string marketplace=null)
+		public async UniTask<Trade> GetNFTLowestPrice (string address, ChainList chain, int? days=null, string providerUrl=null, string marketplace=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -223,7 +227,7 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/lowestprice";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(days != null) queryParams.Add("days", ApiClient.ParameterToString(days));
 			if(providerUrl != null) queryParams.Add("provider_url", ApiClient.ParameterToString(providerUrl));
 			if(marketplace != null) queryParams.Add("marketplace", ApiClient.ParameterToString(marketplace));
@@ -233,14 +237,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTLowestPrice: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTLowestPrice: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
 
-			return (Trade)ApiClient.Deserialize(response.Content, typeof(Trade), response.Headers);
+			return (Trade)ApiClient.Deserialize(response.Item3, typeof(Trade), response.Item2);
 		}
 		/// <summary>
 		/// Returns metadata (name, symbol, decimals, logo) for a given token contract address.
@@ -249,7 +254,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
-		public async Task<List<Erc20Metadata>> GetTokenMetadataBySymbol (List<String> symbols, ChainList chain, string subdomain=null)
+		public async UniTask<List<Erc20Metadata>> GetTokenMetadataBySymbol (List<String> symbols, ChainList chain, string subdomain=null)
 		{
 
 			// Verify the required parameter 'symbols' is set
@@ -265,7 +270,7 @@ namespace Moralis.Web3Api.Api
 			path = path.Replace("{format}", "json");
 
 			if(symbols != null) queryParams.Add("symbols", ApiClient.ParameterToString(symbols));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
 
 			// Authentication setting, if any
@@ -273,14 +278,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenMetadataBySymbol: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenMetadataBySymbol: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
 
-			return (List<Erc20Metadata>)ApiClient.Deserialize(response.Content, typeof(List<Erc20Metadata>), response.Headers);
+			return (List<Erc20Metadata>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20Metadata>), response.Item2);
 		}
 		/// <summary>
 		/// Returns the price nominated in the native token and usd for a given token contract address.
@@ -291,7 +297,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="exchange">The factory name or address of the token exchange</param>
 		/// <param name="toBlock">to_block</param>
 		/// <returns>Returns the price nominated in the native token and usd for a given token contract address</returns>
-		public async Task<Erc20Price> GetTokenPrice (string address, ChainList chain, string providerUrl=null, string exchange=null, int? toBlock=null)
+		public async UniTask<Erc20Price> GetTokenPrice (string address, ChainList chain, string providerUrl=null, string exchange=null, int? toBlock=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -306,7 +312,7 @@ namespace Moralis.Web3Api.Api
 			var path = "/erc20/{address}/price";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(providerUrl != null) queryParams.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
 			if(exchange != null) queryParams.Add("exchange", ApiClient.ParameterToString(exchange));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
@@ -316,14 +322,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenPrice: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenPrice: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
 
-			return (Erc20Price)ApiClient.Deserialize(response.Content, typeof(Erc20Price), response.Headers);
+			return (Erc20Price)ApiClient.Deserialize(response.Item3, typeof(Erc20Price), response.Item2);
 		}
 		/// <summary>
 		/// Gets ERC20 token contract transactions in descending order based on block number
@@ -350,7 +357,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of token contract transactions.</returns>
-		public async Task<Erc20TransactionCollection> GetTokenAddressTransfers (string address, ChainList chain, string subdomain=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
+		public async UniTask<Erc20TransactionCollection> GetTokenAddressTransfers (string address, ChainList chain, string subdomain=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -365,7 +372,7 @@ namespace Moralis.Web3Api.Api
 			var path = "/erc20/{address}/transfers";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(subdomain != null) queryParams.Add("subdomain", ApiClient.ParameterToString(subdomain));
 			if(fromBlock != null) queryParams.Add("from_block", ApiClient.ParameterToString(fromBlock));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
@@ -379,14 +386,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenAddressTransfers: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenAddressTransfers: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
 
-			return (Erc20TransactionCollection)ApiClient.Deserialize(response.Content, typeof(Erc20TransactionCollection), response.Headers);
+			return (Erc20TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(Erc20TransactionCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the amount which the spender is allowed to withdraw from the spender
@@ -397,7 +405,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the amount which the spender is allowed to withdraw from the owner..</returns>
-		public async Task<Erc20Allowance> GetTokenAllowance (string address, string ownerAddress, string spenderAddress, ChainList chain, string providerUrl=null)
+		public async UniTask<Erc20Allowance> GetTokenAllowance (string address, string ownerAddress, string spenderAddress, ChainList chain, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -420,7 +428,7 @@ namespace Moralis.Web3Api.Api
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
 			if(ownerAddress != null) queryParams.Add("owner_address", ApiClient.ParameterToString(ownerAddress));
 			if(spenderAddress != null) queryParams.Add("spender_address", ApiClient.ParameterToString(spenderAddress));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(providerUrl != null) queryParams.Add("providerUrl", ApiClient.ParameterToString(providerUrl));
 
 			// Authentication setting, if any
@@ -428,14 +436,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenAllowance: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenAllowance: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenAllowance: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenAllowance: " + response.Item3, response.Item3);
 
-			return (Erc20Allowance)ApiClient.Deserialize(response.Content, typeof(Erc20Allowance), response.Headers);
+			return (Erc20Allowance)ApiClient.Deserialize(response.Item3, typeof(Erc20Allowance), response.Item2);
 		}
 		/// <summary>
 		/// Gets NFTs that match a given metadata search.
@@ -463,7 +472,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the matching NFTs</returns>
-		public async Task<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
+		public async UniTask<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'q' is set
@@ -479,14 +488,14 @@ namespace Moralis.Web3Api.Api
 			path = path.Replace("{format}", "json");
 
 			if(q != null) queryParams.Add("q", ApiClient.ParameterToString(q));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
 			if(filter != null) queryParams.Add("filter", ApiClient.ParameterToString(filter));
 			if(fromBlock != null) queryParams.Add("from_block", ApiClient.ParameterToString(fromBlock));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if(fromDate != null) queryParams.Add("from_date", ApiClient.ParameterToString(fromDate));
 			if(toDate != null) queryParams.Add("to_date", ApiClient.ParameterToString(toDate));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 
 			// Authentication setting, if any
@@ -494,14 +503,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling SearchNFTs: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling SearchNFTs: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling SearchNFTs: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling SearchNFTs: " + response.Item3, response.Item3);
 
-			return (NftMetadataCollection)ApiClient.Deserialize(response.Content, typeof(NftMetadataCollection), response.Headers);
+			return (NftMetadataCollection)ApiClient.Deserialize(response.Item3, typeof(NftMetadataCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens from a block number to a block number
@@ -526,10 +536,8 @@ namespace Moralis.Web3Api.Api
 		/// <param name="format">The format of the token id</param>
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
-		/// <param name="cursor">The cursor returned in the last response (for getting the next page)
-		/// </param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		public async Task<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, int? offset=null, int? limit=null, string cursor=null)
+		public async UniTask<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, string cursor = "", int? limit=null)
 		{
 
 			var postBody = new Dictionary<String, String>();
@@ -541,29 +549,29 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/transfers";
 			path = path.Replace("{format}", "json");
 
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(fromBlock != null) queryParams.Add("from_block", ApiClient.ParameterToString(fromBlock));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if(fromDate != null) queryParams.Add("from_date", ApiClient.ParameterToString(fromDate));
 			if(toDate != null) queryParams.Add("to_date", ApiClient.ParameterToString(toDate));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
-			if(cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNftTransfersFromToBlock: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNftTransfersFromToBlock: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNftTransfersFromToBlock: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNftTransfersFromToBlock: " + response.Item3, response.Item3);
 
-			return (NftTransferCollection)ApiClient.Deserialize(response.Content, typeof(NftTransferCollection), response.Headers);
+			return (NftTransferCollection)ApiClient.Deserialize(response.Item3, typeof(NftTransferCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets data, including metadata (where available), for all token ids for the given contract address.
@@ -577,7 +585,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of nfts</returns>
-		public async Task<NftCollection> GetAllTokenIds (string address, ChainList chain, string format=null, int? offset=null, int? limit=null)
+		public async UniTask<NftCollection> GetAllTokenIds (string address, ChainList chain, string format=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -592,9 +600,9 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 
 			// Authentication setting, if any
@@ -602,14 +610,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetAllTokenIds: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetAllTokenIds: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetAllTokenIds: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetAllTokenIds: " + response.Item3, response.Item3);
 
-			return (NftCollection)ApiClient.Deserialize(response.Content, typeof(NftCollection), response.Headers);
+			return (NftCollection)ApiClient.Deserialize(response.Item3, typeof(NftCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -619,10 +628,8 @@ namespace Moralis.Web3Api.Api
 		/// <param name="format">The format of the token id</param>
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
-		/// <param name="cursor">The cursor returned in the last response (for getting the next page)
-		/// </param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		public async Task<NftTransferCollection> GetContractNFTTransfers (string address, ChainList chain, string format=null, int? offset=null, int? limit=null, string cursor=null)
+		public async UniTask<NftTransferCollection> GetContractNFTTransfers (string address, ChainList chain, string format=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -637,25 +644,25 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/transfers";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
-			if(cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetContractNFTTransfers: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetContractNFTTransfers: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetContractNFTTransfers: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetContractNFTTransfers: " + response.Item3, response.Item3);
 
-			return (NftTransferCollection)ApiClient.Deserialize(response.Content, typeof(NftTransferCollection), response.Headers);
+			return (NftTransferCollection)ApiClient.Deserialize(response.Item3, typeof(NftTransferCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -670,7 +677,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of nft owners</returns>
-		public async Task<NftOwnerCollection> GetNFTOwners (string address, ChainList chain, string format=null, int? offset=null, int? limit=null)
+		public async UniTask<NftOwnerCollection> GetNFTOwners (string address, ChainList chain, string format=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -685,9 +692,9 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/owners";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 
 			// Authentication setting, if any
@@ -695,14 +702,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTOwners: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTOwners: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTOwners: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTOwners: " + response.Item3, response.Item3);
 
-			return (NftOwnerCollection)ApiClient.Deserialize(response.Content, typeof(NftOwnerCollection), response.Headers);
+			return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the contract level metadata (name, symbol, base token uri) for the given contract
@@ -712,7 +720,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="address">Address of the contract</param>
 		/// <param name="chain">The chain to query</param>
 		/// <returns>Returns a collection NFT collections.</returns>
-		public async Task<NftContractMetadata> GetNFTMetadata (string address, ChainList chain)
+		public async UniTask<NftContractMetadata> GetNFTMetadata (string address, ChainList chain)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -727,103 +735,22 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/metadata";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTMetadata: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetNFTMetadata: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
 
-			return (NftContractMetadata)ApiClient.Deserialize(response.Content, typeof(NftContractMetadata), response.Headers);
-		}
-		/// <summary>
-		/// ReSync the metadata for an NFT
-		/// * The metadata flag will request a resync of the metadata for an nft
-		/// * The uri flag will request fetch the token_uri for an NFT and then fetch it's metadata. To be used when the token uri get updated
-		/// 
-		/// </summary>
-		/// <param name="address">Address of the contract</param>
-		/// <param name="tokenId">The id of the token</param>
-		/// <param name="chain">The chain to query</param>
-		/// <param name="flag">the type of resync to operate</param>
-		public async Task<Type> ReSyncMetadata (string address, string tokenId, ChainList chain, string flag=null)
-		{
-
-			// Verify the required parameter 'address' is set
-			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling ReSyncMetadata");
-
-			// Verify the required parameter 'tokenId' is set
-			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling ReSyncMetadata");
-
-			var postBody = new Dictionary<String, String>();
-			var queryParams = new Dictionary<String, String>();
-			var headerParams = new Dictionary<String, String>();
-			var formParams = new Dictionary<String, String>();
-			var fileParams = new Dictionary<String, FileParameter>();
-
-			var path = "/nft/{address}/{token_id}/metadata/resync";
-			path = path.Replace("{format}", "json");
-			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
-			if(flag != null) queryParams.Add("flag", ApiClient.ParameterToString(flag));
-
-			// Authentication setting, if any
-			String[] authSettings = new String[] { "ApiKeyAuth" };
-
-			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
-
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling ReSyncMetadata: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling ReSyncMetadata: " + response.ErrorMessage, response.ErrorMessage);
-
-			return (Type)ApiClient.Deserialize(response.Content, typeof(Type), response.Headers);
-		}
-		/// <summary>
-		/// Sync a Contract for NFT Index
-		/// 
-		/// </summary>
-		/// <param name="address">Address of the contract</param>
-		/// <param name="chain">The chain to query</param>
-		public async Task<Type> SyncNFTContract (string address, ChainList chain)
-		{
-
-			// Verify the required parameter 'address' is set
-			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling SyncNFTContract");
-
-			var postBody = new Dictionary<String, String>();
-			var queryParams = new Dictionary<String, String>();
-			var headerParams = new Dictionary<String, String>();
-			var formParams = new Dictionary<String, String>();
-			var fileParams = new Dictionary<String, FileParameter>();
-
-			var path = "/nft/{address}/sync";
-			path = path.Replace("{format}", "json");
-			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
-
-			// Authentication setting, if any
-			String[] authSettings = new String[] { "ApiKeyAuth" };
-
-			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.PUT, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
-
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling SyncNFTContract: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling SyncNFTContract: " + response.ErrorMessage, response.ErrorMessage);
-
-			return (Type)ApiClient.Deserialize(response.Content, typeof(Type), response.Headers);
+			return (NftContractMetadata)ApiClient.Deserialize(response.Item3, typeof(NftContractMetadata), response.Item2);
 		}
 		/// <summary>
 		/// Gets data, including metadata (where available), for the given token id of the given contract address.
@@ -835,7 +762,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="format">The format of the token id</param>
 		/// <returns>Returns the specified NFT</returns>
-		public async Task<Nft> GetTokenIdMetadata (string address, string tokenId, ChainList chain, string format=null)
+		public async UniTask<Nft> GetTokenIdMetadata (string address, string tokenId, ChainList chain, string format=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -853,7 +780,7 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/{token_id}";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
 
 			// Authentication setting, if any
@@ -861,14 +788,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenIdMetadata: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenIdMetadata: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenIdMetadata: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenIdMetadata: " + response.Item3, response.Item3);
 
-			return (Nft)ApiClient.Deserialize(response.Content, typeof(Nft), response.Headers);
+			return (Nft)ApiClient.Deserialize(response.Item3, typeof(Nft), response.Item2);
 		}
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -884,7 +812,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of NFTs with their respective owners</returns>
-		public async Task<NftOwnerCollection> GetTokenIdOwners (string address, string tokenId, ChainList chain, string format=null, int? offset=null, int? limit=null)
+		public async UniTask<NftOwnerCollection> GetTokenIdOwners (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -902,9 +830,9 @@ namespace Moralis.Web3Api.Api
 			var path = "/nft/{address}/{token_id}/owners";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 
 			// Authentication setting, if any
@@ -912,14 +840,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenIdOwners: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetTokenIdOwners: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenIdOwners: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetTokenIdOwners: " + response.Item3, response.Item3);
 
-			return (NftOwnerCollection)ApiClient.Deserialize(response.Content, typeof(NftOwnerCollection), response.Headers);
+			return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -931,10 +860,8 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <param name="order">The field(s) to order on and if it should be ordered in ascending or descending order. Specified by: fieldName1.order,fieldName2.order. Example 1: "block_number", "block_number.ASC", "block_number.DESC", Example 2: "block_number and contract_type", "block_number.ASC,contract_type.DESC"</param>
-		/// <param name="cursor">The cursor returned in the last response (for getting the next page)
-		/// </param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		public async Task<NftTransferCollection> GetWalletTokenIdTransfers (string address, string tokenId, ChainList chain, string format=null, int? offset=null, int? limit=null, string order=null, string cursor=null)
+		public async UniTask<NftTransferCollection> GetWalletTokenIdTransfers (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null, string order=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -951,27 +878,109 @@ namespace Moralis.Web3Api.Api
 
 			var path = "/nft/{address}/{token_id}/transfers";
 			path = path.Replace("{format}", "json");
-			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));			
+			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(format != null) queryParams.Add("format", ApiClient.ParameterToString(format));
-			if(offset != null) queryParams.Add("offset", ApiClient.ParameterToString(offset));
+			if(cursor != null) queryParams.Add("offset", ApiClient.ParameterToString(cursor));
 			if(limit != null) queryParams.Add("limit", ApiClient.ParameterToString(limit));
 			if(order != null) queryParams.Add("order", ApiClient.ParameterToString(order));
-			if(cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetWalletTokenIdTransfers: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetWalletTokenIdTransfers: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
 
-			return (NftTransferCollection)ApiClient.Deserialize(response.Content, typeof(NftTransferCollection), response.Headers);
+			return (NftTransferCollection)ApiClient.Deserialize(response.Item3, typeof(NftTransferCollection), response.Item2);
+		}
+
+		/// <summary>
+		/// ReSync the metadata for an NFT
+		/// </summary>
+		/// <param name="address">Address of the contract</param>
+		/// <param name="tokenId">The id of the token</param>
+		/// <param name="chain">The chain to query</param>
+		/// <returns></returns>
+		public async UniTask<bool> ReSyncMetadata(string address, string tokenId, ChainList chain)
+		{
+			// Verify the required parameter 'address' is set
+			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetWalletTokenIdTransfers");
+
+			// Verify the required parameter 'tokenId' is set
+			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling GetWalletTokenIdTransfers");
+
+			var postBody = new Dictionary<String, String>();
+			var queryParams = new Dictionary<String, String>();
+			var headerParams = new Dictionary<String, String>();
+			var formParams = new Dictionary<String, String>();
+			var fileParams = new Dictionary<String, FileParameter>();
+
+			var path = "/nft/{address}/{token_id}/metadata/resync";
+			path = path.Replace("{format}", "json");
+			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address)); 
+			path = path.Replace("{" + "token_id" + "}", ApiClient.ParameterToString(tokenId));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Sync a Contract for NFT Index
+		/// </summary>
+		/// <param name="address">Address of the contract</param>
+		/// <param name="chain">The chain to query</param>
+		/// <returns></returns>
+		public async UniTask<bool> SyncNFTContract(string address, ChainList chain)
+		{
+			// Verify the required parameter 'address' is set
+			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetWalletTokenIdTransfers");
+
+			var postBody = new Dictionary<String, String>();
+			var queryParams = new Dictionary<String, String>();
+			var headerParams = new Dictionary<String, String>();
+			var formParams = new Dictionary<String, String>();
+			var fileParams = new Dictionary<String, FileParameter>();
+
+			var path = "/nft/{address}/sync";
+			path = path.Replace("{format}", "json");
+			path = path.Replace("{" + "address" + "}", ApiClient.ParameterToString(address));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
+
+			return true;
 		}
 	}
 }

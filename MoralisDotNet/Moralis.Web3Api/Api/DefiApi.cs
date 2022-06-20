@@ -27,13 +27,15 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/ 
-            using System;
+*/
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using RestSharp;
 using Newtonsoft.Json;
+using System.Net;
+using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
+using Moralis.Web3Api.Core;
+using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -105,7 +107,7 @@ namespace Moralis.Web3Api.Api
 		/// </param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the pair reserves</returns>
-		public async Task<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
+		public async UniTask<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'pairAddress' is set
@@ -120,7 +122,7 @@ namespace Moralis.Web3Api.Api
 			var path = "/{pair_address}/reserves";
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "pair_address" + "}", ApiClient.ParameterToString(pairAddress));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if(toDate != null) queryParams.Add("to_date", ApiClient.ParameterToString(toDate));
 			if(providerUrl != null) queryParams.Add("provider_url", ApiClient.ParameterToString(providerUrl));
@@ -130,14 +132,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairReserves: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairReserves: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
 
-			return (ReservesCollection)ApiClient.Deserialize(response.Content, typeof(ReservesCollection), response.Headers);
+			return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
 		/// <summary>
 		/// Fetches and returns pair data of the provided token0+token1 combination.
@@ -154,7 +157,7 @@ namespace Moralis.Web3Api.Api
 		/// * If 'to_date' and 'to_block' are provided, 'to_block' will be used.
 		/// </param>
 		/// <returns>Returns the pair address of the two tokens</returns>
-		public async Task<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
+		public async UniTask<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
 		{
 
 			// Verify the required parameter 'exchange' is set
@@ -176,7 +179,7 @@ namespace Moralis.Web3Api.Api
 			path = path.Replace("{format}", "json");
 			path = path.Replace("{" + "token0_address" + "}", ApiClient.ParameterToString(token0Address));			path = path.Replace("{" + "token1_address" + "}", ApiClient.ParameterToString(token1Address));
 			if(exchange != null) queryParams.Add("exchange", ApiClient.ParameterToString(exchange));
-			if(chain != null) queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
+			queryParams.Add("chain", ApiClient.ParameterToHex((long)chain));
 			if(toBlock != null) queryParams.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if(toDate != null) queryParams.Add("to_date", ApiClient.ParameterToString(toDate));
 
@@ -185,14 +188,15 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairAddress: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairAddress: " + response.ErrorMessage, response.ErrorMessage);
+			if (((int)response.Item1) >= 400)
+				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
+			else if (((int)response.Item1) == 0)
+				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
 
-			return (ReservesCollection)ApiClient.Deserialize(response.Content, typeof(ReservesCollection), response.Headers);
+			return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
 	}
 }

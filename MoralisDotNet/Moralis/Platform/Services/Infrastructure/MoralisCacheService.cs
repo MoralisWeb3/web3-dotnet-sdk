@@ -5,11 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Utilities;
-using static Moralis.Platform.Resources;
+using static Moralis.Platform.ResourceWrapper;
+
+#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously
 
 namespace Moralis.Platform.Services.Infrastructure
 {
@@ -22,43 +24,63 @@ namespace Moralis.Platform.Services.Infrastructure
         {
             public FileBackedCache(FileInfo file) => File = file;
 
-            internal Task SaveAsync() => Lock(() => File.WriteContentAsync(JsonUtilities.Encode(Storage)));
-
-            internal Task LoadAsync() => File.ReadAllTextAsync().ContinueWith(task =>
+            internal void Save()
             {
-                lock (Mutex)
+                File.WriteContent(JsonUtilities.Encode(Storage));
+            }
+
+            internal async UniTask LoadAsync()
+            {
+                Storage = new Dictionary<string, object> { };
+
+#if !UNITY_WEBGL
+                if (File.Exists)
                 {
+                    string data = string.Empty;
+
                     try
                     {
-                        Storage = JsonUtilities.Parse(task.Result) as Dictionary<string, object>;
+                        data = await File.ReadAllTextAsync();
                     }
-                    catch
+                    catch (Exception exp)
                     {
-                        Storage = new Dictionary<string, object> { };
+                        Debug.Log($"File read error: {exp.Message}");
+                    }
+
+                    lock (Mutex)
+                    {
+                        try
+                        {
+                            Storage = JsonUtilities.Parse(data) as Dictionary<string, object>;
+                        }
+                        catch
+                        {
+                            Storage = new Dictionary<string, object> { };
+                        }
                     }
                 }
-            });
-
-            // TODO: Check if the call to ToDictionary is necessary here considering contents is IDictionary<string object>.
+                else 
+                { 
+                    Storage = new Dictionary<string, object> { };
+                    using (File.Create())
+                    {
+                    }
+                }
+#endif
+            }
 
             internal void Update(IDictionary<string, object> contents) => Lock(() => Storage = contents.ToDictionary(element => element.Key, element => element.Value));
 
-            public Task AddAsync(string key, object value)
+            public async UniTask AddAsync(string key, object value)
             {
-                lock (Mutex)
-                {
-                    Storage[key] = value;
-                    return SaveAsync();
-                }
+                Storage[key] = value;
+                Save();
             }
 
-            public Task RemoveAsync(string key)
+            public async UniTask RemoveAsync(string key)
             {
-                lock (Mutex)
-                {
-                    Storage.Remove(key);
-                    return SaveAsync();
-                }
+                Storage.Remove(key);
+                Save();
             }
 
             public void Add(string key, object value) => throw new NotSupportedException(FileBackedCacheSynchronousMutationNotSupportedMessage);
@@ -138,7 +160,6 @@ namespace Moralis.Platform.Services.Infrastructure
 
         FileInfo File { get; set; }
         FileBackedCache Cache { get; set; }
-        TaskQueue Queue { get; } = new TaskQueue { };
 
         /// <summary>
         /// Creates a Moralis storage controller and attempts to extract a previously created settings storage file from the persistent storage location.
@@ -157,13 +178,16 @@ namespace Moralis.Platform.Services.Infrastructure
         /// Loads a settings dictionary from the file wrapped by <see cref="File"/>.
         /// </summary>
         /// <returns>A storage dictionary containing the deserialized content of the storage file targeted by the <see cref="CacheController"/> instance</returns>
-        public Task<IDataCache<string, object>> LoadAsync()
+        public async UniTask<IDataCache<string, object>> LoadAsync()
         {
             // Check if storage dictionary is already created from the controllers file (create if not)
             EnsureCacheExists();
 
             // Load storage dictionary content async and return the resulting dictionary type
-            return Queue.Enqueue(toAwait => toAwait.ContinueWith(_ => Cache.LoadAsync().OnSuccess(__ => Cache as IDataCache<string, object>)).Unwrap(), CancellationToken.None);
+            //return Queue.Enqueue(toAwait => toAwait.ContinueWith(_ => Cache.LoadAsync().OnSuccess(_ => Cache as IDataCache<string, object>)).Unwrap(), CancellationToken.None);
+            await Cache.LoadAsync();
+                
+            return Cache as IDataCache<string, object>;
         }
 
         /// <summary>
@@ -171,18 +195,17 @@ namespace Moralis.Platform.Services.Infrastructure
         /// </summary>
         /// <param name="contents">The data to be saved.</param>
         /// <returns>A data cache containing the saved data.</returns>
-        public Task<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents) => Queue.Enqueue(toAwait => toAwait.ContinueWith(_ =>
+        public async UniTask<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents)
         {
-            EnsureCacheExists().Update(contents);
-            return Cache.SaveAsync().OnSuccess(__ => Cache as IDataCache<string, object>);
-        }).Unwrap());
+            EnsureCacheExists();
+            Cache.Save();
+            return Cache as IDataCache<string, object>;
+        }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
         public void RefreshPaths() => Cache = new FileBackedCache(File = PersistentCacheFile);
-
-        // TODO: Attach the following method to AppDomain.CurrentDomain.ProcessExit if that actually ever made sense for anything except randomly generated file names, otherwise attach the delegate when it is known the file name is a randomly generated string.
 
         /// <summary>
         /// Clears the data controlled by this class.
@@ -230,7 +253,10 @@ namespace Moralis.Platform.Services.Infrastructure
                 FileInfo file = new FileInfo(AbsoluteCacheFilePath);
                 if (!file.Exists)
                     using (file.Create())
-                        ; // Hopefully the JIT doesn't no-op this. The behaviour of the "using" clause should dictate how the stream is closed, to make sure it happens properly.
+                    {
+                    }
+
+                // Hopefully the JIT doesn't no-op this. The behaviour of the "using" clause should dictate how the stream is closed, to make sure it happens properly.
 
                 return file;
             }
@@ -260,14 +286,21 @@ namespace Moralis.Platform.Services.Infrastructure
         /// <param name="originFilePath"></param>
         /// <param name="targetFilePath"></param>
         /// <returns>A task that completes once the file move operation form <paramref name="originFilePath"/> to <paramref name="targetFilePath"/> completes.</returns>
-        public async Task TransferAsync(string originFilePath, string targetFilePath)
+        public async UniTask TransferAsync(string originFilePath, string targetFilePath)
         {
-            if (!String.IsNullOrWhiteSpace(originFilePath) && !String.IsNullOrWhiteSpace(targetFilePath) && new FileInfo(originFilePath) is { Exists: true } originFile && new FileInfo(targetFilePath) is { } targetFile)
-            {
-                using StreamWriter writer = new StreamWriter(targetFile.OpenWrite(), Encoding.Unicode);
-                using StreamReader reader = new StreamReader(originFile.OpenRead(), Encoding.Unicode);
+            if (!String.IsNullOrWhiteSpace(originFilePath) &&
+                !String.IsNullOrWhiteSpace(targetFilePath))
+            { 
+                FileInfo originFile = new FileInfo(originFilePath);
+                FileInfo targetFile = new FileInfo(targetFilePath);
 
-                await writer.WriteAsync(await reader.ReadToEndAsync());
+                if (originFile.Exists && targetFile != null)
+                {
+                    using StreamWriter writer = new StreamWriter(targetFile.OpenWrite(), Encoding.Unicode);
+                    using StreamReader reader = new StreamReader(originFile.OpenRead(), Encoding.Unicode);
+
+                    await writer.WriteAsync(await reader.ReadToEndAsync());
+                }
             }
         }
     }
