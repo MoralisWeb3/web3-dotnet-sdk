@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.IO;
+using System.Web;
+using System.Linq;
 using System.Net;
 using System.Text;
-using Moralis.SolanaApi;
-using WebRequest = Moralis.SolanaApi.Models.WebRequest;
 using Newtonsoft.Json;
-using Cysharp.Threading.Tasks;
-using Moralis.SolanaApi.Core.Models;
-using Moralis.SolanaApi.Models;
-using System.Web;
+using RestSharp;
+using RestSharp.Extensions;
 
 namespace Moralis.SolanaApi.Client
 {
@@ -19,31 +19,29 @@ namespace Moralis.SolanaApi.Client
     public class ApiClient
     {
         private readonly Dictionary<String, String> _defaultHeaderMap = new Dictionary<String, String>();
-
+  
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://localhost:3063/api/v2")
+        public ApiClient(String basePath="http://localhost:3063/api/v2")
         {
             BasePath = basePath;
-            RestClient = new UniversalWebClient();
-
+            RestClient = new RestClient(BasePath);
         }
-
+    
         /// <summary>
         /// Gets or sets the base path.
         /// </summary>
         /// <value>The base path</value>
         public string BasePath { get; set; }
-
+    
         /// <summary>
         /// Gets or sets the RestClient.
         /// </summary>
         /// <value>An instance of the RestClient</value>
-        //public RestClient RestClient { get; set; }
-        public UniversalWebClient RestClient { get; set; }
-
+        public RestClient RestClient { get; set; }
+    
         /// <summary>
         /// Gets the default header.
         /// </summary>
@@ -51,7 +49,7 @@ namespace Moralis.SolanaApi.Client
         {
             get { return _defaultHeaderMap; }
         }
-
+    
         /// <summary>
         /// Makes the HTTP request (Sync).
         /// </summary>
@@ -64,72 +62,43 @@ namespace Moralis.SolanaApi.Client
         /// <param name="fileParams">File parameters.</param>
         /// <param name="authSettings">Authentication settings.</param>
         /// <returns>Object</returns>
-        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> CallApi(String path, Method method, Dictionary<String, String> queryParams, String postBody,
-            Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
+        public Object CallApi(String path, RestSharp.Method method, Dictionary<String, String> queryParams, String postBody,
+            Dictionary<String, String> headerParams, Dictionary<String, String> formParams, 
             Dictionary<String, FileParameter> fileParams, String[] authSettings)
         {
-            bool paramsAdded = false;
-            //var request = new RestRequest(path, method);
-            Models.WebRequest request = new Models.WebRequest();
-            request.Resource = BasePath;
-            request.Path = path;
-            request.Method = method.ToString().ToUpper();
 
+            var request = new RestRequest(path, method);
+   
             UpdateParamsForAuth(queryParams, headerParams, authSettings);
 
-            if (!String.IsNullOrWhiteSpace(postBody))
-            {
-                request.Data = new MemoryStream(Encoding.UTF8.GetBytes(postBody));
-            }
-
             // add default header, if any
-            foreach (var defaultHeader in _defaultHeaderMap)
-            {
-                request.Headers.Add(new KeyValuePair<string, string>(defaultHeader.Key, defaultHeader.Value));
-            }
+            foreach(var defaultHeader in _defaultHeaderMap)
+                request.AddHeader(defaultHeader.Key, defaultHeader.Value);
 
             // add header parameter, if any
-            foreach (var param in headerParams)
-            {
-                if (!String.IsNullOrEmpty(param.Key) && !String.IsNullOrEmpty(param.Value))
-                {
-                    request.Headers.Add(new KeyValuePair<string, string>(param.Key, param.Value));
-                }
-            }
+            foreach(var param in headerParams)
+                request.AddHeader(param.Key, param.Value);
 
             // add query parameter, if any
-            foreach (var param in queryParams)
-            {
-                if (paramsAdded == false)
-                {
-                    paramsAdded = true;
-                    request.Method = $"{request.Method}?{param.Key}={HttpUtility.UrlEncode(param.Value)}";
-                }
-                else
-                {
-                    request.Method = $"{request.Method}&{param.Key}={HttpUtility.UrlEncode(param.Value)}";
-                }
-            }
+            foreach(var param in queryParams)
+                request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
 
             // add form parameter, if any
-            if (formParams != null && formParams.Count > 0)
-            {
-                string data = JsonConvert.SerializeObject(formParams);
-                request.Data = new MemoryStream(Encoding.UTF8.GetBytes(data));
-            }
+            foreach(var param in formParams)
+                request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
 
             // add file parameter, if any
-            if (fileParams != null && fileParams.Count > 0)
-            {
-                string data = JsonConvert.SerializeObject(fileParams);
-                request.Data = new MemoryStream(Encoding.UTF8.GetBytes(data));
-            }
-
+            foreach(var param in fileParams)
+                request.AddFile(param.Value.Name, param.Value.GetFile, param.Value.FileName, param.Value.ContentType);
             //request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
 
-            return await RestClient.ExecuteAsync(request);
-        }
+            if (postBody != null) // http body (model) parameter
+                request.AddParameter("application/json", postBody, ParameterType.RequestBody);
 
+            return (Object)RestClient.Execute(request);
+
+        }
+    
         /// <summary>
         /// Add default header.
         /// </summary>
@@ -140,7 +109,7 @@ namespace Moralis.SolanaApi.Client
         {
             _defaultHeaderMap.Add(key, value);
         }
-
+    
         /// <summary>
         /// Escape string (url-encoded).
         /// </summary>
@@ -149,8 +118,9 @@ namespace Moralis.SolanaApi.Client
         public string EscapeString(string str)
         {
             return HttpUtility.UrlEncode(str); 
+            //return RestSharp.Contrib.HttpUtility.UrlEncode(str);
         }
-
+    
         /// <summary>
         /// Create FileParameter based on Stream.
         /// </summary>
@@ -159,16 +129,12 @@ namespace Moralis.SolanaApi.Client
         /// <returns>FileParameter.</returns>
         public FileParameter ParameterToFile(string name, Stream stream)
         {
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, buffer.Length);
-            stream.Position = 0;
-
             if (stream is FileStream)
-                return FileParameter.Create(name, buffer, Path.GetFileName(((FileStream)stream).Name));
+                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
             else
-                return FileParameter.Create(name, buffer, "no_file_name_provided");
+                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
         }
-
+    
         /// <summary>
         /// If parameter is DateTime, output in a formatted string (default ISO 8601), customizable with Configuration.DateTime.
         /// If parameter is a list of string, join the list with ",".
@@ -193,7 +159,7 @@ namespace Moralis.SolanaApi.Client
             else
                 return JsonConvert.SerializeObject(obj);
         }
-
+    
         /// <summary>
         /// Convert a number to a HEX string.
         /// </summary>
@@ -213,7 +179,7 @@ namespace Moralis.SolanaApi.Client
         /// <param name="type">Object type.</param>
         /// <param name="headers">HTTP headers.</param>
         /// <returns>Object representation of the JSON string.</returns>
-        public object Deserialize(string content, Type type, Dictionary<string, string> headers = null)
+        public object Deserialize(string content, Type type, IList<Parameter> headers=null)
         {
             if (type == typeof(Object)) // return an object
             {
@@ -229,14 +195,10 @@ namespace Moralis.SolanaApi.Client
                 var fileName = filePath + Guid.NewGuid();
                 if (headers != null)
                 {
-                    //var regex = new Regex(@"Content-Disposition:.*filename=['""]?([^'""\s]+)['""]?$");
-                    //var match = regex.Match(headers.ToString());
-                    //if (match.Success)
-                    if (headers.ContainsKey("Content-Disposition"))
-                    {
-                        string cntDisp = headers["Content-Disposition"];
-                        fileName = filePath + cntDisp.Replace("\"", "").Replace("'", "");
-                    }
+                    var regex = new Regex(@"Content-Disposition:.*filename=['""]?([^'""\s]+)['""]?$");
+                    var match = regex.Match(headers.ToString());
+                    if (match.Success)
+                        fileName = filePath + match.Value.Replace("\"", "").Replace("'", "");
                 }
                 File.WriteAllText(fileName, content);
                 return new FileStream(fileName, FileMode.Open);
@@ -245,14 +207,14 @@ namespace Moralis.SolanaApi.Client
 
             if (type.Name.StartsWith("System.Nullable`1[[System.DateTime")) // return a datetime object
             {
-                return DateTime.Parse(content, null, System.Globalization.DateTimeStyles.RoundtripKind);
+                return DateTime.Parse(content,  null, System.Globalization.DateTimeStyles.RoundtripKind);
             }
 
             if (type == typeof(String) || type.Name.StartsWith("System.Nullable")) // return primitive type
             {
-                return ConvertType(content, type);
+                return ConvertType(content, type); 
             }
-
+    
             // at this point, it must be a model (json)
             try
             {
@@ -263,7 +225,7 @@ namespace Moralis.SolanaApi.Client
                 throw new ApiException(500, e.Message);
             }
         }
-
+    
         /// <summary>
         /// Serialize an object into JSON string.
         /// </summary>
@@ -280,23 +242,23 @@ namespace Moralis.SolanaApi.Client
                 throw new ApiException(500, e.Message);
             }
         }
-
+    
         /// <summary>
         /// Get the API key with prefix.
         /// </summary>
         /// <param name="apiKeyIdentifier">API key identifier (authentication scheme).</param>
         /// <returns>API key with prefix.</returns>
-        public string GetApiKeyWithPrefix(string apiKeyIdentifier)
+        public string GetApiKeyWithPrefix (string apiKeyIdentifier)
         {
             var apiKeyValue = "";
-            Configuration.ApiKey.TryGetValue(apiKeyIdentifier, out apiKeyValue);
+            Configuration.ApiKey.TryGetValue (apiKeyIdentifier, out apiKeyValue);
             var apiKeyPrefix = "";
-            if (Configuration.ApiKeyPrefix.TryGetValue(apiKeyIdentifier, out apiKeyPrefix))
+            if (Configuration.ApiKeyPrefix.TryGetValue (apiKeyIdentifier, out apiKeyPrefix))
                 return apiKeyPrefix + " " + apiKeyValue;
             else
                 return apiKeyValue;
         }
-
+    
         /// <summary>
         /// Update parameters based on authentication.
         /// </summary>
@@ -311,11 +273,11 @@ namespace Moralis.SolanaApi.Client
             foreach (string auth in authSettings)
             {
                 // determine which one to use
-                switch (auth)
+                switch(auth)
                 {
                     case "ApiKeyAuth":
                         headerParams["X-API-Key"] = GetApiKeyWithPrefix("X-API-Key");
-
+                        
                         break;
                     default:
                         //TODO show warning about security definition not found
@@ -323,7 +285,7 @@ namespace Moralis.SolanaApi.Client
                 }
             }
         }
-
+ 
         /// <summary>
         /// Encode string in base64 format.
         /// </summary>
@@ -334,17 +296,16 @@ namespace Moralis.SolanaApi.Client
             var textByte = System.Text.Encoding.UTF8.GetBytes(text);
             return System.Convert.ToBase64String(textByte);
         }
-
+    
         /// <summary>
         /// Dynamically cast the object into target type.
         /// </summary>
         /// <param name="fromObject">Object to be casted</param>
         /// <param name="toObject">Target type</param>
         /// <returns>Casted object</returns>
-        public static Object ConvertType(Object fromObject, Type toObject)
-        {
+        public static Object ConvertType(Object fromObject, Type toObject) {
             return Convert.ChangeType(fromObject, toObject);
         }
-
+  
     }
 }

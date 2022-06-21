@@ -1,156 +1,156 @@
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
-using WebRequest = Moralis.Web3Api.Models.WebRequest;
-using Cysharp.Threading.Tasks;
-using Moralis.Web3Api.Interfaces;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
+//using System.Net;
+//using System.Text;
+//using WebRequest = Moralis.Web3Api.Models.WebRequest;
+//using Cysharp.Threading.Tasks;
+//using Moralis.Web3Api.Interfaces;
 
-namespace Moralis.Web3Api
-{
-    /// <summary>
-    /// A universal implementation of <see cref="IWebClient"/>.
-    /// </summary>
-    public class UniversalWebClient : IWebClient
-    {
-        static HashSet<string> ContentHeaders { get; } = new HashSet<string>
-        {
-            { "Allow" },
-            { "Content-Disposition" },
-            { "Content-Encoding" },
-            { "Content-Language" },
-            { "Content-Length" },
-            { "Content-Location" },
-            { "Content-MD5" },
-            { "Content-Range" },
-            { "Content-Type" },
-            { "Expires" },
-            { "Last-Modified" }
-        };
+//namespace Moralis.Web3Api
+//{
+//    /// <summary>
+//    /// A universal implementation of <see cref="IWebClient"/>.
+//    /// </summary>
+//    public class UniversalWebClient : IWebClient
+//    {
+//        static HashSet<string> ContentHeaders { get; } = new HashSet<string>
+//        {
+//            { "Allow" },
+//            { "Content-Disposition" },
+//            { "Content-Encoding" },
+//            { "Content-Language" },
+//            { "Content-Length" },
+//            { "Content-Location" },
+//            { "Content-MD5" },
+//            { "Content-Range" },
+//            { "Content-Type" },
+//            { "Expires" },
+//            { "Last-Modified" }
+//        };
 
-        static List<string> allowedHeaders { get; } = new List<string>
-        {
-            "x-parse-application-id",
-            "x-parse-installation-id",
-            "x-parse-session-token",
-            "content-type"
-        };
+//        static List<string> allowedHeaders { get; } = new List<string>
+//        {
+//            "x-parse-application-id",
+//            "x-parse-installation-id",
+//            "x-parse-session-token",
+//            "content-type"
+//        };
 
-        public UniversalWebClient() { }
+//        public UniversalWebClient() { }
 
-        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest) 
-        {
-            Tuple<HttpStatusCode, Dictionary<string, string>, string> result = default;
+//        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest) 
+//        {
+//            Tuple<HttpStatusCode, Dictionary<string, string>, string> result = default;
 
-            UnityWebRequest webRequest;
+//            UnityWebRequest webRequest;
             
-            switch (httpRequest.Method)
-            {
-                case "DELETE":
-                    webRequest = UnityWebRequest.Delete(httpRequest.Target);
-                    break;
-                case "POST":
-                    webRequest = CreatePostRequest(httpRequest);
-                    break;
-                case "PUT":
-                    webRequest = CreatePutRequest(httpRequest);
-                    break;
-                default:
-                    webRequest = UnityWebRequest.Get(httpRequest.Target);
-                    break;
-            }
+//            switch (httpRequest.Method)
+//            {
+//                case "DELETE":
+//                    webRequest = UnityWebRequest.Delete(httpRequest.Target);
+//                    break;
+//                case "POST":
+//                    webRequest = CreatePostRequest(httpRequest);
+//                    break;
+//                case "PUT":
+//                    webRequest = CreatePutRequest(httpRequest);
+//                    break;
+//                default:
+//                    webRequest = UnityWebRequest.Get(httpRequest.Target);
+//                    break;
+//            }
 
-            if (httpRequest.Headers != null)
-            {
-                foreach (KeyValuePair<string, string> header in httpRequest.Headers)
-                {
-                    if (webRequest.GetRequestHeader(header.Key) != null) continue;
+//            if (httpRequest.Headers != null)
+//            {
+//                foreach (KeyValuePair<string, string> header in httpRequest.Headers)
+//                {
+//                    if (webRequest.GetRequestHeader(header.Key) != null) continue;
 
-                    if (!String.IsNullOrWhiteSpace(header.Value) &&
-                        allowedHeaders.Contains(header.Key.ToLower()))
-                    {
-                        webRequest.SetRequestHeader(header.Key, header.Value);
-                    }
-                }
-            }
+//                    if (!String.IsNullOrWhiteSpace(header.Value) &&
+//                        allowedHeaders.Contains(header.Key.ToLower()))
+//                    {
+//                        webRequest.SetRequestHeader(header.Key, header.Value);
+//                    }
+//                }
+//            }
 
-            try
-            {
-                await webRequest.SendWebRequest();
-            }
-            catch (Exception exp)
-            {
-                Debug.LogError($"Error: {exp.Message}");
-            }
+//            try
+//            {
+//                await webRequest.SendWebRequest();
+//            }
+//            catch (Exception exp)
+//            {
+//                Debug.LogError($"Error: {exp.Message}");
+//            }
 
-            HttpStatusCode responseStatus = HttpStatusCode.BadRequest;
-            string responseText = null;
+//            HttpStatusCode responseStatus = HttpStatusCode.BadRequest;
+//            string responseText = null;
 
-            if (Enum.IsDefined(typeof(HttpStatusCode), (int)webRequest.responseCode))
-            {
-                responseStatus = (HttpStatusCode)Enum.ToObject(typeof(HttpStatusCode), webRequest.responseCode);
-            }
+//            if (Enum.IsDefined(typeof(HttpStatusCode), (int)webRequest.responseCode))
+//            {
+//                responseStatus = (HttpStatusCode)Enum.ToObject(typeof(HttpStatusCode), webRequest.responseCode);
+//            }
 
-            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
-            {
-                responseText = webRequest.error;
-            }
-            else
-            {
-                responseText = webRequest.downloadHandler.text;
-            }
+//            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
+//            {
+//                responseText = webRequest.error;
+//            }
+//            else
+//            {
+//                responseText = webRequest.downloadHandler.text;
+//            }
             
-            result = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(responseStatus, webRequest.GetResponseHeaders(), responseText);
+//            result = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(responseStatus, webRequest.GetResponseHeaders(), responseText);
 
-            return result;
-        }
+//            return result;
+//        }
 
-        private UnityWebRequest CreatePostRequest(Models.WebRequest httpRequest)
-        {
-            //string requestData = null;
-            var req = new UnityWebRequest(httpRequest.Target, "POST");
-            Stream data = httpRequest.Data;
+//        private UnityWebRequest CreatePostRequest(Models.WebRequest httpRequest)
+//        {
+//            //string requestData = null;
+//            var req = new UnityWebRequest(httpRequest.Target, "POST");
+//            Stream data = httpRequest.Data;
 
-            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
-            {
-                data = adjData;
-            }
+//            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
+//            {
+//                data = adjData;
+//            }
 
-            byte[] buffer = new byte[data.Length];
-            data.Read(buffer, 0, buffer.Length);
-            data.Position = 0;
+//            byte[] buffer = new byte[data.Length];
+//            data.Read(buffer, 0, buffer.Length);
+//            data.Position = 0;
 
-            //requestData = Encoding.UTF8.GetString(buffer);
-            req.uploadHandler = (UploadHandler)new UploadHandlerRaw(buffer);
-            req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+//            //requestData = Encoding.UTF8.GetString(buffer);
+//            req.uploadHandler = (UploadHandler)new UploadHandlerRaw(buffer);
+//            req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
 
-            return req; // UnityWebRequest.Post(httpRequest.Target, requestData);
-        }
+//            return req; // UnityWebRequest.Post(httpRequest.Target, requestData);
+//        }
 
-        private UnityWebRequest CreatePutRequest(Models.WebRequest httpRequest)
-        {
-            //string requestData = null;
+//        private UnityWebRequest CreatePutRequest(Models.WebRequest httpRequest)
+//        {
+//            //string requestData = null;
 
-            var req = new UnityWebRequest(httpRequest.Target, "PUT");
-            Stream data = httpRequest.Data;
+//            var req = new UnityWebRequest(httpRequest.Target, "PUT");
+//            Stream data = httpRequest.Data;
 
-            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("put") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
-            {
-                data = adjData;
-            }
+//            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("put") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
+//            {
+//                data = adjData;
+//            }
 
-            byte[] buffer = new byte[data.Length];
-            data.Read(buffer, 0, buffer.Length);
-            data.Position = 0;
+//            byte[] buffer = new byte[data.Length];
+//            data.Read(buffer, 0, buffer.Length);
+//            data.Position = 0;
 
-            //requestData = Encoding.UTF8.GetString(buffer);
+//            //requestData = Encoding.UTF8.GetString(buffer);
 
-            req.uploadHandler = (UploadHandler)new UploadHandlerRaw(buffer);
-            req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+//            req.uploadHandler = (UploadHandler)new UploadHandlerRaw(buffer);
+//            req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
 
-            return req; // return UnityWebRequest.Put(httpRequest.Target, requestData);
-        }
-    }
-}
+//            return req; // return UnityWebRequest.Put(httpRequest.Target, requestData);
+//        }
+//    }
+//}
