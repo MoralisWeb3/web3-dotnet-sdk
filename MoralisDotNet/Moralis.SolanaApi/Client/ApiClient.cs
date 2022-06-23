@@ -64,7 +64,7 @@ namespace Moralis.SolanaApi.Client
         /// <returns>Object</returns>
         public Object CallApi(String path, RestSharp.Method method, Dictionary<String, String> queryParams, String postBody,
             Dictionary<String, String> headerParams, Dictionary<String, String> formParams, 
-            Dictionary<String, FileParameter> fileParams, String[] authSettings)
+            Dictionary<String, Models.FileParameter> fileParams, String[] authSettings)
         {
 
             var request = new RestRequest(path, method);
@@ -89,8 +89,15 @@ namespace Moralis.SolanaApi.Client
 
             // add file parameter, if any
             foreach(var param in fileParams)
-                request.AddFile(param.Value.Name, param.Value.GetFile, param.Value.FileName, param.Value.ContentType);
-            //request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    param.Value.Writer.Invoke(ms);
+                    byte[] bytes = new byte[ms.Length];
+                    ms.Read(bytes, 0, bytes.Length);
+                    request.AddFile(param.Value.Name, bytes, param.Value.FileName, param.Value.ContentType);
+                }
+            }
 
             if (postBody != null) // http body (model) parameter
                 request.AddParameter("application/json", postBody, ParameterType.RequestBody);
@@ -127,12 +134,12 @@ namespace Moralis.SolanaApi.Client
         /// <param name="name">Parameter name.</param>
         /// <param name="stream">Input stream.</param>
         /// <returns>FileParameter.</returns>
-        public FileParameter ParameterToFile(string name, Stream stream)
+        public Models.FileParameter ParameterToFile(string name, Stream stream)
         {
             if (stream is FileStream)
-                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
             else
-                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
         }
     
         /// <summary>

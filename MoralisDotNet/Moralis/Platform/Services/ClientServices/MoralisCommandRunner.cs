@@ -57,7 +57,7 @@ namespace Moralis.Platform.Services.ClientServices
         {
             MoralisCommand cmd = await PrepareCommand(command);
 
-            Tuple<Status, string> cmdResult = await GetWebClient().ExecuteAsync(cmd); //, uploadProgress, downloadProgress, cancellationToken);
+            Tuple<Status, string> cmdResult = await GetWebClient().ExecuteAsync(cmd, uploadProgress, downloadProgress, cancellationToken);
 
             cancellationToken.ThrowIfCancellationRequested();
 

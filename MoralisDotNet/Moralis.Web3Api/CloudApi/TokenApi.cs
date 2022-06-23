@@ -35,9 +35,9 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
-using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -126,15 +126,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<List<Erc20Metadata>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<Erc20Metadata>>), response.Item2)).Result;
+			return ((CloudFunctionResult<List<Erc20Metadata>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<Erc20Metadata>>), null)).Result;
 		}
 		/// <summary>
 		/// Get the nft trades for a given contracts and marketplace
@@ -188,15 +188,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<TradeCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<TradeCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<TradeCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<TradeCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Get the lowest price found for a nft token contract for the last x days (only trades paid in ETH)
@@ -233,15 +233,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<Trade>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Trade>), response.Item2)).Result;
+			return ((CloudFunctionResult<Trade>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Trade>), null)).Result;
 		}
 		/// <summary>
 		/// Returns metadata (name, symbol, decimals, logo) for a given token contract address.
@@ -272,15 +272,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<List<Erc20Metadata>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<Erc20Metadata>>), response.Item2)).Result;
+			return ((CloudFunctionResult<List<Erc20Metadata>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<Erc20Metadata>>), null)).Result;
 		}
 		/// <summary>
 		/// Returns the price nominated in the native token and usd for a given token contract address.
@@ -315,15 +315,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<Erc20Price>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20Price>), response.Item2)).Result;
+			return ((CloudFunctionResult<Erc20Price>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20Price>), null)).Result;
 		}
 		/// <summary>
 		/// Gets ERC20 token contract transactions in descending order based on block number
@@ -378,15 +378,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<Erc20TransactionCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20TransactionCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<Erc20TransactionCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20TransactionCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the amount which the spender is allowed to withdraw from the spender
@@ -427,15 +427,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenAllowance: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenAllowance: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<Erc20Allowance>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20Allowance>), response.Item2)).Result;
+			return ((CloudFunctionResult<Erc20Allowance>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Erc20Allowance>), null)).Result;
 		}
 		/// <summary>
 		/// Gets NFTs that match a given metadata search.
@@ -492,15 +492,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling SearchNFTs: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling SearchNFTs: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftMetadataCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadataCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftMetadataCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadataCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens from a block number to a block number
@@ -550,15 +550,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetNftTransfersFromToBlock: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetNftTransfersFromToBlock: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets data, including metadata (where available), for all token ids for the given contract address.
@@ -596,15 +596,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetAllTokenIds: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetAllTokenIds: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -639,15 +639,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetContractNFTTransfers: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetContractNFTTransfers: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -686,15 +686,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTOwners: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTOwners: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftOwnerCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftOwnerCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftOwnerCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftOwnerCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the contract level metadata (name, symbol, base token uri) for the given contract
@@ -725,15 +725,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftContractMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftContractMetadata>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftContractMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftContractMetadata>), null)).Result;
 		}
 		/// <summary>
 		/// Gets data, including metadata (where available), for the given token id of the given contract address.
@@ -771,15 +771,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenIdMetadata: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenIdMetadata: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<Nft>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Nft>), response.Item2)).Result;
+			return ((CloudFunctionResult<Nft>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Nft>), null)).Result;
 		}
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -823,15 +823,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenIdOwners: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetTokenIdOwners: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftOwnerCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftOwnerCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftOwnerCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftOwnerCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -873,15 +873,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetWalletTokenIdTransfers: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
 		}
 
 
@@ -921,10 +921,10 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			var response = (await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			var response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");  //(await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
 
 			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling ReSyncMetadata: " + response.Item2, response.Item2);
+				throw new ApiException((int)response.Item1, "Error calling ReSyncMetadata: " + null, null);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling ReSyncMetadata: " + response.Item3, response.Item3);
 
@@ -958,10 +958,10 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			var response = (await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			var response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");  //(await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
 
 			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling SyncNFTContract: " + response.Item2, response.Item2);
+				throw new ApiException((int)response.Item1, "Error calling SyncNFTContract: " + null, null);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling SyncNFTContract: " + response.Item3, response.Item3);
 

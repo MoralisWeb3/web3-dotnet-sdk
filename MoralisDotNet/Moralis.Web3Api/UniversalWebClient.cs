@@ -3,6 +3,7 @@
 //using System.Collections.Generic;
 //using System.IO;
 //using System.Net;
+//using System.Net.Http;
 //using System.Text;
 //using WebRequest = Moralis.Web3Api.Models.WebRequest;
 //using Cysharp.Threading.Tasks;
@@ -40,12 +41,32 @@
 
 //        public UniversalWebClient() { }
 
-//        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest) 
+//        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest)
 //        {
 //            Tuple<HttpStatusCode, Dictionary<string, string>, string> result = default;
 
-//            UnityWebRequest webRequest;
-            
+//            //var webRequest = new Models.WebRequest() ;
+
+//            HttpClient client = new HttpClient();
+//            client.BaseAddress = httpRequest.Path;
+//            var hc = new HttpWebRequest()
+//            switch (httpRequest.Method)
+//            {
+//                case "DELETE":
+//                    webRequest = client.PostAsync()
+//                    break;
+//                case "POST":
+//                    webRequest = CreatePostRequest(httpRequest);
+//                    break;
+//                case "PUT":
+//                    webRequest = CreatePutRequest(httpRequest);
+//                    break;
+//                default:
+//                    webRequest = UnityWebRequest.Get(httpRequest.Target);
+//                    break;
+//            }
+
+//            /*
 //            switch (httpRequest.Method)
 //            {
 //                case "DELETE":
@@ -84,6 +105,7 @@
 //            {
 //                Debug.LogError($"Error: {exp.Message}");
 //            }
+//            */
 
 //            HttpStatusCode responseStatus = HttpStatusCode.BadRequest;
 //            string responseText = null;
@@ -101,7 +123,7 @@
 //            {
 //                responseText = webRequest.downloadHandler.text;
 //            }
-            
+
 //            result = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(responseStatus, webRequest.GetResponseHeaders(), responseText);
 
 //            return result;

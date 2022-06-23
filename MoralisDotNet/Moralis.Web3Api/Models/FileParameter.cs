@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Moralis.Web3Api.Core.Models
+namespace Moralis.Web3Api.Models
 {
     public class FileParameter
     {

@@ -71,15 +71,15 @@ namespace Moralis.SolanaApi.Api
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling Balance: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling Balance: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling Balance: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling Balance: " + response.Item3, response.Item3);
-
-			return ((CloudFunctionResult<NativeBalance>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NativeBalance>), response.Item2)).Result;
+			//return ((CloudFunctionResult<NativeBalance>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NativeBalance>), response.Item2)).Result;
 		}
 
 		public async UniTask<List<SplTokenBalanace>> GetSplTokens(NetworkTypes network, string address)
@@ -95,15 +95,15 @@ namespace Moralis.SolanaApi.Api
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetSplTokens: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetSplTokens: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetSplTokens: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetSplTokens: " + response.Item3, response.Item3);
-
-			return ((CloudFunctionResult<List<SplTokenBalanace>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplTokenBalanace>>), response.Item2)).Result;
+			//return ((CloudFunctionResult<List<SplTokenBalanace>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplTokenBalanace>>), response.Item2)).Result;
 		}
 
 		public async UniTask<List<SplNft>> GetNFTs(NetworkTypes network, string address)
@@ -119,15 +119,15 @@ namespace Moralis.SolanaApi.Api
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
-
-			return ((CloudFunctionResult<List<SplNft>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplNft>>), response.Item2)).Result;
+			//return ((CloudFunctionResult<List<SplNft>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplNft>>), response.Item2)).Result;
 		}
 
 		public async UniTask<Portfolio> GetPortfolio(NetworkTypes network, string address)
@@ -143,15 +143,15 @@ namespace Moralis.SolanaApi.Api
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPortfolio: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPortfolio: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetPortfolio: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetPortfolio: " + response.Item3, response.Item3);
-
-			return ((CloudFunctionResult<Portfolio>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Portfolio>), response.Item2)).Result;
+			//return ((CloudFunctionResult<Portfolio>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Portfolio>), response.Item2)).Result;
 		}
 	}
 }

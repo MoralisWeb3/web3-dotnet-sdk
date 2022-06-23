@@ -35,7 +35,6 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
-using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -123,16 +122,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
-
-			return (Resolve)ApiClient.Deserialize(response.Item3, typeof(Resolve), response.Item2);
+			//return (Resolve)ApiClient.Deserialize(response.Item3, typeof(Resolve), response.Item2);
 		}
 		/// <summary>
 		/// Resolves an ETH address and find the ENS name
@@ -160,16 +159,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
-
-			return (Ens)ApiClient.Deserialize(response.Item3, typeof(Ens), response.Item2);
+			//return (Ens)ApiClient.Deserialize(response.Item3, typeof(Ens), response.Item2);
 		}
 	}
 }

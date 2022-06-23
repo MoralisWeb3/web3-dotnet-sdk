@@ -38,14 +38,7 @@ namespace Moralis.Platform.Services.Infrastructure
                 {
                     string data = string.Empty;
 
-                    try
-                    {
-                        data = await File.ReadAllTextAsync();
-                    }
-                    catch (Exception exp)
-                    {
-                        Debug.Log($"File read error: {exp.Message}");
-                    }
+                    data = await File.ReadAllTextAsync();
 
                     lock (Mutex)
                     {

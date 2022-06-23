@@ -10,6 +10,7 @@ using System.Threading;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
 using Moralis.SolanaApi.Interfaces;
+using Cysharp.Threading.Tasks;
 
 namespace Moralis
 {
@@ -187,17 +188,22 @@ namespace Moralis
 
         public async Task<Guid?> GetInstallationIdAsync() => await InstallationService.GetAsync();
 
-        public MoralisQuery<T> Query<T>() where T : MoralisObject
+        //public MoralisQuery<T> Query<T>() where T : MoralisObject
+        //{
+        //    return new MoralisQuery<T>(this.ServiceHub.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, this.ServiceHub.CurrentUserService.CurrentUser.sessionToken);
+        //}
+        public async UniTask<MoralisQuery<T>> Query<T>() where T : MoralisObject
         {
-            return new MoralisQuery<T>(this.ServiceHub.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, this.ServiceHub.CurrentUserService.CurrentUser.sessionToken);
-        }
+            MoralisUser user = await GetCurrentUser();
 
+            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, user.sessionToken); //, logger);
+        }
         public T Create<T>(object[] parameters = null) where T : MoralisObject
         {
             return this.ServiceHub.Create<T>(parameters);
         }
 
-        public MoralisUser GetCurrentUser() => this.ServiceHub.GetCurrentUser();
+        public UniTask<MoralisUser> GetCurrentUser() => this.ServiceHub.GetCurrentUser();
 
 
         public void Dispose()
@@ -211,7 +217,7 @@ namespace Moralis
         /// </summary>
         /// <param name="sessionToken"></param>
         /// <returns>Task<MoralisUser</returns>
-        public Task<TUser> UserFromSession(string sessionToken)
+        public UniTask<TUser> UserFromSession(string sessionToken)
         {
             return this.ServiceHub.BecomeAsync<TUser>(sessionToken);
         }
@@ -225,7 +231,7 @@ namespace Moralis
         /// </summary>
         /// <param name="data">Authentication data</param>
         /// <returns>Task<TUser></returns>
-        public Task<TUser> LogInAsync(IDictionary<string, object> data)
+        public UniTask<TUser> LogInAsync(IDictionary<string, object> data)
         {
             return this.LogInAsync(data, CancellationToken.None);
         }
@@ -239,7 +245,7 @@ namespace Moralis
         /// <param name="data">Authentication data</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Task<TUser></returns>
-        public Task<TUser> LogInAsync(IDictionary<string, object> data, CancellationToken cancellationToken)
+        public UniTask<TUser> LogInAsync(IDictionary<string, object> data, CancellationToken cancellationToken)
         {
             return this.ServiceHub.LogInWithAsync("moralisEth", data, cancellationToken);
         }
@@ -248,7 +254,7 @@ namespace Moralis
         /// Logs out the current user.
         /// </summary>
         /// <returns></returns>
-        public Task LogOutAsync()
+        public UniTask LogOutAsync()
         {
             return this.ServiceHub.LogOutAsync<TUser>();
         }
@@ -331,7 +337,7 @@ namespace Moralis
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Task DeleteAsync<T>(T target) where T : MoralisObject
+        public UniTask DeleteAsync<T>(T target) where T : MoralisObject
         {
             return target.DeleteAsync();
         }

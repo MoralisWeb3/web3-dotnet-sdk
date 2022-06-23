@@ -1,153 +1,135 @@
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Net;
-//using System.Text;
-//using WebRequest = Moralis.Platform.Services.Models.WebRequest;
-//using Cysharp.Threading.Tasks;
-//using Moralis.Platform.Abstractions;
-//using Newtonsoft.Json;
 
-//namespace Moralis.Platform.Services
-//{
-//    /// <summary>
-//    /// A universal implementation of <see cref="IWebClient"/>.
-//    /// </summary>
-//    public class UniversalWebClient : IWebClient
-//    {
-//        static HashSet<string> ContentHeaders { get; } = new HashSet<string>
-//        {
-//            { "Allow" },
-//            { "Content-Disposition" },
-//            { "Content-Encoding" },
-//            { "Content-Language" },
-//            { "Content-Length" },
-//            { "Content-Location" },
-//            { "Content-MD5" },
-//            { "Content-Range" },
-//            { "Content-Type" },
-//            { "Expires" },
-//            { "Last-Modified" }
-//        };
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Moralis.Platform.Abstractions;
+using Moralis.Platform.Services.Models;
+using Moralis.Platform.Utilities;
+using BCLWebClient = System.Net.Http.HttpClient;
+using WebRequest = Moralis.Platform.Services.Models.WebRequest;
 
-//        static List<string> allowedHeaders { get; } = new List<string>
-//        {
-//            "x-parse-application-id",
-//            "x-parse-client-version",
-//            "x-parse-installation-id",
-//            "x-parse-session-token",
-//            "content-type"
-//        };
-//        public UniversalWebClient() { }
+namespace Moralis.Platform.Services
+{
+    /// <summary>
+    /// A universal implementation of <see cref="IWebClient"/>.
+    /// </summary>
+    public class UniversalWebClient : IWebClient
+    {
+        static HashSet<string> ContentHeaders { get; } = new HashSet<string>
+        {
+            { "Allow" },
+            { "Content-Disposition" },
+            { "Content-Encoding" },
+            { "Content-Language" },
+            { "Content-Length" },
+            { "Content-Location" },
+            { "Content-MD5" },
+            { "Content-Range" },
+            { "Content-Type" },
+            { "Expires" },
+            { "Last-Modified" }
+        };
 
-//        public async UniTask<Tuple<HttpStatusCode, string>> ExecuteAsync(Models.WebRequest httpRequest)
-//        {
-//            Tuple<HttpStatusCode, string> result = default;
+        public UniversalWebClient() : this(new BCLWebClient { }) { }
 
-//            UnityWebRequest webRequest; 
+        public UniversalWebClient(BCLWebClient client) => Client = client;
 
-//            switch (httpRequest.Method)
-//            {
-//                case "DELETE":
-//                    webRequest = UnityWebRequest.Delete(httpRequest.Target);
-//                    break;
-//                case "POST":
-//                    webRequest = CreatePostRequest(httpRequest);
-//                    break;
-//                case "PUT":
-//                    webRequest = CreatePutRequest(httpRequest);
-//                    break;
-//                default:
-//                    webRequest = UnityWebRequest.Get(httpRequest.Target);
-//                    break;
-//            }
+        BCLWebClient Client { get; set; }
 
-//            if (httpRequest.Headers != null)
-//            {
-//                foreach (KeyValuePair<string, string> header in httpRequest.Headers)
-//                {
-//                    if (webRequest.GetRequestHeader(header.Key) != null) continue;
+        public async UniTask<Tuple<HttpStatusCode, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken)
+        {
+            uploadProgress ??= new Progress<IDataTransferLevel> { };
+            downloadProgress ??= new Progress<IDataTransferLevel> { };
 
-//                    if (!String.IsNullOrWhiteSpace(header.Value) &&
-//                        allowedHeaders.Contains(header.Key.ToLower()))
-//                    {
-//                        webRequest.SetRequestHeader(header.Key, header.Value);
-//                    }
-//                }
-//            }
+            HttpRequestMessage message = new HttpRequestMessage(new HttpMethod(httpRequest.Method), httpRequest.Target);
 
-//            try
-//            {
-//                await webRequest.SendWebRequest();
-//            }
-//            catch (Exception exp)
-//            {
-//                Debug.LogError($"Target: {httpRequest.Target}");
-//                Debug.LogError($"Error: {exp.Message}");
-//            }
+            // Fill in zero-length data if method is post.
+            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } data)
+            {
+                message.Content = new StreamContent(data);
+            }
 
-//            HttpStatusCode responseStatus = HttpStatusCode.BadRequest;
-//            string responseText = "{}";
+            if (httpRequest.Headers != null)
+            {
+                foreach (KeyValuePair<string, string> header in httpRequest.Headers)
+                {
+                    if (ContentHeaders.Contains(header.Key))
+                    {
+                        message.Content.Headers.Add(header.Key, header.Value);
+                    }
+                    else
+                    {
+                        message.Headers.Add(header.Key, header.Value);
+                    }
+                }
+            }
 
-//            if (Enum.IsDefined(typeof(HttpStatusCode), (int)webRequest.responseCode))
-//            {
-//                responseStatus = (HttpStatusCode)Enum.ToObject(typeof(HttpStatusCode), webRequest.responseCode);
-//            }
-//            if  (webRequest.result == UnityWebRequest.Result.ConnectionError)
-//            {
-//                Debug.Log("Error Getting Wallet Info: " + webRequest.error);
-//                responseText = webRequest.error;
-//            }
-//            else
-//            {
-//                responseText = webRequest.downloadHandler == null ? responseText : webRequest.downloadHandler.text;
-//            }
+            // Avoid aggressive caching on Windows Phone 8.1.
 
-//            result = new Tuple<HttpStatusCode, string>(responseStatus, responseText);
-            
-//            // Signals that this UnityWebRequest is no longer being used, and should clean up any resources it is using.
-//            webRequest.Dispose();
-            
-//            return result;
-//        }
+            message.Headers.Add("Cache-Control", "no-cache");
+            message.Headers.IfModifiedSince = DateTimeOffset.UtcNow;
 
-//        private UnityWebRequest CreatePostRequest(Models.WebRequest httpRequest)
-//        {
-//            var req = new UnityWebRequest(httpRequest.Target, "POST");
-//            Stream data = httpRequest.Data;
+            // TODO: (richardross) investigate progress here, maybe there's something we're missing in order to support this.
 
-//            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
-//            {
-//                data = adjData;
-//            }
+            uploadProgress.Report(new DataTransferLevel { Amount = 0 });
 
-//            byte[] buffer = new byte[data.Length];
-//            data.Read(buffer, 0, buffer.Length);
-//            data.Position = 0;
+            HttpResponseMessage sendResp = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            //HttpResponseMessage response = httpMessageTask.Result;
+            uploadProgress.Report(new DataTransferLevel { Amount = 1 });
 
-//            req.uploadHandler = (UploadHandler)new UploadHandlerRaw(buffer);
-//            req.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            Stream readStream = await sendResp.Content.ReadAsStreamAsync();
 
-//            return req; 
-//        }
+            MemoryStream resultStream = new MemoryStream { };
+            //Stream responseStream = streamTask.Result;
 
-//        private UnityWebRequest CreatePutRequest(Models.WebRequest httpRequest)
-//        {
-//            string requestData = null;
-//            Stream data = httpRequest.Data;
+            int bufferSize = 4096;
+            int bytesRead = 0;
+            byte[] buffer = new byte[bufferSize];
+            long totalLength = -1;
+            long readSoFar = 0;
 
-//            if ((httpRequest.Data is null && httpRequest.Method.ToLower().Equals("post") ? new MemoryStream(new byte[0]) : httpRequest.Data) is Stream { } adjData)
-//            {
-//                data = adjData;
-//            }
+            try
+            {
+                totalLength = readStream.Length;
+            }
+            catch { };
 
-//            byte[] buffer = new byte[data.Length];
-//            data.Read(buffer, 0, buffer.Length);
-//            data.Position = 0;
+            bytesRead = await readStream.ReadAsync(buffer, 0, bufferSize, cancellationToken);
 
-//            requestData = Encoding.UTF8.GetString(buffer);
+            while (bytesRead > 0)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-//            return UnityWebRequest.Put(httpRequest.Target, requestData);
-//        }
-//    }
-//}
+                await resultStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                readSoFar += bytesRead;
+
+                if (totalLength > -1)
+                {
+                    downloadProgress.Report(new DataTransferLevel { Amount = 1.0 * readSoFar / totalLength });
+                }
+
+                bytesRead = await readStream.ReadAsync(buffer, 0, bufferSize, cancellationToken);
+            }
+
+            // If getting stream size is not supported, then report download only once.
+            if (totalLength == -1)
+            {
+                downloadProgress.Report(new DataTransferLevel { Amount = 1.0 });
+            }
+
+            byte[] resultAsArray = resultStream.ToArray();
+            resultStream.Dispose();
+
+            // Assume UTF-8 encoding.
+            return new Tuple<HttpStatusCode, string>(sendResp.StatusCode, Encoding.UTF8.GetString(resultAsArray, 0, resultAsArray.Length));
+        }
+    }
+}

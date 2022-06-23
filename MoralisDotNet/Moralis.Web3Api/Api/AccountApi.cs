@@ -36,9 +36,9 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
-using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+//using RestSharp;
 
 namespace Moralis.Web3Api.Api
 {
@@ -149,16 +149,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTransactions: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTransactions: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetTransactions: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetTransactions: " + response.Item3, response.Item3);
-
-			return (TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(TransactionCollection), response.Item2);
+			//return (TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(TransactionCollection), response.Item2);
 		}
 
 		/// <summary>
@@ -192,16 +192,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNativeBalance: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNativeBalance: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNativeBalance: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNativeBalance: " + response.Item3, response.Item3);
-
-			return (NativeBalance)ApiClient.Deserialize(response.Item3, typeof(NativeBalance), response.Item2);
+			//return (NativeBalance)ApiClient.Deserialize(response.Item3, typeof(NativeBalance), response.Item2);
 		}
 		/// <summary>
 		/// Gets token balances for a specific address
@@ -234,16 +234,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTokenBalances: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTokenBalances: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetTokenBalances: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetTokenBalances: " + response.Item3, response.Item3);
-
-			return (List<Erc20TokenBalance>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20TokenBalance>), response.Item2);
+			//return (List<Erc20TokenBalance>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20TokenBalance>), response.Item2);
 		}
 		/// <summary>
 		/// Gets ERC20 token transactions in descending order based on block number
@@ -298,16 +298,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTokenTransfers: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTokenTransfers: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetTokenTransfers: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetTokenTransfers: " + response.Item3, response.Item3);
-
-			return (Erc20TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(Erc20TransactionCollection), response.Item2);
+			//return (Erc20TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(Erc20TransactionCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets NFTs owned by the given address
@@ -348,15 +348,16 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTs: " + response.Item3, response.Item3);
 
-			return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
+			//return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -393,16 +394,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfers: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfers: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTTransfers: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTTransfers: " + response.Item3, response.Item3);
-
-			return (NftTransferCollection)ApiClient.Deserialize(response.Item3, typeof(NftTransferCollection), response.Item2);
+			//return (NftTransferCollection)ApiClient.Deserialize(response.Item3, typeof(NftTransferCollection), response.Item2);
 		}
 		/// <summary>
 		/// Gets NFTs owned by the given address
@@ -445,16 +446,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTsForContract: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTsForContract: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTsForContract: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTsForContract: " + response.Item3, response.Item3);
-
-			return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
+			//return (NftOwnerCollection)ApiClient.Deserialize(response.Item3, typeof(NftOwnerCollection), response.Item2);
 		}
 	}
 }

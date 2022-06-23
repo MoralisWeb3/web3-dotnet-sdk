@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Moralis.SolanaApi.Core.Models
+namespace Moralis.SolanaApi.Models
 {
     public class FileParameter
     {

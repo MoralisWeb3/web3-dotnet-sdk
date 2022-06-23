@@ -75,18 +75,5 @@ namespace Moralis.Platform.Utilities
 
             return result.GetAwaiter().GetResult();
         }
-		
-		
-        //public static UniTask WhileAsync(Func<Task<bool>> predicate, Func<Task> body)
-        //{
-        //    Func<Task> iterate = null;
-        //    iterate = () => predicate().OnSuccess(t =>
-        //        {
-        //            if (!t.Result)
-        //                return Task.FromResult(0);
-        //            return body().OnSuccess(_ => iterate()).Unwrap();
-        //        }).Unwrap();
-        //    return iterate();
-        //}
     }
 }

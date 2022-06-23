@@ -35,7 +35,6 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
-using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 
@@ -131,16 +130,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
-
-			return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
+			//return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
 		/// <summary>
 		/// Fetches and returns pair data of the provided token0+token1 combination.
@@ -187,16 +186,16 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
+			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
-
-			return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
+			//return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
 	}
 }

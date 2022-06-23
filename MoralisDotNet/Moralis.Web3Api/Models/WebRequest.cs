@@ -26,5 +26,16 @@ namespace Moralis.Web3Api.Models
         /// HTTP method. One of <c>DELETE</c>, <c>GET</c>, <c>HEAD</c>, <c>POST</c> or <c>PUT</c>
         /// </summary>
         public string Method { get; set; }
+
+        public void AddHeader(string key, string val)
+        { 
+            if(Headers == null) Headers = new List<KeyValuePair<string, string>>();
+            KeyValuePair<string, string> kp = new KeyValuePair<string, string>(key, val);
+
+            if (!Headers.Contains(kp))
+            { 
+                Headers.Add(kp);
+            }
+        }
     }
 }

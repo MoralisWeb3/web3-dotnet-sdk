@@ -14,6 +14,6 @@ namespace Moralis.Platform.Abstractions
         /// </summary>
         /// <param name="httpRequest">The HTTP request to be executed.</param>
         /// <returns>A task that resolves to Htt</returns>
-        UniTask<Tuple<Status, string>> ExecuteAsync(WebRequest httpRequest); //, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken = default);
+        UniTask<Tuple<Status, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken = default);
     }
 }

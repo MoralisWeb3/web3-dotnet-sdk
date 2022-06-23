@@ -36,10 +36,6 @@ namespace Moralis.Platform.Services.ClientServices
 
                 resp.ObjectService = this.ObjectService;
             }
-            else
-            {
-                Debug.LogError($"SignUpAsync failed: {cmdResp.Item2}");
-            }
 
             return resp;
         }
@@ -55,10 +51,6 @@ namespace Moralis.Platform.Services.ClientServices
                 result.ObjectService = this.ObjectService;
                 result.ACL = new MoralisAcl(result);
                 await result.SaveAsync();
-            }
-            else
-            {
-                Debug.LogError($"LogInAsync failed: {cmdResp.Item2}");
             }
 
             return result;
@@ -89,10 +81,6 @@ namespace Moralis.Platform.Services.ClientServices
 
                 await user.SaveAsync();
             }
-            else
-            {
-                Debug.Log($"LogInAsync failed: {cmdResp.Item2}");
-            }
 
             return user;
         }
@@ -114,11 +102,6 @@ namespace Moralis.Platform.Services.ClientServices
         public async UniTask RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default)
         {
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("server/requestPasswordReset", method: "POST", data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(email)] = email })), cancellationToken: cancellationToken);
-
-            if((int)cmdResp.Item1 >= 400)
-            {
-                Debug.LogError($"RequestPasswordResetAsync failed: {cmdResp.Item2}");
-            }
         }
     }
 }

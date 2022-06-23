@@ -8,8 +8,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Extensions;
+//using RestSharp;
+//using RestSharp.Extensions;
+using Moralis.Web3Api.Models;
+using System.Net.Http;
+using Cysharp.Threading.Tasks;
+using Moralis.Web3Api.Core;
+using System.Net.Http.Headers;
 
 namespace Moralis.Web3Api.Client
 {
@@ -27,7 +32,7 @@ namespace Moralis.Web3Api.Client
         public ApiClient(String basePath="http://localhost:3063/api/v2")
         {
             BasePath = basePath;
-            RestClient = new RestClient(BasePath);
+            //HttpClient = new HttpClient()
         }
     
         /// <summary>
@@ -40,7 +45,7 @@ namespace Moralis.Web3Api.Client
         /// Gets or sets the RestClient.
         /// </summary>
         /// <value>An instance of the RestClient</value>
-        public RestClient RestClient { get; set; }
+        //public HttpClient RestClient { get; set; }
     
         /// <summary>
         /// Gets the default header.
@@ -62,39 +67,133 @@ namespace Moralis.Web3Api.Client
         /// <param name="fileParams">File parameters.</param>
         /// <param name="authSettings">Authentication settings.</param>
         /// <returns>Object</returns>
-        public Object CallApi(String path, RestSharp.Method method, Dictionary<String, String> queryParams, String postBody,
+        public async UniTask<HttpResponseMessage> CallApi(String path, HttpMethod method, Dictionary<String, String> queryParams, String postBody,
             Dictionary<String, String> headerParams, Dictionary<String, String> formParams, 
-            Dictionary<String, FileParameter> fileParams, String[] authSettings)
+            Dictionary<String, Models.FileParameter> fileParams, String[] authSettings)
         {
+            HttpResponseMessage response = null;
+            string url = path;
+            bool firstParam = true;
 
-            var request = new RestRequest(path, method);
-   
-            UpdateParamsForAuth(queryParams, headerParams, authSettings);
+            if (queryParams != null && queryParams.Keys.Count > 0)
+            {
+                foreach (string k in queryParams.Keys)
+                {
+                    if (firstParam)
+                    {
+                        url = $"{url}?";
+                        firstParam = false;
+                    }
+                    else
+                    {
+                        url = $"{url}&";
+                    }
 
-            // add default header, if any
-            foreach(var defaultHeader in _defaultHeaderMap)
-                request.AddHeader(defaultHeader.Key, defaultHeader.Value);
+                    url = $"{url}{k}={queryParams[k]}";
+                }
+            }
 
-            // add header parameter, if any
-            foreach(var param in headerParams)
-                request.AddHeader(param.Key, param.Value);
+            if (formParams != null && formParams.Keys.Count > 0)
+            {
+                foreach (string k in formParams.Keys)
+                {
+                    if (firstParam)
+                    {
+                        url = $"{url}?";
+                        firstParam = false;
+                    }
+                    else
+                    {
+                        url = $"{url}&";
+                    }
 
-            // add query parameter, if any
-            foreach(var param in queryParams)
-                request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
+                    url = $"{url}{k}={formParams[k]}";
+                }
+            }
 
-            // add form parameter, if any
-            foreach(var param in formParams)
-                request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(BasePath);
 
-            // add file parameter, if any
-            foreach (var param in fileParams)
-                request.AddFile(param.Value.Name, param.Value.GetFile, param.Value.FileName, param.Value.ContentType);
+            if (DefaultHeader != null)
+            {
+                foreach (string k in DefaultHeader.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(k, DefaultHeader[k]);
+                }
+            }
 
-            if (postBody != null) // http body (model) parameter
-                request.AddParameter("application/json", postBody, ParameterType.RequestBody);
+            if (headerParams != null)
+            {
+                foreach (string k in headerParams.Keys)
+                { 
+                    client.DefaultRequestHeaders.Add(k, headerParams[k]);
+                }
+            }
 
-            return (Object)RestClient.Execute(request);
+            if (HttpMethod.Get.Equals(method))
+            {
+                response = await client.GetAsync(url);
+            }
+            else if (HttpMethod.Post.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PostAsync(url, data);
+            }
+            else if (HttpMethod.Delete.Equals(method))
+            {
+                response = await client.DeleteAsync(url);
+            }
+            else if (HttpMethod.Put.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PutAsync(url, data);
+            }
+            else if (HttpMethod.Patch.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PatchAsync(url, data);
+            }
+
+            return response;
+
+            //var request = new Models.WebRequest(); //RestRequest(path, method);
+            //HttpClient client = new HttpClient();
+            //client.BaseAddress = new Uri(this.BasePath);
+            //client.
+            //UpdateParamsForAuth(queryParams, headerParams, authSettings);
+
+            //// add default header, if any
+            //foreach(var defaultHeader in _defaultHeaderMap)
+            //    request.AddHeader(defaultHeader.Key, defaultHeader.Value);
+
+            //// add header parameter, if any
+            //foreach(var param in headerParams)
+            //    request.AddHeader(param.Key, param.Value);
+
+            //// add query parameter, if any
+            //foreach(var param in queryParams)
+            //    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
+
+            //// add form parameter, if any
+            //foreach(var param in formParams)
+            //    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
+
+            //// add file parameter, if any
+            //foreach (var param in fileParams)
+            //{
+            //    using (MemoryStream ms = new MemoryStream())
+            //    {
+            //        param.Value.Writer.Invoke(ms);
+            //        byte[] bytes = new byte[ms.Length];
+            //        ms.Read(bytes, 0, bytes.Length);
+            //        request.AddFile(param.Value.Name, bytes, param.Value.FileName, param.Value.ContentType);
+            //    }
+            //}
+
+            //if (postBody != null) // http body (model) parameter
+            //    request.AddParameter("application/json", postBody, ParameterType.RequestBody);
+
+            //return (Object)RestClient.Execute(request);
 
         }
     
@@ -126,12 +225,12 @@ namespace Moralis.Web3Api.Client
         /// <param name="name">Parameter name.</param>
         /// <param name="stream">Input stream.</param>
         /// <returns>FileParameter.</returns>
-        public FileParameter ParameterToFile(string name, Stream stream)
+        public Models.FileParameter ParameterToFile(string name, Stream stream)
         {
             if (stream is FileStream)
-                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
             else
-                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
         }
     
         /// <summary>
@@ -305,6 +404,20 @@ namespace Moralis.Web3Api.Client
         public static Object ConvertType(Object fromObject, Type toObject) {
             return Convert.ChangeType(fromObject, toObject);
         }
-  
+
+        public List<Parameter> ResponHeadersToParameterList(HttpResponseHeaders source)
+        {
+            IEnumerator<KeyValuePair<string, IEnumerable<string>>> headerEnumerator = source.GetEnumerator();
+            List<Parameter> headers = new List<Parameter>();
+
+            while (headerEnumerator.MoveNext())
+            {
+                KeyValuePair<string, IEnumerable<string>> kp = headerEnumerator.Current;
+                Parameter header = new Parameter(kp.Key, kp.Value, ParameterType.HttpHeader);
+                headers.Add(header);
+            }
+
+            return headers;
+        }
     }
 }

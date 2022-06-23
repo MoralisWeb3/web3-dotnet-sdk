@@ -66,12 +66,7 @@ namespace Moralis.Platform.Services.ClientServices
         public async UniTask DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default)
         {
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/classes/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
-            
-            if ((int)cmdResp.Item1 >= 400)
-            {
-                Debug.LogError($"SaveAsync failed: {cmdResp.Item2}");
-            }
-        }
+         }
                
         int MaximumBatchSize { get; } = 50;
 

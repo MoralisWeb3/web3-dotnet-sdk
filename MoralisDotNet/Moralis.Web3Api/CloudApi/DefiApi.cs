@@ -35,9 +35,9 @@ using System.Net;
 using Cysharp.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
-using Moralis.Web3Api.Core.Models;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Linq;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -131,32 +131,32 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+         //       await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
+            if (((int)response.Item1) >= 400)
+                throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
+            else if (((int)response.Item1) == 0)
+                throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<ReservesCollection>), response.Item2)).Result;
-		}
-		/// <summary>
-		/// Fetches and returns pair data of the provided token0+token1 combination.
-		/// The token0 and token1 options are interchangable (ie. there is no different outcome in "token0=WETH and token1=USDT" or "token0=USDT and token1=WETH")
-		/// 
-		/// </summary>
-		/// <param name="exchange">The factory name or address of the token exchange</param>
-		/// <param name="token0Address">Token0 address</param>
-		/// <param name="token1Address">Token1 address</param>
-		/// <param name="chain">The chain to query</param>
-		/// <param name="toBlock">To get the reserves at this block number</param>
-		/// <param name="toDate">Get the reserves to this date (any format that is accepted by momentjs)
-		/// * Provide the param 'to_block' or 'to_date'
-		/// * If 'to_date' and 'to_block' are provided, 'to_block' will be used.
-		/// </param>
-		/// <returns>Returns the pair address of the two tokens</returns>
-		public async UniTask<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
+            return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<ReservesCollection>), null)).Result;
+        }
+        /// <summary>
+        /// Fetches and returns pair data of the provided token0+token1 combination.
+        /// The token0 and token1 options are interchangable (ie. there is no different outcome in "token0=WETH and token1=USDT" or "token0=USDT and token1=WETH")
+        /// 
+        /// </summary>
+        /// <param name="exchange">The factory name or address of the token exchange</param>
+        /// <param name="token0Address">Token0 address</param>
+        /// <param name="token1Address">Token1 address</param>
+        /// <param name="chain">The chain to query</param>
+        /// <param name="toBlock">To get the reserves at this block number</param>
+        /// <param name="toDate">Get the reserves to this date (any format that is accepted by momentjs)
+        /// * Provide the param 'to_block' or 'to_date'
+        /// * If 'to_date' and 'to_block' are provided, 'to_block' will be used.
+        /// </param>
+        /// <returns>Returns the pair address of the two tokens</returns>
+        public async UniTask<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
 		{
 
 			// Verify the required parameter 'exchange' is set
@@ -187,15 +187,15 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-				await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
 			if (((int)response.Item1) >= 400)
 				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
 			else if (((int)response.Item1) == 0)
 				throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
 
-			return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<ReservesCollection>), response.Item2)).Result;
+			return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<ReservesCollection>), null)).Result;
 		}
 	}
 }

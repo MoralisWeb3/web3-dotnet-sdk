@@ -76,15 +76,15 @@ namespace Moralis.SolanaApi.CloudApi
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			return null;
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.POST, null, bodyData, headerParams, null, null, authSettings);
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.POST, null, bodyData, headerParams, null, null, authSettings);
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
-
-			return ((CloudFunctionResult<NftMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadata>), response.Item2)).Result;
+			//return ((CloudFunctionResult<NftMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadata>), response.Item2)).Result;
 		}
 	}
 }
