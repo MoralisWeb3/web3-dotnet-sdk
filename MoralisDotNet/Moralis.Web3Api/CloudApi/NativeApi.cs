@@ -32,11 +32,12 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -101,7 +102,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns the contents of a block</returns>
-		public async UniTask<Block> GetBlock (string blockNumberOrHash, ChainList chain, string subdomain=null)
+		public async Task<Block> GetBlock (string blockNumberOrHash, ChainList chain, string subdomain=null)
 		{
 
 			// Verify the required parameter 'blockNumberOrHash' is set
@@ -123,15 +124,30 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetBlock: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetBlock: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<Block>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Block>), null)).Result;
+				return ((CloudFunctionResult<Block>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<Block>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetBlock: {response.ReasonPhrase}");
+			}
+
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetBlock: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetBlock: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<Block>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Block>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the closest block of the provided date
@@ -140,7 +156,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="chain">The chain to query</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the blocknumber and corresponding date and timestamp</returns>
-		public async UniTask<BlockDate> GetDateToBlock (string date, ChainList chain, string providerUrl=null)
+		public async Task<BlockDate> GetDateToBlock (string date, ChainList chain, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'date' is set
@@ -162,15 +178,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetDateToBlock: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetDateToBlock: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<BlockDate>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<BlockDate>), null)).Result;
+				return ((CloudFunctionResult<BlockDate>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<BlockDate>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetDateToBlock: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetDateToBlock: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetDateToBlock: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<BlockDate>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<BlockDate>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the logs from an address
@@ -205,7 +235,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="topic2">topic2</param>
 		/// <param name="topic3">topic3</param>
 		/// <returns>Returns the logs of an address</returns>
-		public async UniTask<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null)
+		public async Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -236,15 +266,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<LogEventByAddress>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventByAddress>), null)).Result;
+				return ((CloudFunctionResult<LogEventByAddress>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<LogEventByAddress>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetLogsByAddress: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<LogEventByAddress>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventByAddress>), null)).Result;
 		}
 		/// <summary>
 		/// Gets NFT transfers by block number or block hash
@@ -255,7 +299,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the contents of a block</returns>
-		public async UniTask<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null)
+		public async Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'blockNumberOrHash' is set
@@ -279,15 +323,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
+				return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<NftTransferCollection>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTTransfersByBlock: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
 		}
 		/// <summary>
 		/// Gets the contents of a block transaction by hash
@@ -296,7 +354,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns the contents of a block transaction</returns>
-		public async UniTask<BlockTransaction> GetTransaction (string transactionHash, ChainList chain, string subdomain=null)
+		public async Task<BlockTransaction> GetTransaction (string transactionHash, ChainList chain, string subdomain=null)
 		{
 
 			// Verify the required parameter 'transactionHash' is set
@@ -318,15 +376,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<BlockTransaction>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<BlockTransaction>), null)).Result;
+				return ((CloudFunctionResult<BlockTransaction>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<BlockTransaction>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetTransaction: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<BlockTransaction>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<BlockTransaction>), null)).Result;
 		}
 		/// <summary>
 		/// Gets events in descending order based on block number
@@ -356,7 +428,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of events by topic</returns>
-		public async UniTask<List<LogEvent>> GetContractEvents (string address, string topic, object abi, ChainList chain, string subdomain=null, string providerUrl=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
+		public async Task<List<LogEvent>> GetContractEvents (string address, string topic, object abi, ChainList chain, string subdomain=null, string providerUrl=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -393,18 +465,33 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			//			return ((CloudFunctionResult<List<LogEvent>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<LogEvent>>), response.Item2)).Result;
-			LogEventResponse resp = ((CloudFunctionResult<LogEventResponse>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventResponse>), null)).Result;
+				LogEventResponse resp = ((CloudFunctionResult<LogEventResponse>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<LogEventResponse>), headers)).Result;
+				return resp.Events;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetContractEvents: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			return resp.Events;
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
+
+			////			return ((CloudFunctionResult<List<LogEvent>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<LogEvent>>), response.Item2)).Result;
+			//LogEventResponse resp = ((CloudFunctionResult<LogEventResponse>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventResponse>), null)).Result;
+
+			//return resp.Events;
 		}
 
 		/// <summary>
@@ -417,7 +504,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns response of the function executed</returns>
-		public async UniTask<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
+		public async Task<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -449,15 +536,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<string>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<string>), null)).Result;
+				return ((CloudFunctionResult<string>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<string>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling RunContractFunction: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<string>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<string>), null)).Result;
 		}
 	}
 }

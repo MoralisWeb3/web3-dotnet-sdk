@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Net;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Services.Models;
@@ -31,7 +31,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <param name="sessionToken">current user's session token</param>
         /// <param name="cancellationToken">Threading cancellation token</param>
         /// <returns>T - result of cloud function call.</returns>
-        public async UniTask<T> CallFunctionAsync<T>(string name, IDictionary<string, object> parameters, string sessionToken, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<T> CallFunctionAsync<T>(string name, IDictionary<string, object> parameters, string sessionToken, System.Threading.CancellationToken cancellationToken = default)
         {
             MoralisCommand command = new MoralisCommand($"server/functions/{Uri.EscapeDataString(name)}", method: "POST", sessionToken: sessionToken, data: parameters is { } && parameters.Count > 0 ? JsonSerializer.Serialize(parameters) : "{}");
 

@@ -1,6 +1,6 @@
 using System.IO;
 using System.Text;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 #pragma warning disable 1998
 
@@ -25,11 +25,11 @@ namespace Moralis.Platform.Utilities
         /// </summary>
         /// <param name="file">The <see cref="FileInfo"/> instance wrapping the target file that string content is to be read from</param>
         /// <returns>A task that should contain the little-endian 16-bit character string (UTF-16) extracted from the <paramref name="file"/> if the read completes successfully</returns>
-        public static async UniTask<string> ReadAllTextAsync(this FileInfo file)
+        public static async Task<string> ReadAllTextAsync(this FileInfo file)
         {
             // WARNING File cache will not work in WebGL at this time
 #if UNITY_WEBGL
-            return await UniTask.FromResult<string>(cacheData);
+            return await Task.FromResult<string>(cacheData);
 #else
             string data = null;
             lock (lockObj)

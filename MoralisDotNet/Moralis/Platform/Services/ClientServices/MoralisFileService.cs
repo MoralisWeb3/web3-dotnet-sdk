@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading;
 using Moralis.Platform.Services.ClientServices;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
@@ -21,13 +21,13 @@ namespace Moralis.Platform.Services.ClientServices
 
         public MoralisFileService(IMoralisCommandRunner commandRunner, IJsonSerializer jsonSerializer) => (CommandRunner, JsonSerializer) = (commandRunner, jsonSerializer);
 
-        public async UniTask<MoralisFileState> SaveAsync(MoralisFileState state, Stream dataStream, string sessionToken, IProgress<IDataTransferLevel> progress, CancellationToken cancellationToken = default)
+        public async Task<MoralisFileState> SaveAsync(MoralisFileState state, Stream dataStream, string sessionToken, IProgress<IDataTransferLevel> progress, CancellationToken cancellationToken = default)
         {
             if (state.url != null)
                 return state;
 
             if (cancellationToken.IsCancellationRequested)
-                return await UniTask.FromCanceled<MoralisFileState>(cancellationToken);
+                return await Task.FromCanceled<MoralisFileState>(cancellationToken);
 
             long oldPosition = dataStream.Position;
 

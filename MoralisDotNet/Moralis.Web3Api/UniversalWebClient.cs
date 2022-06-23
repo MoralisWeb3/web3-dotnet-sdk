@@ -6,7 +6,7 @@
 //using System.Net.Http;
 //using System.Text;
 //using WebRequest = Moralis.Web3Api.Models.WebRequest;
-//using Cysharp.Threading.Tasks;
+//using System.Threading.Tasks;
 //using Moralis.Web3Api.Interfaces;
 
 //namespace Moralis.Web3Api
@@ -41,7 +41,7 @@
 
 //        public UniversalWebClient() { }
 
-//        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest)
+//        public async Task<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest)
 //        {
 //            Tuple<HttpStatusCode, Dictionary<string, string>, string> result = default;
 

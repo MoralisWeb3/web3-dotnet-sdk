@@ -1,6 +1,6 @@
 ﻿using System;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 
 namespace Moralis.Platform.Services.Infrastructure
@@ -18,7 +18,7 @@ namespace Moralis.Platform.Services.Infrastructure
 
         public InstallationService(ICacheService storageController) => StorageController = storageController;
 
-        public async UniTask SetAsync(Guid? installationId)
+        public async Task SetAsync(Guid? installationId)
         {
             //lock (Mutex)
             //{
@@ -39,7 +39,7 @@ namespace Moralis.Platform.Services.Infrastructure
             InstallationId = installationId;
         }
 
-        public async UniTask<Guid?> GetAsync()
+        public async Task<Guid?> GetAsync()
         {
             lock (Mutex)
                 if (InstallationId != null)
@@ -62,6 +62,6 @@ namespace Moralis.Platform.Services.Infrastructure
             }
         }
 
-        public async UniTask ClearAsync() => await SetAsync(null);
+        public async Task ClearAsync() => await SetAsync(null);
     }
 }

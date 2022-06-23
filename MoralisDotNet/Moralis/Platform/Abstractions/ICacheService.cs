@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
@@ -27,20 +27,20 @@ namespace Moralis.Platform.Abstractions
         /// <param name="originFilePath"></param>
         /// <param name="targetFilePath"></param>
         /// <returns>A task that completes once the file move operation form <paramref name="originFilePath"/> to <paramref name="targetFilePath"/> completes.</returns>
-        UniTask TransferAsync(string originFilePath, string targetFilePath);
+        Task TransferAsync(string originFilePath, string targetFilePath);
 
         /// <summary>
         /// Load the contents of this storage controller asynchronously.
         /// </summary>
         /// <returns></returns>
-        UniTask<IDataCache<string, object>> LoadAsync();
+        Task<IDataCache<string, object>> LoadAsync();
 
         /// <summary>
         /// Overwrites the contents of this storage controller asynchronously.
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        UniTask<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents);
+        Task<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents);
     }
 
 }

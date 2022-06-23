@@ -1,6 +1,6 @@
 using System;
 using Status = System.Net.HttpStatusCode;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Moralis.Web3Api.Models;
 
@@ -14,6 +14,6 @@ namespace Moralis.Web3Api.Interfaces
         /// </summary>
         /// <param name="httpRequest">The HTTP request to be executed.</param>
         /// <returns>A task that resolves to Htt</returns>
-        UniTask<Tuple<Status, Dictionary<string, string>, string>> ExecuteAsync(WebRequest httpRequest); //, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken = default);
+        Task<Tuple<Status, Dictionary<string, string>, string>> ExecuteAsync(WebRequest httpRequest); //, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken = default);
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Models;
 
 namespace Moralis.Web3Api.Interfaces
@@ -19,7 +19,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
-		UniTask<List<Erc20Metadata>> GetTokenMetadata (List<String> addresses, ChainList chain, string subdomain=null, string providerUrl=null);
+		Task<List<Erc20Metadata>> GetTokenMetadata (List<String> addresses, ChainList chain, string subdomain=null, string providerUrl=null);
 
 		/// <summary>
 		/// Get the nft trades for a given contracts and marketplace
@@ -44,7 +44,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the trades</returns>
-		UniTask<TradeCollection> GetNFTTrades (string address, ChainList chain, int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, string cursor = "", int? limit=null);
+		Task<TradeCollection> GetNFTTrades (string address, ChainList chain, int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Get the lowest price found for a nft token contract for the last x days (only trades paid in ETH)
@@ -57,7 +57,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <param name="marketplace">marketplace from where to get the trades (only opensea is supported at the moment)</param>
 		/// <returns>Returns the trade with the lowest price</returns>
-		UniTask<Trade> GetNFTLowestPrice (string address, ChainList chain, int? days=null, string providerUrl=null, string marketplace=null);
+		Task<Trade> GetNFTLowestPrice (string address, ChainList chain, int? days=null, string providerUrl=null, string marketplace=null);
 
 		/// <summary>
 		/// Returns metadata (name, symbol, decimals, logo) for a given token contract address.
@@ -66,7 +66,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
-		UniTask<List<Erc20Metadata>> GetTokenMetadataBySymbol (List<String> symbols, ChainList chain, string subdomain=null);
+		Task<List<Erc20Metadata>> GetTokenMetadataBySymbol (List<String> symbols, ChainList chain, string subdomain=null);
 
 		/// <summary>
 		/// Returns the price nominated in the native token and usd for a given token contract address.
@@ -77,7 +77,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="exchange">The factory name or address of the token exchange</param>
 		/// <param name="toBlock">to_block</param>
 		/// <returns>Returns the price nominated in the native token and usd for a given token contract address</returns>
-		UniTask<Erc20Price> GetTokenPrice (string address, ChainList chain, string providerUrl=null, string exchange=null, int? toBlock=null);
+		Task<Erc20Price> GetTokenPrice (string address, ChainList chain, string providerUrl=null, string exchange=null, int? toBlock=null);
 
 		/// <summary>
 		/// Gets ERC20 token contract transactions in descending order based on block number
@@ -104,7 +104,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of token contract transactions.</returns>
-		UniTask<Erc20TransactionCollection> GetTokenAddressTransfers (string address, ChainList chain, string subdomain=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null);
+		Task<Erc20TransactionCollection> GetTokenAddressTransfers (string address, ChainList chain, string subdomain=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null);
 
 		/// <summary>
 		/// Gets the amount which the spender is allowed to withdraw from the spender
@@ -115,7 +115,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="chain">The chain to query</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the amount which the spender is allowed to withdraw from the owner..</returns>
-		UniTask<Erc20Allowance> GetTokenAllowance (string address, string ownerAddress, string spenderAddress, ChainList chain, string providerUrl=null);
+		Task<Erc20Allowance> GetTokenAllowance (string address, string ownerAddress, string spenderAddress, ChainList chain, string providerUrl=null);
 
 		/// <summary>
 		/// Gets NFTs that match a given metadata search.
@@ -143,7 +143,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the matching NFTs</returns>
-		UniTask<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string cursor = "", int? limit=null);
+		Task<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets the transfers of the tokens from a block number to a block number
@@ -169,7 +169,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		UniTask<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, string cursor = "", int? limit=null);
+		Task<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets data, including metadata (where available), for all token ids for the given contract address.
@@ -183,7 +183,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of nfts</returns>
-		UniTask<NftCollection> GetAllTokenIds (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
+		Task<NftCollection> GetAllTokenIds (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -194,7 +194,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		UniTask<NftTransferCollection> GetContractNFTTransfers (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
+		Task<NftTransferCollection> GetContractNFTTransfers (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -209,7 +209,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of nft owners</returns>
-		UniTask<NftOwnerCollection> GetNFTOwners (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
+		Task<NftOwnerCollection> GetNFTOwners (string address, ChainList chain, string format=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets the contract level metadata (name, symbol, base token uri) for the given contract
@@ -219,7 +219,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="address">Address of the contract</param>
 		/// <param name="chain">The chain to query</param>
 		/// <returns>Returns a collection NFT collections.</returns>
-		UniTask<NftContractMetadata> GetNFTMetadata (string address, ChainList chain);
+		Task<NftContractMetadata> GetNFTMetadata (string address, ChainList chain);
 
 		/// <summary>
 		/// Gets data, including metadata (where available), for the given token id of the given contract address.
@@ -231,7 +231,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="chain">The chain to query</param>
 		/// <param name="format">The format of the token id</param>
 		/// <returns>Returns the specified NFT</returns>
-		UniTask<Nft> GetTokenIdMetadata (string address, string tokenId, ChainList chain, string format=null);
+		Task<Nft> GetTokenIdMetadata (string address, string tokenId, ChainList chain, string format=null);
 
 		/// <summary>
 		/// Gets all owners of NFT items within a given contract collection
@@ -247,7 +247,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of NFTs with their respective owners</returns>
-		UniTask<NftOwnerCollection> GetTokenIdOwners (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null);
+		Task<NftOwnerCollection> GetTokenIdOwners (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null);
 
 		/// <summary>
 		/// Gets the transfers of the tokens matching the given parameters
@@ -260,7 +260,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="limit">limit</param>
 		/// <param name="order">The field(s) to order on and if it should be ordered in ascending or descending order. Specified by: fieldName1.order,fieldName2.order. Example 1: "block_number", "block_number.ASC", "block_number.DESC", Example 2: "block_number and contract_type", "block_number.ASC,contract_type.DESC"</param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		UniTask<NftTransferCollection> GetWalletTokenIdTransfers (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null, string order=null);
+		Task<NftTransferCollection> GetWalletTokenIdTransfers (string address, string tokenId, ChainList chain, string format=null, string cursor = "", int? limit=null, string order=null);
 
 		/// <summary>
 		/// ReSync the metadata for an NFT
@@ -269,7 +269,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="tokenId">The id of the token</param>
 		/// <param name="chain">The chain to query</param>
 		/// <returns></returns>
-		UniTask<bool> ReSyncMetadata(string address, string tokenId, ChainList chain);
+		Task<bool> ReSyncMetadata(string address, string tokenId, ChainList chain);
 
 		/// <summary>
 		/// Sync a Contract for NFT Index
@@ -277,6 +277,6 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="address">Address of the contract</param>
 		/// <param name="chain">The chain to query</param>
 		/// <returns></returns>
-		UniTask<bool> SyncNFTContract(string address, ChainList chain);
+		Task<bool> SyncNFTContract(string address, ChainList chain);
 	}
 }

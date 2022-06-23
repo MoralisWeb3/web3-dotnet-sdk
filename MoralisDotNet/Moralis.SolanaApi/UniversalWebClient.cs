@@ -5,7 +5,7 @@
 //using System.Net;
 //using System.Text;
 //using WebRequest = Moralis.SolanaApi.Models.WebRequest;
-//using Cysharp.Threading.Tasks;
+//using System.Threading.Tasks;
 //using Moralis.SolanaApi.Interfaces;
 
 //namespace Moralis.SolanaApi
@@ -39,7 +39,7 @@
 
 //        public UniversalWebClient() { }
 
-//        public async UniTask<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest) 
+//        public async Task<Tuple<HttpStatusCode, Dictionary<string, string>, string>> ExecuteAsync(Models.WebRequest httpRequest) 
 //        {
 //            Tuple<HttpStatusCode, Dictionary<string, string>, string> result = default;
 

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Net;
 using Moralis.SolanaApi.Client;
 using Moralis.SolanaApi.Interfaces;
@@ -59,7 +59,7 @@ namespace Moralis.SolanaApi.CloudApi
 		/// <value>An instance of the ApiClient</value>
 		public ApiClient ApiClient { get; set; }
 
-		public async UniTask<NativeBalance> Balance(NetworkTypes network, string address)
+		public async Task<NativeBalance> Balance(NetworkTypes network, string address)
 		{
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");
@@ -86,7 +86,7 @@ namespace Moralis.SolanaApi.CloudApi
 			//return ((CloudFunctionResult<NativeBalance>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NativeBalance>), response.Item2)).Result;
 		}
 
-		public async UniTask<List<SplTokenBalanace>> GetSplTokens(NetworkTypes network, string address)
+		public async Task<List<SplTokenBalanace>> GetSplTokens(NetworkTypes network, string address)
 		{
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");
@@ -113,7 +113,7 @@ namespace Moralis.SolanaApi.CloudApi
 			//return ((CloudFunctionResult<List<SplTokenBalanace>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplTokenBalanace>>), response.Item2)).Result;
 		}
 
-		public async UniTask<List<SplNft>> GetNFTs(NetworkTypes network, string address)
+		public async Task<List<SplNft>> GetNFTs(NetworkTypes network, string address)
 		{
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");
@@ -140,7 +140,7 @@ namespace Moralis.SolanaApi.CloudApi
 			//return ((CloudFunctionResult< List < SplNft >>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<SplNft>>), response.Item2)).Result;
 		}
 
-		public async UniTask<Portfolio> GetPortfolio(NetworkTypes network, string address)
+		public async Task<Portfolio> GetPortfolio(NetworkTypes network, string address)
 		{
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");

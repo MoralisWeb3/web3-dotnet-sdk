@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
@@ -101,7 +101,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="domain">Domain to be resolved</param>
 		/// <param name="currency">The currency to query</param>
 		/// <returns>Returns an address</returns>
-		public async UniTask<Resolve> ResolveDomain (string domain, string currency=null)
+		public async Task<Resolve> ResolveDomain (string domain, string currency=null)
 		{
 
 			// Verify the required parameter 'domain' is set
@@ -139,7 +139,7 @@ namespace Moralis.Web3Api.Api
 		/// </summary>
 		/// <param name="address">The address to be resolved</param>
 		/// <returns>Returns an ENS</returns>
-		public async UniTask<Ens> ResolveAddress (string address)
+		public async Task<Ens> ResolveAddress (string address)
 		{
 
 			// Verify the required parameter 'address' is set

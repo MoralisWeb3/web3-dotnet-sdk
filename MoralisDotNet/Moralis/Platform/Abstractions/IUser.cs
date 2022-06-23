@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
@@ -38,7 +38,7 @@ namespace Moralis.Platform.Abstractions
         /// session on disk so that you can access the user using <see cref="CurrentUser"/>. A username and
         /// password must be set before calling SignUpAsync.
         /// </summary>
-        UniTask SignUpAsync();
+        Task SignUpAsync();
 
         /// <summary>
         /// Signs up a new user. This will create a new ParseUser on the server and will also persist the
@@ -46,7 +46,7 @@ namespace Moralis.Platform.Abstractions
         /// password must be set before calling SignUpAsync.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        UniTask SignUpAsync(CancellationToken cancellationToken);
+        Task SignUpAsync(CancellationToken cancellationToken);
 
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Models;
 
 namespace Moralis.Web3Api.Interfaces
@@ -18,7 +18,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="domain">Domain to be resolved</param>
 		/// <param name="currency">The currency to query</param>
 		/// <returns>Returns an address</returns>
-		UniTask<Resolve> ResolveDomain (string domain, string currency=null);
+		Task<Resolve> ResolveDomain (string domain, string currency=null);
 
 		/// <summary>
 		/// Resolves an ETH address and find the ENS name
@@ -26,7 +26,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// </summary>
 		/// <param name="address">The address to be resolved</param>
 		/// <returns>Returns an ENS</returns>
-		UniTask<Ens> ResolveAddress (string address);
+		Task<Ens> ResolveAddress (string address);
 
 	}
 }

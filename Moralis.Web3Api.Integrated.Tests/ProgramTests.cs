@@ -14,8 +14,8 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             foreach (IIntegratedTest test in testGroups)
             {
-                MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
-                //MoralisClient.Initialize( "https://arw2wxg84h6b.moralishost.com:2053/server");
+                //MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
+                MoralisClient.Initialize("https://arw2wxg84h6b.moralishost.com:2053/server");
                 string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7".ToLower();
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");

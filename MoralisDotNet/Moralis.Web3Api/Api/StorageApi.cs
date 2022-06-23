@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
@@ -100,7 +100,7 @@ namespace Moralis.Web3Api.Api
 		/// </summary>
 		/// <param name="abi">Array of JSON and Base64 Supported</param>
 		/// <returns>Returns the path to the uploaded files</returns>
-		public async UniTask<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
+		public async Task<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
 		{
 
 			// Verify the required parameter 'abi' is set

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Utilities;
@@ -29,7 +29,7 @@ namespace Moralis.Platform.Services.Infrastructure
                 File.WriteContent(JsonUtilities.Encode(Storage));
             }
 
-            internal async UniTask LoadAsync()
+            internal async Task LoadAsync()
             {
                 Storage = new Dictionary<string, object> { };
 
@@ -64,13 +64,13 @@ namespace Moralis.Platform.Services.Infrastructure
 
             internal void Update(IDictionary<string, object> contents) => Lock(() => Storage = contents.ToDictionary(element => element.Key, element => element.Value));
 
-            public async UniTask AddAsync(string key, object value)
+            public async Task AddAsync(string key, object value)
             {
                 Storage[key] = value;
                 Save();
             }
 
-            public async UniTask RemoveAsync(string key)
+            public async Task RemoveAsync(string key)
             {
                 Storage.Remove(key);
                 Save();
@@ -171,7 +171,7 @@ namespace Moralis.Platform.Services.Infrastructure
         /// Loads a settings dictionary from the file wrapped by <see cref="File"/>.
         /// </summary>
         /// <returns>A storage dictionary containing the deserialized content of the storage file targeted by the <see cref="CacheController"/> instance</returns>
-        public async UniTask<IDataCache<string, object>> LoadAsync()
+        public async Task<IDataCache<string, object>> LoadAsync()
         {
             // Check if storage dictionary is already created from the controllers file (create if not)
             EnsureCacheExists();
@@ -188,7 +188,7 @@ namespace Moralis.Platform.Services.Infrastructure
         /// </summary>
         /// <param name="contents">The data to be saved.</param>
         /// <returns>A data cache containing the saved data.</returns>
-        public async UniTask<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents)
+        public async Task<IDataCache<string, object>> SaveAsync(IDictionary<string, object> contents)
         {
             EnsureCacheExists();
             Cache.Save();
@@ -279,7 +279,7 @@ namespace Moralis.Platform.Services.Infrastructure
         /// <param name="originFilePath"></param>
         /// <param name="targetFilePath"></param>
         /// <returns>A task that completes once the file move operation form <paramref name="originFilePath"/> to <paramref name="targetFilePath"/> completes.</returns>
-        public async UniTask TransferAsync(string originFilePath, string targetFilePath)
+        public async Task TransferAsync(string originFilePath, string targetFilePath)
         {
             if (!String.IsNullOrWhiteSpace(originFilePath) &&
                 !String.IsNullOrWhiteSpace(targetFilePath))

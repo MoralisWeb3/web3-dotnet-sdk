@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
@@ -588,14 +588,14 @@ namespace Moralis.Platform.Queries
         /// Executes an aggregate query and returns aggregate results
         /// </summary>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public UniTask<IEnumerable<T>> AggregateAsync() => AggregateAsync(CancellationToken.None);
+        public Task<IEnumerable<T>> AggregateAsync() => AggregateAsync(CancellationToken.None);
 
         /// <summary>
         /// Executes an aggregate query and returns aggregate results
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public async UniTask<IEnumerable<T>> AggregateAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> AggregateAsync(CancellationToken cancellationToken)
         {
             EnsureNotInstallationQuery();
             IEnumerable<T> aggResp = await QueryService.AggregateAsync<T>(this, SessionToken, cancellationToken);
@@ -613,14 +613,14 @@ namespace Moralis.Platform.Queries
         /// Retrieves a list of MoralisObjects that satisfy this query from Moralis.
         /// </summary>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public UniTask<IEnumerable<T>> FindAsync() => FindAsync(CancellationToken.None);
+        public Task<IEnumerable<T>> FindAsync() => FindAsync(CancellationToken.None);
 
         /// <summary>
         /// Retrieves a list of MoralisObjects that satisfy this query from Moralis.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public async UniTask<IEnumerable<T>> FindAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> FindAsync(CancellationToken cancellationToken)
         {
             EnsureNotInstallationQuery();
             IEnumerable<T> items = await QueryService.FindAsync(this, SessionToken, cancellationToken);
@@ -638,14 +638,14 @@ namespace Moralis.Platform.Queries
         /// Retrieves a list of distinct MoralisObjects that satisfy this query from Moralis.
         /// </summary>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public async UniTask<IEnumerable<T>> DistinctAsync() => await DistinctAsync(CancellationToken.None);
+        public async Task<IEnumerable<T>> DistinctAsync() => await DistinctAsync(CancellationToken.None);
 
         /// <summary>
         /// Retrieves a list of distinct MoralisObjects that satisfy this query from Moralis.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The list of MoralisObjects that match this query.</returns>
-        public async UniTask<IEnumerable<T>> DistinctAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> DistinctAsync(CancellationToken cancellationToken)
         {
             EnsureNotInstallationQuery();
             IEnumerable<T> items = await QueryService.DistinctAsync(this, SessionToken, cancellationToken);
@@ -663,14 +663,14 @@ namespace Moralis.Platform.Queries
         /// Retrieves at most one MoralisObject that satisfies this query.
         /// </summary>
         /// <returns>A single MoralisObject that satisfies this query, or else null.</returns>
-        public async UniTask<T> FirstOrDefaultAsync() => await FirstOrDefaultAsync(CancellationToken.None);
+        public async Task<T> FirstOrDefaultAsync() => await FirstOrDefaultAsync(CancellationToken.None);
 
         /// <summary>
         /// Retrieves at most one MoralisObject that satisfies this query.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A single MoralisObject that satisfies this query, or else null.</returns>
-        public async UniTask<T> FirstOrDefaultAsync(CancellationToken cancellationToken)
+        public async Task<T> FirstOrDefaultAsync(CancellationToken cancellationToken)
         {
             EnsureNotInstallationQuery();
             T item = await QueryService.FirstAsync<T>(this, SessionToken, cancellationToken);
@@ -686,7 +686,7 @@ namespace Moralis.Platform.Queries
         /// </summary>
         /// <returns>A single MoralisObject that satisfies this query.</returns>
         /// <exception cref="MoralisFailureException">If no results match the query.</exception>
-        public async UniTask<T> FirstAsync() => await FirstAsync(CancellationToken.None);
+        public async Task<T> FirstAsync() => await FirstAsync(CancellationToken.None);
 
         /// <summary>
         /// Retrieves at most one MoralisObject that satisfies this query.
@@ -694,20 +694,20 @@ namespace Moralis.Platform.Queries
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A single MoralisObject that satisfies this query.</returns>
         /// <exception cref="MoralisFailureException">If no results match the query.</exception>
-        public async UniTask<T> FirstAsync(CancellationToken cancellationToken) => await FirstOrDefaultAsync(cancellationToken);
+        public async Task<T> FirstAsync(CancellationToken cancellationToken) => await FirstOrDefaultAsync(cancellationToken);
 
         /// <summary>
         /// Counts the number of objects that match this query.
         /// </summary>
         /// <returns>The number of objects that match this query.</returns>
-        public async UniTask<int> CountAsync() => await CountAsync(CancellationToken.None);
+        public async Task<int> CountAsync() => await CountAsync(CancellationToken.None);
 
         /// <summary>
         /// Counts the number of objects that match this query.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The number of objects that match this query.</returns>
-        public async UniTask<int> CountAsync(CancellationToken cancellationToken)
+        public async Task<int> CountAsync(CancellationToken cancellationToken)
         {
             EnsureNotInstallationQuery();
             return await QueryService.CountAsync(this, SessionToken, cancellationToken);
@@ -719,7 +719,7 @@ namespace Moralis.Platform.Queries
         /// </summary>
         /// <param name="objectId">ObjectId of the MoralisObject to fetch.</param>
         /// <returns>The MoralisObject for the given objectId.</returns>
-        public async UniTask<T> GetAsync(string objectId) => await GetAsync(objectId, CancellationToken.None);
+        public async Task<T> GetAsync(string objectId) => await GetAsync(objectId, CancellationToken.None);
 
         /// <summary>
         /// Constructs a MoralisObject whose id is already known by fetching data
@@ -728,7 +728,7 @@ namespace Moralis.Platform.Queries
         /// <param name="objectId">ObjectId of the MoralisObject to fetch.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The MoralisObject for the given objectId.</returns>
-        public async UniTask<T> GetAsync(string objectId, CancellationToken cancellationToken)
+        public async Task<T> GetAsync(string objectId, CancellationToken cancellationToken)
         {
             MoralisQuery<T> singleItemQuery = new MoralisQuery<T>(QueryService, InstallationService, ServerConnectionData, JsonSerializer, SessionToken, ClassName).WhereEqualTo(nameof(objectId), objectId);
             singleItemQuery = new MoralisQuery<T>(singleItemQuery, includes: Includes, selectedKeys: KeySelections, limit: 1);

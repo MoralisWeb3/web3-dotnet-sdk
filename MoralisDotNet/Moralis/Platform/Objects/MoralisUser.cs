@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Newtonsoft.Json;
 using Moralis.Core.Exceptions;
@@ -92,7 +92,7 @@ namespace Moralis.Platform.Objects
        
         internal ICurrentUserService<MoralisUser> CurrentUserService { get; set; }
 
-        internal async UniTask SignUpAsync(UniTask toAwait, CancellationToken cancellationToken)
+        internal async Task SignUpAsync(Task toAwait, CancellationToken cancellationToken)
         {
             if (String.IsNullOrEmpty(this.objectId))
             {
@@ -153,7 +153,7 @@ namespace Moralis.Platform.Objects
         /// session on disk so that you can access the user using <see cref="CurrentUser"/>. A username and
         /// password must be set before calling SignUpAsync.
         /// </summary>
-        public UniTask SignUpAsync() => SignUpAsync(CancellationToken.None);
+        public Task SignUpAsync() => SignUpAsync(CancellationToken.None);
         
         public void SetSaving(bool val)
         {
@@ -166,7 +166,7 @@ namespace Moralis.Platform.Objects
         /// password must be set before calling SignUpAsync.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public async UniTask SignUpAsync(CancellationToken cancellationToken) //=> TaskQueue.Enqueue(toAwait => SignUpAsync(toAwait, cancellationToken), cancellationToken);
+        public async Task SignUpAsync(CancellationToken cancellationToken) //=> TaskQueue.Enqueue(toAwait => SignUpAsync(toAwait, cancellationToken), cancellationToken);
         {
             if (String.IsNullOrEmpty(this.objectId))
             {

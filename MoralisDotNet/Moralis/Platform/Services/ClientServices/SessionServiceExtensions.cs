@@ -1,7 +1,7 @@
 ﻿
 using System.Threading;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Queries;
@@ -18,7 +18,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <summary>
         /// Gets the current <see cref="ParseSession"/> object related to the current user.
         /// </summary>
-        public static async UniTask<MoralisSession> GetCurrentSessionAsync<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser
+        public static async Task<MoralisSession> GetCurrentSessionAsync<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser
         {
             return await GetCurrentSessionAsync(serviceHub, CancellationToken.None);
         }
@@ -27,7 +27,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// Gets the current <see cref="ParseSession"/> object related to the current user.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token</param>
-        public static async UniTask<MoralisSession> GetCurrentSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task<MoralisSession> GetCurrentSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             MoralisSession ms = await serviceHub.GetCurrentSessionAsync<TUser>(cancellationToken);
 
@@ -40,13 +40,13 @@ namespace Moralis.Platform.Services.ClientServices
             return await serviceHub.SessionService.GetSessionAsync(token, serviceHub, cancellationToken);
         }
 
-        public static async UniTask RevokeSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task RevokeSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             if (sessionToken != null && serviceHub.SessionService.IsRevocableSessionToken(sessionToken))
                 await serviceHub.SessionService.RevokeAsync(sessionToken, cancellationToken);
         }
 
-        public static async UniTask<string> UpgradeToRevocableSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task<string> UpgradeToRevocableSessionAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             if (sessionToken is null || serviceHub.SessionService.IsRevocableSessionToken(sessionToken))
                 return sessionToken;

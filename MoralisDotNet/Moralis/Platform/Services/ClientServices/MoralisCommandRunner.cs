@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using Status = System.Net.HttpStatusCode;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
@@ -53,7 +53,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <param name="downloadProgress">An <see cref="IProgress{MoralisDownloadProgressEventArgs}"/> instance to push download progress data to.</param>
         /// <param name="cancellationToken">An asynchronous operation cancellation token that dictates if and when the operation should be cancelled.</param>
         /// <returns>Tuple<HttpStatusCode, string></returns>
-        public async UniTask<Tuple<HttpStatusCode, string>> RunCommandAsync(MoralisCommand command, IProgress<IDataTransferLevel> uploadProgress = null, IProgress<IDataTransferLevel> downloadProgress = null, CancellationToken cancellationToken = default)
+        public async Task<Tuple<HttpStatusCode, string>> RunCommandAsync(MoralisCommand command, IProgress<IDataTransferLevel> uploadProgress = null, IProgress<IDataTransferLevel> downloadProgress = null, CancellationToken cancellationToken = default)
         {
             MoralisCommand cmd = await PrepareCommand(command);
 
@@ -87,7 +87,7 @@ namespace Moralis.Platform.Services.ClientServices
             return newResponse;
         }
 
-        async UniTask<MoralisCommand> PrepareCommand(MoralisCommand command)
+        async Task<MoralisCommand> PrepareCommand(MoralisCommand command)
         {
             MoralisCommand newCommand = new MoralisCommand(command)
             {

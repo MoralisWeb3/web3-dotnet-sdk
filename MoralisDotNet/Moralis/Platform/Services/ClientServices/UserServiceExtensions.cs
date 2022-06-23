@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Moralis.Platform.Utilities;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Queries;
@@ -10,7 +10,7 @@ namespace Moralis.Platform.Services.ClientServices
 {
     public static class UserServiceExtensions
     {
-        internal async static UniTask<string> GetCurrentSessionTokenAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) where TUser : MoralisUser
+        internal async static Task<string> GetCurrentSessionTokenAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) where TUser : MoralisUser
         {
             return await serviceHub.CurrentUserService.GetCurrentSessionTokenAsync(serviceHub, cancellationToken);
         }
@@ -23,7 +23,7 @@ namespace Moralis.Platform.Services.ClientServices
         //        //OnSuccess(task => task.Result );
         //}
 
-        public static async UniTask<TUser> LogInWithAsync<TUser>(this IServiceHub<TUser> serviceHub, string authType, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task<TUser> LogInWithAsync<TUser>(this IServiceHub<TUser> serviceHub, string authType, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             IAuthenticationProvider provider = MoralisUser.GetProvider(authType);
             IDictionary<string, object> authData = await provider.AuthenticateAsync(cancellationToken);
@@ -39,7 +39,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <param name="password">The password to log in with.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The newly logged-in user.</returns>
-        public static async UniTask<TUser> LogInAsync<TUser>(this IServiceHub<TUser> serviceHub, string username, string password, CancellationToken cancellationToken = default) where TUser : MoralisUser
+        public static async Task<TUser> LogInAsync<TUser>(this IServiceHub<TUser> serviceHub, string username, string password, CancellationToken cancellationToken = default) where TUser : MoralisUser
         {
             TUser user = await serviceHub.UserService.LogInAsync(username, password, serviceHub, cancellationToken);
 
@@ -55,7 +55,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <param name="sessionToken">The session token to authorize with</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The user if authorization was successful</returns>
-        public static async UniTask<TUser> BecomeAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken = default) where TUser : MoralisUser
+        public static async Task<TUser> BecomeAsync<TUser>(this IServiceHub<TUser> serviceHub, string sessionToken, CancellationToken cancellationToken = default) where TUser : MoralisUser
         {
             TUser user = await serviceHub.UserService.GetUserAsync(sessionToken, serviceHub, cancellationToken);
 
@@ -84,7 +84,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// This is preferable to using <see cref="LogOut()"/>, unless your code is already running from a
         /// background thread.
         /// </remarks>
-        public static UniTask LogOutAsync<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser => LogOutAsync(serviceHub, CancellationToken.None);
+        public static Task LogOutAsync<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser => LogOutAsync(serviceHub, CancellationToken.None);
 
         /// <summary>
         /// Logs out the currently logged in user session. This will remove the session from disk, log out of
@@ -93,7 +93,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// This is preferable to using <see cref="LogOut()"/>, unless your code is already running from a
         /// background thread.
         /// </summary>
-        public static async UniTask LogOutAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task LogOutAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             TUser user = await GetCurrentUserAsync(serviceHub);
 
@@ -113,7 +113,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// Gets the currently logged in MoralisUser with a valid session, either from memory or disk
         /// if necessary.
         /// </summary>
-        public static async UniTask<MoralisUser> GetCurrentUser<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser
+        public static async Task<MoralisUser> GetCurrentUser<TUser>(this IServiceHub<TUser> serviceHub) where TUser : MoralisUser
         {
             return await GetCurrentUserAsync(serviceHub);
         }
@@ -122,12 +122,12 @@ namespace Moralis.Platform.Services.ClientServices
         /// Gets the currently logged in MoralisUser with a valid session, either from memory or disk
         /// if necessary, asynchronously.
         /// </summary>
-        internal static async UniTask<TUser> GetCurrentUserAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) where TUser : MoralisUser
+        internal static async Task<TUser> GetCurrentUserAsync<TUser>(this IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) where TUser : MoralisUser
         {
             return await serviceHub.CurrentUserService.GetAsync(serviceHub, cancellationToken);
         }
 
-        internal static async UniTask SaveCurrentUserAsync<TUser>(this IServiceHub<TUser> serviceHub, TUser user, CancellationToken cancellationToken = default) where TUser : MoralisUser
+        internal static async Task SaveCurrentUserAsync<TUser>(this IServiceHub<TUser> serviceHub, TUser user, CancellationToken cancellationToken = default) where TUser : MoralisUser
         {
             await serviceHub.CurrentUserService.SetAsync(user, cancellationToken);
         }
@@ -147,7 +147,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// migrate the sessionToken on disk to revocable session.
         /// </summary>
         /// <returns>The Task that upgrades the session.</returns>
-        public static async UniTask EnableRevocableSessionAsync(this IServiceHub<MoralisUser> serviceHub, CancellationToken cancellationToken = default)
+        public static async Task EnableRevocableSessionAsync(this IServiceHub<MoralisUser> serviceHub, CancellationToken cancellationToken = default)
         {
             lock (serviceHub.UserService.RevocableSessionEnabledMutex)
             {
@@ -180,7 +180,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// user account. This email allows the user to securely reset their password on the Moralis site.
         /// </summary>
         /// <param name="email">The email address associated with the user that forgot their password.</param>
-        public static async UniTask RequestPasswordResetAsync<TUser>(this IServiceHub<TUser> serviceHub, string email) where TUser : MoralisUser {
+        public static async Task RequestPasswordResetAsync<TUser>(this IServiceHub<TUser> serviceHub, string email) where TUser : MoralisUser {
             await RequestPasswordResetAsync(serviceHub, email, CancellationToken.None);
         }
 
@@ -190,12 +190,12 @@ namespace Moralis.Platform.Services.ClientServices
         /// </summary>
         /// <param name="email">The email address associated with the user that forgot their password.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public static async UniTask RequestPasswordResetAsync<TUser>(this IServiceHub<TUser> serviceHub, string email, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task RequestPasswordResetAsync<TUser>(this IServiceHub<TUser> serviceHub, string email, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             await serviceHub.UserService.RequestPasswordResetAsync(email, cancellationToken);
         }
 
-        public static async UniTask<TUser> LogInWithAsync<TUser>(this IServiceHub<TUser> serviceHub, string authType, IDictionary<string, object> data, CancellationToken cancellationToken) where TUser : MoralisUser
+        public static async Task<TUser> LogInWithAsync<TUser>(this IServiceHub<TUser> serviceHub, string authType, IDictionary<string, object> data, CancellationToken cancellationToken) where TUser : MoralisUser
         {
             TUser user = await serviceHub.UserService.LogInAsync(authType, data, serviceHub, cancellationToken);
 

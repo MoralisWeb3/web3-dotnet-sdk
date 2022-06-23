@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Queries;
@@ -17,7 +17,7 @@ namespace Moralis.Platform
         public IServiceHub<TUser> ServiceHub;
 
         public MoralisCloud(IServiceHub<TUser> serviceHub) => (ServiceHub) = (serviceHub);
-        public async UniTask<T> RunAsync<T>(string name, IDictionary<string, object> parameters)
+        public async Task<T> RunAsync<T>(string name, IDictionary<string, object> parameters)
         {
             MoralisUser user = await this.ServiceHub.GetCurrentUserAsync();
 

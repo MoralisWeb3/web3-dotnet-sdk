@@ -32,11 +32,12 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -101,7 +102,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="domain">Domain to be resolved</param>
 		/// <param name="currency">The currency to query</param>
 		/// <returns>Returns an address</returns>
-		public async UniTask<Resolve> ResolveDomain (string domain, string currency=null)
+		public async Task<Resolve> ResolveDomain (string domain, string currency=null)
 		{
 
 			// Verify the required parameter 'domain' is set
@@ -122,15 +123,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<Resolve>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Resolve>), null)).Result;
+				return ((CloudFunctionResult<Resolve>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<Resolve>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling ResolveDomain: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveDomain: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<Resolve>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Resolve>), null)).Result;
 		}
 		/// <summary>
 		/// Resolves an ETH address and find the ENS name
@@ -138,7 +153,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// </summary>
 		/// <param name="address">The address to be resolved</param>
 		/// <returns>Returns an ENS</returns>
-		public async UniTask<Ens> ResolveAddress (string address)
+		public async Task<Ens> ResolveAddress (string address)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -158,15 +173,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<Ens>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Ens>), null)).Result;
+				return ((CloudFunctionResult<Ens>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<Ens>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling ResolveAddress: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling ResolveAddress: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<Ens>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<Ens>), null)).Result;
 		}
 	}
 }

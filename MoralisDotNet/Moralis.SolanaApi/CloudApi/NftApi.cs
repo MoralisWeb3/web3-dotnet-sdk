@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Net;
 using Moralis.SolanaApi.Client;
 using Moralis.SolanaApi.Interfaces;
@@ -60,7 +60,7 @@ namespace Moralis.SolanaApi.CloudApi
 		public ApiClient ApiClient { get; set; }
 
 
-		public async UniTask<NftMetadata> GetNFTMetadata(NetworkTypes network, string address)
+		public async Task<NftMetadata> GetNFTMetadata(NetworkTypes network, string address)
 		{
 			// Verify the required parameter 'pairAddress' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");

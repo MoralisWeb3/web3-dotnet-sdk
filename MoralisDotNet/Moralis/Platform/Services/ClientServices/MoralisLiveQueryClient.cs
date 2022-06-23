@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using Moralis.Platform.Utilities;
 using static Moralis.Platform.Exceptions.MoralisFailureException;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
@@ -21,7 +21,7 @@ namespace Moralis.Platform.Services.ClientServices
     public class MoralisLiveQueryClient<T> : ILiveQueryClient where T : MoralisObject
     {
         private bool disposedValue;
-        private UniTask subscriptTask;
+        private Task subscriptTask;
 
         private CancellationTokenSource cancelSource = new CancellationTokenSource();
         private CancellationToken cancellationToken = CancellationToken.None;

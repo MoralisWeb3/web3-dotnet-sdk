@@ -2,7 +2,6 @@
 using Moralis.Web3Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moralis.Web3Api.Integrated.Tests
@@ -184,7 +183,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftCollection resp = await web3Api.Token.GetAllTokenIds("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftCollection resp = await web3Api.Token.GetAllTokenIds("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -202,7 +201,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftTransferCollection resp = await web3Api.Token.GetContractNFTTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetContractNFTTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -256,7 +255,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftOwnerCollection resp = await web3Api.Token.GetNFTOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftOwnerCollection resp = await web3Api.Token.GetNFTOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -273,7 +272,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, null, 0, 10);
+                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -287,7 +286,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             try
             {
                 // Fails same in Admin Consel - Invalid HEX values
-                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, 99999, 25999999, null, null, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, 99999, 25999999, null, null, null, "", 10);
 
                 result = resp is { };
             }
@@ -346,7 +345,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                NftOwnerCollection resp = await web3Api.Token.GetTokenIdOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, 0, 10);
+                NftOwnerCollection resp = await web3Api.Token.GetTokenIdOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -417,7 +416,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftTransferCollection resp = await web3Api.Token.GetWalletTokenIdTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetWalletTokenIdTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -434,7 +433,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Apes", ChainList.eth, null, null, null, null, null, null, 0, 10);
+                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Apes", ChainList.eth, null, null, null, null, null, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }

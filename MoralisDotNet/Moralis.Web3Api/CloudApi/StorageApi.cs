@@ -32,11 +32,12 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -100,7 +101,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// </summary>
 		/// <param name="abi">Array of JSON and Base64 Supported</param>
 		/// <returns>Returns the path to the uploaded files</returns>
-		public async UniTask<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
+		public async Task<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
 		{
 
 			// Verify the required parameter 'abi' is set
@@ -120,15 +121,29 @@ namespace Moralis.Web3Api.CloudApi
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			//await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.Item1) >= 400)
-				throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
-			else if (((int)response.Item1) == 0)
-				throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<List<IpfsFile>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<IpfsFile>>), null)).Result;
+				return ((CloudFunctionResult<List<IpfsFile>>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<List<IpfsFile>>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling UploadFolder: {response.ReasonPhrase}");
+			}
+			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
+			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			//if (((int)response.Item1) >= 400)
+			//	throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
+			//else if (((int)response.Item1) == 0)
+			//	throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
+
+			//return ((CloudFunctionResult<List<IpfsFile>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<IpfsFile>>), null)).Result;
 		}
 	}
 }

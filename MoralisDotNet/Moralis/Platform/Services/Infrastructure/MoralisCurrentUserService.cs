@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Utilities;
@@ -34,7 +34,7 @@ namespace Moralis.Platform.Services.Infrastructure
             }
         }
 
-        public async UniTask SetAsync(TUser user, CancellationToken cancellationToken)
+        public async Task SetAsync(TUser user, CancellationToken cancellationToken)
         {
             if (user is null)
             {
@@ -52,7 +52,7 @@ namespace Moralis.Platform.Services.Infrastructure
             CurrentUser = user;
         }
 
-        public async UniTask<TUser> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) 
+        public async Task<TUser> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) 
         {
             TUser cachedCurrent = null;
 
@@ -77,7 +77,7 @@ namespace Moralis.Platform.Services.Infrastructure
             return cachedCurrent;
         }
 
-        public async UniTask<bool> ExistsAsync(CancellationToken cancellationToken)
+        public async Task<bool> ExistsAsync(CancellationToken cancellationToken)
         {
             bool result = true;
 
@@ -98,7 +98,7 @@ namespace Moralis.Platform.Services.Infrastructure
 
         public void ClearFromMemory() => CurrentUser = default;
 
-        public async UniTask ClearFromDiskAsync()
+        public async Task ClearFromDiskAsync()
         {
             lock (Mutex)
             {
@@ -109,7 +109,7 @@ namespace Moralis.Platform.Services.Infrastructure
             await loadResp.RemoveAsync(nameof(CurrentUser));
         }
 
-        public async UniTask<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
+        public async Task<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
         {
             string result = null;
             TUser user = await GetAsync(serviceHub, cancellationToken);
@@ -118,7 +118,7 @@ namespace Moralis.Platform.Services.Infrastructure
             return result;
         }
 
-        public async UniTask LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
+        public async Task LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
         {
             TUser user = await GetAsync(serviceHub, cancellationToken);
             await ClearFromDiskAsync();

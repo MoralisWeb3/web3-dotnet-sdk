@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
@@ -106,7 +106,7 @@ namespace Moralis.Web3Api.Api
 		/// </param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the pair reserves</returns>
-		public async UniTask<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
+		public async Task<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'pairAddress' is set
@@ -156,7 +156,7 @@ namespace Moralis.Web3Api.Api
 		/// * If 'to_date' and 'to_block' are provided, 'to_block' will be used.
 		/// </param>
 		/// <returns>Returns the pair address of the two tokens</returns>
-		public async UniTask<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
+		public async Task<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
 		{
 
 			// Verify the required parameter 'exchange' is set

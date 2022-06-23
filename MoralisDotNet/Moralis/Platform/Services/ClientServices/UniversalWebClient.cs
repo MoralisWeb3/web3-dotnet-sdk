@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Services.Models;
 using Moralis.Platform.Utilities;
@@ -42,7 +42,7 @@ namespace Moralis.Platform.Services
 
         BCLWebClient Client { get; set; }
 
-        public async UniTask<Tuple<HttpStatusCode, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken)
+        public async Task<Tuple<HttpStatusCode, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken)
         {
             uploadProgress ??= new Progress<IDataTransferLevel> { };
             downloadProgress ??= new Progress<IDataTransferLevel> { };

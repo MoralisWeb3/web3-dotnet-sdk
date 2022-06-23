@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Net;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
@@ -28,7 +28,7 @@ namespace Moralis.Platform.Services.ClientServices
             JsonSerializer = jsonSerializer;
         }
 
-        public async UniTask<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
+        public async Task<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
         {
             MoralisCommand command = new MoralisCommand($"server/classes/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.objectId)}", method: "GET", sessionToken: sessionToken, data: default);
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
@@ -44,7 +44,7 @@ namespace Moralis.Platform.Services.ClientServices
             return resp;
         }
 
-        public async UniTask<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default)
+        public async Task<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default)
         {
             MoralisCommand command = new MoralisCommand(item.objectId == null ? $"server/classes/{Uri.EscapeDataString(item.ClassName)}" : $"server/classes/{Uri.EscapeDataString(item.ClassName)}/{item.objectId}", method: item.objectId is null ? "POST" : "PUT", sessionToken: sessionToken, data: operations is { } && operations.Count > 0 ? JsonSerializer.Serialize(operations, JsonSerializer.DefaultOptions).JsonInsertParseDate() : JsonSerializer.Serialize(item, JsonSerializer.DefaultOptions).JsonInsertParseDate());
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
@@ -63,23 +63,23 @@ namespace Moralis.Platform.Services.ClientServices
             return resp;
         }
 
-        public async UniTask DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default)
+        public async Task DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default)
         {
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/classes/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
          }
                
         int MaximumBatchSize { get; } = 50;
 
-        async UniTask<IList<UniTask<IDictionary<string, object>>>> ExecuteBatchRequestAsync<T>(IList<MoralisCommand> requests, string sessionToken, CancellationToken cancellationToken = default)
+        async Task<IList<Task<IDictionary<string, object>>>> ExecuteBatchRequestAsync<T>(IList<MoralisCommand> requests, string sessionToken, CancellationToken cancellationToken = default)
         {
             int batchSize = requests.Count;
 
-            List<UniTask<IDictionary<string, object>>> tasks = new List<UniTask<IDictionary<string, object>>> { };
-            List<UniTaskCompletionSource<IDictionary<string, object>>> completionSources = new List<UniTaskCompletionSource<IDictionary<string, object>>> { };
+            List<Task<IDictionary<string, object>>> tasks = new List<Task<IDictionary<string, object>>> { };
+            List<TaskCompletionSource<IDictionary<string, object>>> completionSources = new List<TaskCompletionSource<IDictionary<string, object>>> { };
 
             for (int i = 0; i < batchSize; ++i)
             {
-                UniTaskCompletionSource<IDictionary<string, object>> tcs = new UniTaskCompletionSource<IDictionary<string, object>>();
+                TaskCompletionSource<IDictionary<string, object>> tcs = new TaskCompletionSource<IDictionary<string, object>>();
 
                 completionSources.Add(tcs);
                 tasks.Add(tcs.Task);
@@ -105,11 +105,11 @@ namespace Moralis.Platform.Services.ClientServices
 
             if ((int)cmdResp.Item1 < 400)
             {
-                foreach (UniTaskCompletionSource<IDictionary<string, object>> tcs in completionSources)
+                foreach (TaskCompletionSource<IDictionary<string, object>> tcs in completionSources)
                 {
-                    if (UniTaskStatus.Faulted.Equals(tcs.Task.Status))
+                    if (TaskStatus.Faulted.Equals(tcs.Task.Status))
                         tcs.TrySetException(new Exception("Update failed."));
-                    else if (UniTaskStatus.Canceled.Equals(tcs.Task.Status))
+                    else if (TaskStatus.Canceled.Equals(tcs.Task.Status))
                         tcs.TrySetCanceled();
                 }
                 
@@ -119,7 +119,7 @@ namespace Moralis.Platform.Services.ClientServices
 
                 if (resultLength != batchSize)
                 {
-                    foreach (UniTaskCompletionSource<IDictionary<string, object>> completionSource in completionSources)
+                    foreach (TaskCompletionSource<IDictionary<string, object>> completionSource in completionSources)
                         completionSource.TrySetException(new InvalidOperationException($"Batch command result count expected: {batchSize} but was: {resultLength}."));
                 }
                 else
@@ -127,7 +127,7 @@ namespace Moralis.Platform.Services.ClientServices
                     for (int i = 0; i < batchSize; ++i)
                     {
                         Dictionary<string, object> result = resultsArray[i] as Dictionary<string, object>;
-                        UniTaskCompletionSource<IDictionary<string, object>> target = completionSources[i];
+                        TaskCompletionSource<IDictionary<string, object>> target = completionSources[i];
 
                         if (result.ContainsKey("success"))
                             target.TrySetResult(result["success"] as IDictionary<string, object>);

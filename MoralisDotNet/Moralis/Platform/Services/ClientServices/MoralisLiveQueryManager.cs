@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Queries;
@@ -48,11 +48,11 @@ namespace Moralis.Platform.Services.ClientServices
         /// </summary>
         public void UnsubscribeAll()
         {
-            List<UniTask> tasks = new List<UniTask>();
+            List<Task> tasks = new List<Task>();
 
             foreach (ILiveQueryClient c in clients)
             {
-                tasks.Add(UniTask.Run(() =>
+                tasks.Add(Task.Run(() =>
                 {
                     long ticks = DateTime.Now.Ticks;
                     c.Unsubscribe();
@@ -61,7 +61,7 @@ namespace Moralis.Platform.Services.ClientServices
                 }));
             }
 
-            UniTask.WhenAll(tasks.ToArray());
+            Task.WhenAll(tasks.ToArray());
         }
 
         #if UNITY_WEBGL

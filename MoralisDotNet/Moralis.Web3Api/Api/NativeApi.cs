@@ -32,7 +32,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
@@ -101,7 +101,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns the contents of a block</returns>
-		public async UniTask<Block> GetBlock (string blockNumberOrHash, ChainList chain, string subdomain=null)
+		public async Task<Block> GetBlock (string blockNumberOrHash, ChainList chain, string subdomain=null)
 		{
 
 			// Verify the required parameter 'blockNumberOrHash' is set
@@ -141,7 +141,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns the blocknumber and corresponding date and timestamp</returns>
-		public async UniTask<BlockDate> GetDateToBlock (string date, ChainList chain, string providerUrl=null)
+		public async Task<BlockDate> GetDateToBlock (string date, ChainList chain, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'date' is set
@@ -208,7 +208,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="topic2">topic2</param>
 		/// <param name="topic3">topic3</param>
 		/// <returns>Returns the logs of an address</returns>
-		public async UniTask<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null)
+		public async Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -259,7 +259,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the contents of a block</returns>
-		public async UniTask<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null)
+		public async Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'blockNumberOrHash' is set
@@ -301,7 +301,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="chain">The chain to query</param>
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <returns>Returns the contents of a block transaction</returns>
-		public async UniTask<BlockTransaction> GetTransaction (string transactionHash, ChainList chain, string subdomain=null)
+		public async Task<BlockTransaction> GetTransaction (string transactionHash, ChainList chain, string subdomain=null)
 		{
 
 			// Verify the required parameter 'transactionHash' is set
@@ -362,7 +362,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of events by topic</returns>
-		public async UniTask<List<LogEvent>> GetContractEvents (string address, string topic, object abi, ChainList chain, string subdomain=null, string providerUrl=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
+		public async Task<List<LogEvent>> GetContractEvents (string address, string topic, object abi, ChainList chain, string subdomain=null, string providerUrl=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -421,7 +421,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns response of the function executed</returns>
-		public async UniTask<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
+		public async Task<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
 
 			// Verify the required parameter 'address' is set

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Operations;
 using Moralis.Platform.Utilities;
@@ -82,12 +82,12 @@ namespace Moralis.Platform.Objects
         /// Deletes this object on the server.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public UniTask DeleteAsync(CancellationToken cancellationToken = default)
+        public Task DeleteAsync(CancellationToken cancellationToken = default)
         {
             return this.ObjectService.DeleteAsync(this, sessionToken, cancellationToken);
         }
 
-        public virtual async UniTask<bool> SaveAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<bool> SaveAsync(CancellationToken cancellationToken = default)
         {
             // MoralisUser is a special case not all properties can be passed to save.
             if (this is MoralisUser) ((MoralisUser)this).SetSaving(true);

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Moralis.Platform.Abstractions
 {
     public interface ICloudFunctionService
     {
-        UniTask<T> CallFunctionAsync<T>(string name, IDictionary<string, object> parameters, string sessionToken, CancellationToken cancellationToken = default);
+        Task<T> CallFunctionAsync<T>(string name, IDictionary<string, object> parameters, string sessionToken, CancellationToken cancellationToken = default);
     }
 }

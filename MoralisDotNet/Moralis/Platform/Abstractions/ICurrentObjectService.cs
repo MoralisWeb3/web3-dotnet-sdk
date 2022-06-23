@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Objects;
 
 namespace Moralis.Platform.Abstractions
@@ -11,20 +11,20 @@ namespace Moralis.Platform.Abstractions
         /// </summary>
         /// <param name="obj"><see cref="MoralisObject"/> to be persisted.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        UniTask SetAsync(T obj, CancellationToken cancellationToken = default);
+        Task SetAsync(T obj, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets the persisted current <see cref="MoralisObject"/>.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        UniTask<T> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
+        Task<T> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a <see cref="Task"/> that resolves to <code>true</code> if current
         /// <see cref="MoralisObject"/> exists.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        UniTask<bool> ExistsAsync(CancellationToken cancellationToken = default);
+        Task<bool> ExistsAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns <code>true</code> if the given <see cref="MoralisObject"/> is the persisted current
@@ -42,6 +42,6 @@ namespace Moralis.Platform.Abstractions
         /// <summary>
         /// Clears current <see cref="MoralisObject"/> from disk.
         /// </summary>
-        UniTask ClearFromDiskAsync();
+        Task ClearFromDiskAsync();
     }
 }
