@@ -149,7 +149,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (TransactionCollection)ApiClient.Deserialize(data, typeof(TransactionCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNativeBalance: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -192,7 +206,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (NativeBalance)ApiClient.Deserialize(data, typeof(NativeBalance), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNativeBalance: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = 
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -234,7 +262,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (List<Erc20TokenBalance>)ApiClient.Deserialize(data, typeof(List<Erc20TokenBalance>), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenBalances: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -298,7 +340,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (Erc20TransactionCollection)ApiClient.Deserialize(data, typeof(Erc20TransactionCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenTransfers: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -348,7 +404,21 @@ namespace Moralis.Web3Api.Api
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (NftOwnerCollection)ApiClient.Deserialize(data, typeof(NftOwnerCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTs: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -394,7 +464,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (NftTransferCollection)ApiClient.Deserialize(data, typeof(NftTransferCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTTransfers: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -446,7 +530,21 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (NftOwnerCollection)ApiClient.Deserialize(data, typeof(NftOwnerCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTsForContract: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, RestSharp.Method.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 

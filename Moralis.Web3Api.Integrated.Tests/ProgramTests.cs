@@ -35,12 +35,12 @@ namespace Moralis.Web3Api.Integrated.Tests
         {
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
-            groups.Add(new AccountTests());
-            groups.Add(new DefiTests());
+            //groups.Add(new AccountTests());
+            //groups.Add(new DefiTests());
             groups.Add(new NativeTests());
-            groups.Add(new ResolveTests());
-            groups.Add(new StorageTests());
-            groups.Add(new TokenTests());
+            //groups.Add(new ResolveTests());
+            //groups.Add(new StorageTests());
+            //groups.Add(new TokenTests());
 
             return groups;
         }

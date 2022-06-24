@@ -37,6 +37,7 @@ using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.Api
 {
@@ -106,7 +107,6 @@ namespace Moralis.Web3Api.Api
 			// Verify the required parameter 'abi' is set
 			if (abi == null) throw new ApiException(400, "Missing required parameter 'abi' when calling UploadFolder");
 
-			var postBody = new List<String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
 			var formParams = new Dictionary<String, String>();
@@ -115,13 +115,25 @@ namespace Moralis.Web3Api.Api
 			var path = "/ipfs/uploadFolder";
 			path = path.Replace("{format}", "json");
 
-			if (abi != null) postBody.Add(ApiClient.ParameterToString(abi));
-
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
-			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+			string bodyData = abi != null ? JsonConvert.SerializeObject(abi) : null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (List<IpfsFile>)ApiClient.Deserialize(data, typeof(List<IpfsFile>), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling UploadFolder: {response.ReasonPhrase}");
+			}
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 

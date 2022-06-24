@@ -23,6 +23,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("UploadFolder", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
 
             return testResults;

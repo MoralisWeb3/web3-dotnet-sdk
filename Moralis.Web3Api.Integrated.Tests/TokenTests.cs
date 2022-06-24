@@ -22,7 +22,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetAllTokenIds", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetContractNFTTransfers");
             if (await GetContractNFTTransfers(web3Api))
@@ -32,7 +35,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetContractNFTTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTLowestPrice");
             if (await GetNFTLowestPrice(web3Api))
@@ -42,7 +48,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTLowestPrice", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTMetadata");
             if (await GetNFTMetadata(web3Api))
@@ -52,7 +61,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTOwners");
             if (await GetNFTOwners(web3Api))
@@ -62,7 +74,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTOwners", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTTrades");
             if (await GetNFTTrades(web3Api))
@@ -72,7 +87,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTTrades", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNftTransfersFromToBlock");
             if (await GetNftTransfersFromToBlock(web3Api))
@@ -82,7 +100,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNftTransfersFromToBlock", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenAdressTransfers");
             if (await GetTokenAdressTransfers(web3Api))
@@ -92,7 +113,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenAdressTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenIdMetadata");
             if (await GetTokenIdMetadata(web3Api))
@@ -102,7 +126,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenIdMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenIdOwners");
             if (await GetTokenIdOwners(web3Api))
@@ -112,7 +139,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenIdOwners", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenMetadata");
             if (await GetTokenMetadata(web3Api))
@@ -122,7 +152,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenMetadataBySymbol");
             if (await GetTokenMetadataBySymbol(web3Api))
@@ -132,7 +165,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenMetadataBySymbol", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenPrice");
             if (await GetTokenPrice(web3Api))
@@ -142,7 +178,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenPrice", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetWalletTokenIdTransfers");
             if (await GetWalletTokenIdTransfers(web3Api))
@@ -152,7 +191,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetWalletTokenIdTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test SearchNFTs");
             if (await SearchNFTs(web3Api))
@@ -162,7 +204,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("SearchNFTs", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenAllowance");
             if (await GetTokenAllowance(web3Api))
@@ -172,6 +217,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenAllowance", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
             
             return testResults;

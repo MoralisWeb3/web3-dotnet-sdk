@@ -24,7 +24,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNativeBalance", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+            
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetNFTTransfers");
             if (await GetNFTTransfers(web3Api, address))
@@ -34,7 +37,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetTokenBalances");
             if (await GetTokenBalances(web3Api, address))
@@ -44,7 +50,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenBalances", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetTokenTransfers");
             if (await GetTokenTransfers(web3Api, address))
@@ -54,7 +63,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetTransactions");
             if (await GetTransactions(web3Api, address))
@@ -64,7 +76,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTransactions", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetNFTs");
             if (await GetNFTs(web3Api, address))
@@ -74,7 +89,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTs", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetNFTsForContract");
             if (await GetNFTsForContract(web3Api, address))
@@ -84,7 +102,9 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTsForContract", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
             return testResults;
         }
 

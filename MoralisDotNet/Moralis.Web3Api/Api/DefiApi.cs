@@ -37,6 +37,7 @@ using Moralis.Web3Api.Client;
 using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.Api
 {
@@ -130,7 +131,22 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (ReservesCollection)ApiClient.Deserialize(data, typeof(ReservesCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase}");
+			}
+
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
@@ -186,7 +202,22 @@ namespace Moralis.Web3Api.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
-			return null;
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (ReservesCollection)ApiClient.Deserialize(data, typeof(ReservesCollection), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+			}
+
 			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
 			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 

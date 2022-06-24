@@ -542,9 +542,23 @@ namespace Moralis.Web3Api.CloudApi
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
 				string data = await response.Content.ReadAsStringAsync();
-				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return ((CloudFunctionResult<string>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<string>), headers)).Result;
+				if (data.Substring(0,10).Equals("{\"result\":"))
+				{ 
+					data = data.Substring(10);
+					// Strip off ending '}'
+					data = data.Substring(0, data.Length - 1);
+					// If data is a string, strip of leading and ending quotes
+					if (data.Substring(0, 1).Equals("\""))
+					{
+						data = data.Substring(1, data.Length - 2);
+					}
+				}
+
+				return data;
+				//List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				//return ((CloudFunctionResult<string>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<string>), headers)).Result;
 			}
 			else
 			{
