@@ -103,7 +103,6 @@ namespace Moralis.Web3Api.CloudApi
 		/// <returns>Returns the path to the uploaded files</returns>
 		public async Task<List<IpfsFile>> UploadFolder (List<IpfsFileRequest> abi)
 		{
-
 			// Verify the required parameter 'abi' is set
 			if (abi == null) throw new ApiException(400, "Missing required parameter 'abi' when calling UploadFolder");
 
@@ -135,15 +134,6 @@ namespace Moralis.Web3Api.CloudApi
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling UploadFolder: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling UploadFolder: " + response.Item3, response.Item3);
-
-			//return ((CloudFunctionResult<List<IpfsFile>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<IpfsFile>>), null)).Result;
 		}
 	}
 }

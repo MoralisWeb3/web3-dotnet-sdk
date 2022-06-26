@@ -109,7 +109,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns the pair reserves</returns>
 		public async Task<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
 		{
-
 			// Verify the required parameter 'pairAddress' is set
 			if (pairAddress == null) throw new ApiException(400, "Missing required parameter 'pairAddress' when calling GetPairReserves");
 
@@ -146,17 +145,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase}");
 			}
-
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetPairReserves: " + response.Item3, response.Item3);
-
-			//return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
+
 		/// <summary>
 		/// Fetches and returns pair data of the provided token0+token1 combination.
 		/// The token0 and token1 options are interchangable (ie. there is no different outcome in "token0=WETH and token1=USDT" or "token0=USDT and token1=WETH")
@@ -174,7 +164,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns the pair address of the two tokens</returns>
 		public async Task<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
 		{
-
 			// Verify the required parameter 'exchange' is set
 			if (exchange == null) throw new ApiException(400, "Missing required parameter 'exchange' when calling GetPairAddress");
 
@@ -217,16 +206,6 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
 			}
-
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetPairAddress: " + response.Item3, response.Item3);
-
-			//return (ReservesCollection)ApiClient.Deserialize(response.Item3, typeof(ReservesCollection), response.Item2);
 		}
 	}
 }

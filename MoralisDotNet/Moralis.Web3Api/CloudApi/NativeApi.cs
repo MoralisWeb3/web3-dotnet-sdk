@@ -235,7 +235,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="topic2">topic2</param>
 		/// <param name="topic3">topic3</param>
 		/// <returns>Returns the logs of an address</returns>
-		public async Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null)
+		public async Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string cursor="", string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null, int? limit = null)
 		{
 
 			// Verify the required parameter 'address' is set
@@ -259,6 +259,8 @@ namespace Moralis.Web3Api.CloudApi
 			if (topic1 != null) postBody.Add("topic1", ApiClient.ParameterToString(topic1));
 			if (topic2 != null) postBody.Add("topic2", ApiClient.ParameterToString(topic2));
 			if (topic3 != null) postBody.Add("topic3", ApiClient.ParameterToString(topic3));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
+			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
 			// Authentication setting, if any
@@ -280,16 +282,8 @@ namespace Moralis.Web3Api.CloudApi
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetLogsByAddress: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetLogsByAddress: " + response.Item3, response.Item3);
-
-			//return ((CloudFunctionResult<LogEventByAddress>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventByAddress>), null)).Result;
 		}
+
 		/// <summary>
 		/// Gets NFT transfers by block number or block hash
 		/// </summary>
@@ -299,7 +293,7 @@ namespace Moralis.Web3Api.CloudApi
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the contents of a block</returns>
-		public async Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null)
+		public async Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string cursor="", string subdomain=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'blockNumberOrHash' is set
@@ -314,7 +308,7 @@ namespace Moralis.Web3Api.CloudApi
 			var path = "/functions/getNFTTransfersByBlock";
 			if (blockNumberOrHash != null) postBody.Add("block_number_or_hash", ApiClient.ParameterToString(blockNumberOrHash));
 			if (subdomain != null) postBody.Add("subdomain", ApiClient.ParameterToString(subdomain));
-			if (offset != null) postBody.Add("offset", ApiClient.ParameterToString(offset));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -337,16 +331,8 @@ namespace Moralis.Web3Api.CloudApi
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTTransfersByBlock: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTransfersByBlock: " + response.Item3, response.Item3);
-
-			//return ((CloudFunctionResult<NftTransferCollection>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftTransferCollection>), null)).Result;
 		}
+
 		/// <summary>
 		/// Gets the contents of a block transaction by hash
 		/// </summary>
@@ -390,16 +376,8 @@ namespace Moralis.Web3Api.CloudApi
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetTransaction: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTransaction: " + response.Item3, response.Item3);
-
-			//return ((CloudFunctionResult<BlockTransaction>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<BlockTransaction>), null)).Result;
 		}
+
 		/// <summary>
 		/// Gets events in descending order based on block number
 		/// </summary>
@@ -480,18 +458,6 @@ namespace Moralis.Web3Api.CloudApi
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetContractEvents: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetContractEvents: " + response.Item3, response.Item3);
-
-			////			return ((CloudFunctionResult<List<LogEvent>>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<List<LogEvent>>), response.Item2)).Result;
-			//LogEventResponse resp = ((CloudFunctionResult<LogEventResponse>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<LogEventResponse>), null)).Result;
-
-			//return resp.Events;
 		}
 
 		/// <summary>
@@ -556,23 +522,11 @@ namespace Moralis.Web3Api.CloudApi
 				}
 
 				return data;
-				//List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
-
-				//return ((CloudFunctionResult<string>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<string>), headers)).Result;
 			}
 			else
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling RunContractFunction: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = new Tuple<HttpStatusCode, Dictionary<string, string>, string>(HttpStatusCode.Unauthorized, new Dictionary<string, string>(), "oopack");
-			////	await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling RunContractFunction: " + response.Item3, response.Item3);
-
-			//return ((CloudFunctionResult<string>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<string>), null)).Result;
 		}
 	}
 }

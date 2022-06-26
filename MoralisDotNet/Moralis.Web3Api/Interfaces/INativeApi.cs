@@ -62,7 +62,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="topic2">topic2</param>
 		/// <param name="topic3">topic3</param>
 		/// <returns>Returns the logs of an address</returns>
-		Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null);
+		Task<LogEventByAddress> GetLogsByAddress (string address, ChainList chain, string cursor = "", string subdomain=null, string blockNumber=null, string fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string topic0=null, string topic1=null, string topic2=null, string topic3=null, int? limit=null);
 
 		/// <summary>
 		/// Gets NFT transfers by block number or block hash
@@ -73,7 +73,7 @@ namespace Moralis.Web3Api.Interfaces
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the contents of a block</returns>
-		Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string subdomain=null, int? offset=null, int? limit=null);
+		Task<NftTransferCollection> GetNFTTransfersByBlock (string blockNumberOrHash, ChainList chain, string cursor = "", string subdomain=null, int? limit=null);
 
 		/// <summary>
 		/// Gets the contents of a block transaction by hash

@@ -94,7 +94,6 @@ namespace Moralis.Web3Api.Api
 		/// <value>An instance of the ApiClient</value>
 		public ApiClient ApiClient {get; set;}
 
-
 		/// <summary>
 		/// Returns metadata (name, symbol, decimals, logo) for a given token contract address.
 		/// </summary>
@@ -105,7 +104,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
 		public async Task<List<Erc20Metadata>> GetTokenMetadata (List<String> addresses, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
-
 			// Verify the required parameter 'addresses' is set
 			if (addresses == null) throw new ApiException(400, "Missing required parameter 'addresses' when calling GetTokenMetadata");
 
@@ -142,16 +140,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenMetadata: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenMetadata: " + response.Item3, response.Item3);
-
-			//return (List<Erc20Metadata>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20Metadata>), response.Item2);
 		}
+
 		/// <summary>
 		/// Get the nft trades for a given contracts and marketplace
 		/// </summary>
@@ -175,9 +165,8 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the trades</returns>
-		public async Task<TradeCollection> GetNFTTrades (string address, ChainList chain, int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, string cursor = "", int? limit=null)
+		public async Task<TradeCollection> GetNFTTrades (string address, ChainList chain, string cursor="", int? fromBlock=null, string toBlock=null, string fromDate=null, string toDate=null, string providerUrl=null, string marketplace=null, int? limit=null)
 		{
-
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTTrades");
 
@@ -219,16 +208,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTTrades: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTTrades: " + response.Item3, response.Item3);
-
-			//return (TradeCollection)ApiClient.Deserialize(response.Item3, typeof(TradeCollection), response.Item2);
 		}
+
 		/// <summary>
 		/// Get the lowest price found for a nft token contract for the last x days (only trades paid in ETH)
 		/// </summary>
@@ -242,7 +223,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns the trade with the lowest price</returns>
 		public async Task<Trade> GetNFTLowestPrice (string address, ChainList chain, int? days=null, string providerUrl=null, string marketplace=null)
 		{
-
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTLowestPrice");
 
@@ -279,16 +259,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTLowestPrice: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTLowestPrice: " + response.Item3, response.Item3);
-
-			//return (Trade)ApiClient.Deserialize(response.Item3, typeof(Trade), response.Item2);
 		}
+
 		/// <summary>
 		/// Returns metadata (name, symbol, decimals, logo) for a given token contract address.
 		/// </summary>
@@ -298,7 +270,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns metadata (name, symbol, decimals, logo) for a given token contract address.</returns>
 		public async Task<List<Erc20Metadata>> GetTokenMetadataBySymbol (List<String> symbols, ChainList chain, string subdomain=null)
 		{
-
 			// Verify the required parameter 'symbols' is set
 			if (symbols == null) throw new ApiException(400, "Missing required parameter 'symbols' when calling GetTokenMetadataBySymbol");
 
@@ -334,16 +305,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenMetadataBySymbol: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenMetadataBySymbol: " + response.Item3, response.Item3);
-
-			//return (List<Erc20Metadata>)ApiClient.Deserialize(response.Item3, typeof(List<Erc20Metadata>), response.Item2);
 		}
+
 		/// <summary>
 		/// Returns the price nominated in the native token and usd for a given token contract address.
 		/// </summary>
@@ -355,7 +318,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns the price nominated in the native token and usd for a given token contract address</returns>
 		public async Task<Erc20Price> GetTokenPrice (string address, ChainList chain, string providerUrl=null, string exchange=null, int? toBlock=null)
 		{
-
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenPrice");
 
@@ -392,16 +354,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenPrice: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenPrice: " + response.Item3, response.Item3);
-
-			//return (Erc20Price)ApiClient.Deserialize(response.Item3, typeof(Erc20Price), response.Item2);
 		}
+
 		/// <summary>
 		/// Gets ERC20 token contract transactions in descending order based on block number
 		/// </summary>
@@ -429,7 +383,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns a collection of token contract transactions.</returns>
 		public async Task<Erc20TransactionCollection> GetTokenAddressTransfers (string address, ChainList chain, string subdomain=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? offset=null, int? limit=null)
 		{
-
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenAddressTransfers");
 
@@ -470,16 +423,8 @@ namespace Moralis.Web3Api.Api
 			{
 				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenAddressTransfers: {response.ReasonPhrase}");
 			}
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response =
-			//	await ApiClient.CallApi(path, Method.GET, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
-
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetTokenAddressTransfers: " + response.Item3, response.Item3);
-
-			//return (Erc20TransactionCollection)ApiClient.Deserialize(response.Item3, typeof(Erc20TransactionCollection), response.Item2);
 		}
+
 		/// <summary>
 		/// Gets the amount which the spender is allowed to withdraw from the spender
 		/// </summary>
@@ -491,7 +436,6 @@ namespace Moralis.Web3Api.Api
 		/// <returns>Returns the amount which the spender is allowed to withdraw from the owner..</returns>
 		public async Task<Erc20Allowance> GetTokenAllowance (string address, string ownerAddress, string spenderAddress, ChainList chain, string providerUrl=null)
 		{
-
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenAllowance");
 
@@ -570,7 +514,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns the matching NFTs</returns>
-		public async Task<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string cursor = "", int? limit=null)
+		public async Task<NftMetadataCollection> SearchNFTs (string q, ChainList chain, string cursor = "",  string format=null, string filter=null, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, int? limit=null)
 		{
 
 			// Verify the required parameter 'q' is set
@@ -649,7 +593,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="offset">offset</param>
 		/// <param name="limit">limit</param>
 		/// <returns>Returns a collection of NFT transfers</returns>
-		public async Task<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, string cursor = "", int? limit=null)
+		public async Task<NftTransferCollection> GetNftTransfersFromToBlock (ChainList chain, string cursor="", int? fromBlock=null, int? toBlock=null, string fromDate=null, string toDate=null, string format=null, int? limit=null)
 		{
 
 			var postBody = new Dictionary<String, String>();

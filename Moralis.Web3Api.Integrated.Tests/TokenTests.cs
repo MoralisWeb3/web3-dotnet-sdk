@@ -332,7 +332,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             try
             {
                 // Fails same in Admin Consel - Invalid HEX values
-                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, 99999, 25999999, null, null, null, "", 10);
+                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, "", 99999, 25999999, null, null, null, 10);
 
                 result = resp is { };
             }
