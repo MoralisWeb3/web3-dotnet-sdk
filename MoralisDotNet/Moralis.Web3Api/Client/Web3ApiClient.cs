@@ -23,6 +23,11 @@ namespace Moralis.Web3Api.Client
         public IDefiApi Defi { get; private set; }
 
         /// <summary>
+        /// InfoApi operations.
+        /// </summary>
+        public IInfoApi Info { get; private set; }
+
+        /// <summary>
         /// NativeApi operations.
         /// </summary>
         public INativeApi Native { get; private set; }
@@ -75,6 +80,7 @@ namespace Moralis.Web3Api.Client
             {
                 this.Account = new AccountApi(client);
                 this.Defi = new DefiApi(client);
+                this.Info = new InfoApi(client);
                 this.Native = new NativeApi(client);
                 this.Resolve = new ResolveApi(client);
                 this.Storage = new StorageApi(client);
@@ -86,6 +92,7 @@ namespace Moralis.Web3Api.Client
             {
                 this.Account = new CloudApi.AccountApi(client);
                 this.Defi = new CloudApi.DefiApi(client);
+                this.Info = new CloudApi.InfoApi(client);
                 this.Native = new CloudApi.NativeApi(client);
                 this.Resolve = new CloudApi.ResolveApi(client);
                 this.Storage = new CloudApi.StorageApi(client);

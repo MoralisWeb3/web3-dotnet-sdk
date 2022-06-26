@@ -14,6 +14,11 @@ namespace Moralis.Web3Api.Interfaces
         IDefiApi Defi { get; }
 
         /// <summary>
+        /// InfoApi operations
+        /// </summary>
+        IInfoApi Info { get; }
+
+        /// <summary>
         /// NativeApi operations.
         /// </summary>
         INativeApi Native { get; }
