@@ -74,7 +74,7 @@ namespace Moralis.Web3Api.CloudApi
 			var formParams = new Dictionary<String, String>();
 			var fileParams = new Dictionary<String, FileParameter>();
 
-			var path = "/functions/getWeb3Version";
+			var path = "/functions/web3ApiVersion";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
@@ -110,7 +110,7 @@ namespace Moralis.Web3Api.CloudApi
 			var formParams = new Dictionary<String, String>();
 			var fileParams = new Dictionary<String, FileParameter>();
 
-			var path = "/functions/getEndpointWeights";
+			var path = "/functions/endpointWeights";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
