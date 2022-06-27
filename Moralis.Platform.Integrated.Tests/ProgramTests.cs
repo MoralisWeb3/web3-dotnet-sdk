@@ -20,9 +20,9 @@ namespace Moralis.Platform.Integrated.Tests
             {
                 ServerConnectionData conData = new ServerConnectionData()
                 {
-                    ApplicationID = "tNJatzsHirx4V2VAep6sc923OYGxvkpBeJttR7Ks",
-                    ServerURI = "https://arw2wxg84h6b.moralishost.com:2053/server",
-                    MasterKey = "pQe9CknXwryQGYyXUCM6blgc0tIsUMnKq05ZpnUM"
+                    ApplicationID = "APPLICATION ID",
+                    ServerURI = "SERVER URI",
+                    MasterKey = "SERVER MASTER KEY"
                 };
 
                 //MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
