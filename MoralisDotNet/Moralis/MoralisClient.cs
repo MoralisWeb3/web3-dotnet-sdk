@@ -165,7 +165,7 @@ namespace Moralis
         {
             MoralisUser user = await GetCurrentUser();
 
-            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, user.sessionToken); //, logger);
+            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, user != null ? user.sessionToken : null); //, logger);
         }
 
         public T Create<T>(object[] parameters = null) where T : MoralisObject
