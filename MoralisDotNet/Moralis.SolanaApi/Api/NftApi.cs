@@ -5,6 +5,7 @@ using System.Net;
 using Moralis.SolanaApi.Client;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
+using System.Net.Http;
 
 namespace Moralis.SolanaApi.Api
 {
@@ -72,15 +73,21 @@ namespace Moralis.SolanaApi.Api
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
-			return null;
-			//Tuple<HttpStatusCode, Dictionary<string, string>, string> response = await ApiClient.CallApi(path, Method.GET, null, null, headerParams, null, null, authSettings);
 
-			//if (((int)response.Item1) >= 400)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
-			//else if (((int)response.Item1) == 0)
-			//	throw new ApiException((int)response.Item1, "Error calling GetNFTMetadata: " + response.Item3, response.Item3);
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
-			//return ((CloudFunctionResult<NftMetadata>)ApiClient.Deserialize(response.Item3, typeof(CloudFunctionResult<NftMetadata>), response.Item2)).Result;
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (NftMetadata)ApiClient.Deserialize(data, typeof(NftMetadata), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTMetadata: {response.ReasonPhrase}");
+			}
 		}
 	}
 }

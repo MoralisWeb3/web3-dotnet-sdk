@@ -9,9 +9,11 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Moralis.Web3Api.Core;
 using System.Net.Http.Headers;
 using System.Net.Http;
+using Moralis.Moralis.SolanaApi.Models;
+using Moralis.Moralis.SolanaApi;
+using Moralis.SolanaApi.Models;
 
 namespace Moralis.SolanaApi.Client
 {
@@ -129,6 +131,13 @@ namespace Moralis.SolanaApi.Client
                 }
             }
 
+            // The HttpClient strips out the Local path from domain. 
+            // Re-add this to the url so it is included properly.
+            if (!client.BaseAddress.LocalPath.Equals("/"))
+            {
+                url = $"{client.BaseAddress.LocalPath}{url}";
+            }
+
             if (HttpMethod.Get.Equals(method))
             {
                 response = await client.GetAsync(url);
@@ -154,46 +163,6 @@ namespace Moralis.SolanaApi.Client
             }
 
             return response;
-
-            //var request = new Models.WebRequest(); //RestRequest(path, method);
-            //HttpClient client = new HttpClient();
-            //client.BaseAddress = new Uri(this.BasePath);
-            //client.
-            //UpdateParamsForAuth(queryParams, headerParams, authSettings);
-
-            //// add default header, if any
-            //foreach(var defaultHeader in _defaultHeaderMap)
-            //    request.AddHeader(defaultHeader.Key, defaultHeader.Value);
-
-            //// add header parameter, if any
-            //foreach(var param in headerParams)
-            //    request.AddHeader(param.Key, param.Value);
-
-            //// add query parameter, if any
-            //foreach(var param in queryParams)
-            //    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
-
-            //// add form parameter, if any
-            //foreach(var param in formParams)
-            //    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
-
-            //// add file parameter, if any
-            //foreach (var param in fileParams)
-            //{
-            //    using (MemoryStream ms = new MemoryStream())
-            //    {
-            //        param.Value.Writer.Invoke(ms);
-            //        byte[] bytes = new byte[ms.Length];
-            //        ms.Read(bytes, 0, bytes.Length);
-            //        request.AddFile(param.Value.Name, bytes, param.Value.FileName, param.Value.ContentType);
-            //    }
-            //}
-
-            //if (postBody != null) // http body (model) parameter
-            //    request.AddParameter("application/json", postBody, ParameterType.RequestBody);
-
-            //return (Object)RestClient.Execute(request);
-
         }
 
         /// <summary>
