@@ -9,7 +9,7 @@
     <Authors>Moralis IO</Authors>
     <SignAssembly>true</SignAssembly>
     <PackageIcon>Moralis-LightBG-Symbol-1024.png</PackageIcon>
-    <PackageProjectUrl>moralis.io</PackageProjectUrl>
+    <PackageProjectUrl>https://www.moralis.io</PackageProjectUrl>
     <Copyright>Copyright (c) 2022 Moralis</Copyright>
     <AssemblyOriginatorKeyFile>moralis_sdk.sn.snk</AssemblyOriginatorKeyFile>
     <FileVersion>1.0.2.0</FileVersion>
@@ -17,6 +17,7 @@
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/MoralisWeb3/web3-dotnet-sdk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
