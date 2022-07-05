@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Moralis.SolanaApi.Client
 {
@@ -17,7 +16,7 @@ namespace Moralis.SolanaApi.Client
         /// Version of the package.
         /// </summary>
         /// <value>Version of the package.</value>
-        public const string Version = "1.0.0";
+        public const string Version = "1.0.2";
   
         /// <summary>
         /// Gets or sets the default API client for making HTTP calls.
@@ -124,7 +123,7 @@ namespace Moralis.SolanaApi.Client
                      .GetReferencedAssemblies()
                      .Where(x => x.Name == "System.Core").First().Version.ToString()  + "\n";
             report += "    Version of the API: 2\n";
-            report += "    SDK Package Version: 1.0.0\n";
+            report += "    SDK Package Version: 1.0.2\n";
   
             return report;
         }

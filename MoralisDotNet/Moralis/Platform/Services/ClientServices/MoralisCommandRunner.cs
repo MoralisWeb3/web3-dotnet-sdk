@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using Status = System.Net.HttpStatusCode;
+using Moralis.Platform.Utilities;
 using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
-using Moralis.Platform.Services.Models;
 using Moralis.Platform.Objects;
-using Moralis.Platform.Utilities;
+using Moralis.Platform.Services.Models;
 
 namespace Moralis.Platform.Services.ClientServices
 {
@@ -52,21 +53,24 @@ namespace Moralis.Platform.Services.ClientServices
         /// <param name="downloadProgress">An <see cref="IProgress{MoralisDownloadProgressEventArgs}"/> instance to push download progress data to.</param>
         /// <param name="cancellationToken">An asynchronous operation cancellation token that dictates if and when the operation should be cancelled.</param>
         /// <returns>Tuple<HttpStatusCode, string></returns>
-        public Task<Tuple<HttpStatusCode, string>> RunCommandAsync(MoralisCommand command, IProgress<IDataTransferLevel> uploadProgress = null, IProgress<IDataTransferLevel> downloadProgress = null, CancellationToken cancellationToken = default) => PrepareCommand(command).ContinueWith(commandTask => GetWebClient().ExecuteAsync(commandTask.Result, uploadProgress, downloadProgress, cancellationToken).OnSuccess(task =>
+        public async Task<Tuple<HttpStatusCode, string>> RunCommandAsync(MoralisCommand command, IProgress<IDataTransferLevel> uploadProgress = null, IProgress<IDataTransferLevel> downloadProgress = null, CancellationToken cancellationToken = default)
         {
+            MoralisCommand cmd = await PrepareCommand(command);
+
+            Tuple<Status, string> cmdResult = await GetWebClient().ExecuteAsync(cmd, uploadProgress, downloadProgress, cancellationToken);
+
             cancellationToken.ThrowIfCancellationRequested();
 
-            Tuple<HttpStatusCode, string> response = task.Result;
-            string content = response.Item2;
-            int responseCode = (int) response.Item1;
+            string content = cmdResult.Item2;
+            int responseCode = (int)cmdResult.Item1;
 
             if (responseCode >= 500)
             {
-                throw new MoralisFailureException(MoralisFailureException.ErrorCode.InternalServerError, response.Item2);
+                throw new MoralisFailureException(MoralisFailureException.ErrorCode.InternalServerError, cmdResult.Item2);
             }
 
             // The Moralis server returns POCO saved dates as an object. Convert to ISO datetime string.
-            string adjustedData = response.Item2.AdjustJsonForParseDate();
+            string adjustedData = cmdResult.Item2.AdjustJsonForParseDate();
 
             // Remove Results wrapper.
             if (adjustedData.StartsWith("{\"results\":"))
@@ -78,35 +82,40 @@ namespace Moralis.Platform.Services.ClientServices
                 adjustedData = adjustedData.Substring(10, adjustedData.Length - 11);
             }
 
-            Tuple<HttpStatusCode, string> newResponse = new Tuple<HttpStatusCode, string>(response.Item1, adjustedData);
-            
-            return newResponse;
-        })).Unwrap();
+            Tuple<HttpStatusCode, string> newResponse = new Tuple<HttpStatusCode, string>(cmdResult.Item1, adjustedData);
 
-        Task<MoralisCommand> PrepareCommand(MoralisCommand command)
+            return newResponse;
+        }
+
+        async Task<MoralisCommand> PrepareCommand(MoralisCommand command)
         {
             MoralisCommand newCommand = new MoralisCommand(command)
             {
                 Resource = ServerConnectionData.ServerURI
             };
 
-            Task<MoralisCommand> installationIdFetchTask = InstallationService.GetAsync().ContinueWith(task =>
-            {
-                lock (newCommand.Headers)
-                {
-                    newCommand.Headers.Add(new KeyValuePair<string, string>("X-Parse-Installation-Id", task.Result.ToString()));
-                }
-
-                return newCommand;
-            });
-
-            // Locks needed due to installationFetchTask continuation newCommand.Headers.Add-call-related race condition (occurred once in Unity).
-            // TODO: Consider removal of installationFetchTask variable.
+            Guid? guid = await InstallationService.GetAsync();
 
             lock (newCommand.Headers)
             {
-                newCommand.Headers.Add(new KeyValuePair<string, string>("X-Parse-Application-Id", ServerConnectionData.ApplicationID));
-                newCommand.Headers.Add(new KeyValuePair<string, string>("X-Parse-Client-Version", MoralisService<TUser>.Version.ToString()));
+                newCommand.Headers.Add(new KeyValuePair<string, string>("X-Parse-Installation-Id", guid?.ToString()));
+            }
+
+            lock (newCommand.Headers)
+            {
+                KeyValuePair<string, string> appId = new KeyValuePair<string, string>("X-Parse-Application-Id", ServerConnectionData.ApplicationID);
+
+                if (!newCommand.Headers.Contains(appId))
+                {
+                    newCommand.Headers.Add(appId);
+                }
+
+                KeyValuePair<string, string> clientVersion = new KeyValuePair<string, string>("X-Parse-Client-Version", MoralisService<TUser>.Version.ToString());
+
+                if (!newCommand.Headers.Contains(clientVersion))
+                {
+                    newCommand.Headers.Add(clientVersion);
+                }
 
                 if (ServerConnectionData.Headers != null)
                 {
@@ -146,7 +155,7 @@ namespace Moralis.Platform.Services.ClientServices
                 }
             }
 
-            return installationIdFetchTask;
+            return newCommand;
         }
     }
 }

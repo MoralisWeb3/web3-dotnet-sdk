@@ -1,6 +1,6 @@
-﻿using Moralis.SolanaApi.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Moralis.SolanaApi.Models;
 
 namespace Moralis.SolanaApi.Interfaces
 {

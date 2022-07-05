@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using Moralis.Platform.Services.ClientServices;
+using Moralis.Platform.Utilities;
 using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
-using Moralis.Platform.Services.ClientServices;
 using Moralis.Platform.Services.Models;
-using Moralis.Platform.Utilities;
 
 namespace Moralis.Platform.Services.ClientServices
 {
@@ -21,44 +21,38 @@ namespace Moralis.Platform.Services.ClientServices
 
         public MoralisFileService(IMoralisCommandRunner commandRunner, IJsonSerializer jsonSerializer) => (CommandRunner, JsonSerializer) = (commandRunner, jsonSerializer);
 
-        public Task<MoralisFileState> SaveAsync(MoralisFileState state, Stream dataStream, string sessionToken, IProgress<IDataTransferLevel> progress, CancellationToken cancellationToken = default)
+        public async Task<MoralisFileState> SaveAsync(MoralisFileState state, Stream dataStream, string sessionToken, IProgress<IDataTransferLevel> progress, CancellationToken cancellationToken = default)
         {
             if (state.url != null)
-                // !isDirty
-
-                return Task.FromResult(state);
+                return state;
 
             if (cancellationToken.IsCancellationRequested)
-                return Task.FromCanceled<MoralisFileState>(cancellationToken);
+                return await Task.FromCanceled<MoralisFileState>(cancellationToken);
 
             long oldPosition = dataStream.Position;
 
-            return CommandRunner.RunCommandAsync(new MoralisCommand($"server/files/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken).OnSuccess(uploadTask =>
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/files/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken);
                 
-                Tuple<HttpStatusCode, string> result = uploadTask.Result;
-                if (result.Item2 is { })
-                {
-                    MoralisFileState resp = JsonSerializer.Deserialize<MoralisFileState>(result.Item2);
+            cancellationToken.ThrowIfCancellationRequested();
+            MoralisFileState fileState = default;
 
-                    if (String.IsNullOrWhiteSpace(resp.name) || !(resp.url is { }))
-                        throw new MoralisFailureException(MoralisFailureException.ErrorCode.ScriptFailed, "");
-
-                    resp.mediatype = state.mediatype;
-                    return resp;
-                }
-                else
-                    throw new MoralisFailureException(MoralisFailureException.ErrorCode.ScriptFailed, "");
-            }).ContinueWith(task =>
+            if (cmdResult.Item2 is { })
             {
-                // Rewind the stream on failure or cancellation (if possible).
+                fileState = JsonSerializer.Deserialize<MoralisFileState>(cmdResult.Item2);
 
-                if ((task.IsFaulted || task.IsCanceled) && dataStream.CanSeek)
-                    dataStream.Seek(oldPosition, SeekOrigin.Begin);
+                if (String.IsNullOrWhiteSpace(fileState.name) || !(fileState.url is { }))
+                    throw new MoralisFailureException(MoralisFailureException.ErrorCode.ScriptFailed, "");
 
-                return task;
-            }).Unwrap();
+                fileState.mediatype = state.mediatype;
+            }
+            else
+                throw new MoralisFailureException(MoralisFailureException.ErrorCode.ScriptFailed, "");
+        
+            // Rewind the stream on failure or cancellation (if possible).
+            if (dataStream.CanSeek)
+                dataStream.Seek(oldPosition, SeekOrigin.Begin);
+
+            return fileState;
         }
     }
 }

@@ -6,11 +6,18 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Description>Provides integration and models for Moralis' SDK</Description>
-    <Authors>Moralis</Authors>
+    <Authors>Moralis IO</Authors>
     <SignAssembly>true</SignAssembly>
-    <PackageIcon>Moralis-Icon-Dark.png</PackageIcon>
-    <PackageProjectUrl>moralis.io</PackageProjectUrl>
-    <Copyright>Copyright (c) 2021 Moralis</Copyright>
+    <PackageIcon>Moralis-LightBG-Symbol-1024.png</PackageIcon>
+    <PackageProjectUrl>https://www.moralis.io</PackageProjectUrl>
+    <Copyright>Copyright (c) 2022 Moralis</Copyright>
+    <AssemblyOriginatorKeyFile>moralis_sdk.sn.snk</AssemblyOriginatorKeyFile>
+    <FileVersion>1.0.2.0</FileVersion>
+	<Version>1.0.2</Version>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <RepositoryUrl>https://github.com/MoralisWeb3/web3-dotnet-sdk</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,17 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="RestSharp" Version="106.12.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="Moralis-Icon-Dark.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
@@ -55,6 +57,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Moralis-LightBG-Symbol-1024.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 

@@ -1,5 +1,4 @@
-﻿
-using Moralis.Platform.Objects;
+﻿using Moralis.Platform.Objects;
 
 namespace Moralis.Platform.Abstractions
 {

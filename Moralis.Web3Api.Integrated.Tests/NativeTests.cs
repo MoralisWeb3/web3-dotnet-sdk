@@ -22,7 +22,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetBlock", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetContractEvents");
             if (await GetContractEvents(web3Api))
@@ -32,7 +35,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetContractEvents", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetDateToBlock");
             if (await GetDateToBlock(web3Api))
@@ -42,7 +48,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetDateToBlock", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetLogsByAddress");
             if (await GetLogsByAddress(web3Api, address))
@@ -52,7 +61,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetLogsByAddress", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetNFTTransfersByBlock");
             if (await GetNFTTransfersByBlock(web3Api))
@@ -62,7 +74,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTTransfersByBlock", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetTransaction");
             if (await GetTransaction(web3Api))
@@ -72,7 +87,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTransaction", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test RunContractFunction");
             if (await RunContractFunction(web3Api))
@@ -82,7 +100,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {              
                 testResults.FailedTests.Add("RunContractFunction", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test RunContractFunction1");
             if (await RunContractFunction1(web3Api))
@@ -92,6 +113,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("RunContractFunction1", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
 
             return testResults;

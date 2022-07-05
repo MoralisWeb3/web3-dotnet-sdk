@@ -55,7 +55,7 @@ namespace Moralis.Platform.Abstractions
         //
         // Summary:
         //     Aborts the connection and cancels any pending IO operations.
-       void Abort();
+        void Abort();
         //
         // Summary:
         //     Close the System.Net.WebSockets.ClientWebSocket instance as an asynchronous operation.
@@ -111,7 +111,7 @@ namespace Moralis.Platform.Abstractions
         //     Returns System.Threading.Tasks.Task. The task object representing the asynchronous
         //     operation.
         Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
-        
+
         //
         // Summary:
         //     Receive data on System.Net.WebSockets.ClientWebSocket as an asynchronous operation.

@@ -23,7 +23,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetPairAddress", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test GetPairReserves");
             if (await GetPairReserves(web3Api))
@@ -33,6 +36,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetPairReserves", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
 
             return testResults;

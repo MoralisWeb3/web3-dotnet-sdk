@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.IO;
 using System.Web;
-using System.Linq;
-using System.Net;
 using System.Text;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Extensions;
+using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using Moralis.SolanaApi.Models;
 
 namespace Moralis.SolanaApi.Client
 {
@@ -28,7 +26,7 @@ namespace Moralis.SolanaApi.Client
         public ApiClient(String basePath = "http://localhost:3063/api/v2")
         {
             BasePath = basePath;
-            RestClient = new RestClient(BasePath);
+            //HttpClient = new HttpClient()
         }
 
         /// <summary>
@@ -41,7 +39,7 @@ namespace Moralis.SolanaApi.Client
         /// Gets or sets the RestClient.
         /// </summary>
         /// <value>An instance of the RestClient</value>
-        public RestClient RestClient { get; set; }
+        //public HttpClient RestClient { get; set; }
 
         /// <summary>
         /// Gets the default header.
@@ -63,71 +61,103 @@ namespace Moralis.SolanaApi.Client
         /// <param name="fileParams">File parameters.</param>
         /// <param name="authSettings">Authentication settings.</param>
         /// <returns>Object</returns>
-        public async Task<Object> CallApi(String path, RestSharp.Method method, Dictionary<String, String> queryParams, String postBody,
+        public async Task<HttpResponseMessage> CallApi(String path, HttpMethod method, Dictionary<String, String> queryParams, String postBody,
             Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, FileParameter> fileParams, String[] authSettings)
+            Dictionary<String, Models.FileParameter> fileParams, String[] authSettings)
         {
-
-            var request = new RestRequest(path, method);
+            HttpResponseMessage response = null;
+            string url = path;
+            bool firstParam = true;
 
             UpdateParamsForAuth(queryParams, headerParams, authSettings);
 
-            // add default header, if any
-            if (_defaultHeaderMap != null)
+            if (queryParams != null && queryParams.Keys.Count > 0)
             {
-                foreach (var defaultHeader in _defaultHeaderMap)
+                foreach (string k in queryParams.Keys)
                 {
-                    request.AddHeader(defaultHeader.Key, defaultHeader.Value);
+                    if (firstParam)
+                    {
+                        url = $"{url}?";
+                        firstParam = false;
+                    }
+                    else
+                    {
+                        url = $"{url}&";
+                    }
+
+                    url = $"{url}{k}={queryParams[k]}";
                 }
             }
 
-            // add header parameter, if any
+            if (formParams != null && formParams.Keys.Count > 0)
+            {
+                foreach (string k in formParams.Keys)
+                {
+                    if (firstParam)
+                    {
+                        url = $"{url}?";
+                        firstParam = false;
+                    }
+                    else
+                    {
+                        url = $"{url}&";
+                    }
+
+                    url = $"{url}{k}={formParams[k]}";
+                }
+            }
+
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(BasePath);
+
+            if (DefaultHeader != null)
+            {
+                foreach (string k in DefaultHeader.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(k, DefaultHeader[k]);
+                }
+            }
+
             if (headerParams != null)
             {
-                foreach (var param in headerParams)
+                foreach (string k in headerParams.Keys)
                 {
-                    request.AddHeader(param.Key, param.Value);
+                    client.DefaultRequestHeaders.Add(k, headerParams[k]);
                 }
             }
 
-            // add query parameter, if any
-            if (queryParams != null)
+            // The HttpClient strips out the Local path from domain. 
+            // Re-add this to the url so it is included properly.
+            if (!client.BaseAddress.LocalPath.Equals("/"))
             {
-                foreach (var param in queryParams)
-                {
-                    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
-                }
+                url = $"{client.BaseAddress.LocalPath}{url}";
             }
 
-            // add form parameter, if any
-            if (formParams != null)
+            if (HttpMethod.Get.Equals(method))
             {
-                foreach (var param in formParams)
-                {
-                    request.AddParameter(param.Key, param.Value, ParameterType.QueryString);
-                }
+                response = await client.GetAsync(url);
+            }
+            else if (HttpMethod.Post.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PostAsync(url, data);
+            }
+            else if (HttpMethod.Delete.Equals(method))
+            {
+                response = await client.DeleteAsync(url);
+            }
+            else if (HttpMethod.Put.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PutAsync(url, data);
+            }
+            else if (HttpMethod.Patch.Equals(method))
+            {
+                var data = new StringContent(postBody, Encoding.UTF8, "application/json");
+                response = await client.PatchAsync(url, data);
             }
 
-            // add file parameter, if any
-            if (formParams != null)
-            {
-                foreach (var param in fileParams)
-                {
-                    request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentLength, param.Value.ContentType);
-                }
-                //request.AddFile(param.Value.Name, param.Value.Writer, param.Value.FileName, param.Value.ContentType);
-            }
-
-            if (postBody != null) // http body (model) parameter
-                request.AddParameter("application/json", postBody, ParameterType.RequestBody);
-
-            Task<Object> restTask = Task.Run(() =>
-            {
-                return (Object)RestClient.Execute(request);
-            });
-
-            return await restTask;
-
+            return response;
         }
 
         /// <summary>
@@ -148,11 +178,8 @@ namespace Moralis.SolanaApi.Client
         /// <returns>Escaped string.</returns>
         public string EscapeString(string str)
         {
-#if MORALIS_UNITY
-            return UnityEngine.Networking.UnityWebRequest.EscapeURL(str);
-#else
             return HttpUtility.UrlEncode(str);
-#endif
+            //return RestSharp.Contrib.HttpUtility.UrlEncode(str);
         }
 
         /// <summary>
@@ -161,12 +188,12 @@ namespace Moralis.SolanaApi.Client
         /// <param name="name">Parameter name.</param>
         /// <param name="stream">Input stream.</param>
         /// <returns>FileParameter.</returns>
-        public FileParameter ParameterToFile(string name, Stream stream)
+        public Models.FileParameter ParameterToFile(string name, Stream stream)
         {
             if (stream is FileStream)
-                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
             else
-                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
+                return Models.FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
         }
 
         /// <summary>
@@ -342,5 +369,19 @@ namespace Moralis.SolanaApi.Client
             return Convert.ChangeType(fromObject, toObject);
         }
 
+        public List<Parameter> ResponHeadersToParameterList(HttpResponseHeaders source)
+        {
+            IEnumerator<KeyValuePair<string, IEnumerable<string>>> headerEnumerator = source.GetEnumerator();
+            List<Parameter> headers = new List<Parameter>();
+
+            while (headerEnumerator.MoveNext())
+            {
+                KeyValuePair<string, IEnumerable<string>> kp = headerEnumerator.Current;
+                Parameter header = new Parameter(kp.Key, kp.Value, ParameterType.HttpHeader);
+                headers.Add(header);
+            }
+
+            return headers;
+        }
     }
 }

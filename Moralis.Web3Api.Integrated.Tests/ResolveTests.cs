@@ -24,7 +24,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("ResolveDomain", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(250);
 
             Console.WriteLine("Running test ResolveAddress");
             if (await ResolveAddress(web3Api))
@@ -34,6 +37,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("ResolveAddress", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
 
             return testResults;

@@ -11,6 +11,7 @@ using System.Threading;
 using Moralis.Web3Api.Interfaces;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
+using System.Threading.Tasks;
 
 namespace Moralis
 {
@@ -160,9 +161,11 @@ namespace Moralis
 
         public async Task<Guid?> GetInstallationIdAsync() => await InstallationService.GetAsync();
 
-        public MoralisQuery<T> Query<T>() where T : MoralisObject
+        public async Task<MoralisQuery<T>> Query<T>() where T : MoralisObject
         {
-            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, GetCurrentUser().sessionToken); //, logger);
+            MoralisUser user = await GetCurrentUser();
+
+            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, user != null ? user.sessionToken : null); //, logger);
         }
 
         public T Create<T>(object[] parameters = null) where T : MoralisObject
@@ -170,7 +173,7 @@ namespace Moralis
             return this.ServiceHub.Create<T>(parameters);
         }
 
-        public MoralisUser GetCurrentUser() => this.ServiceHub.GetCurrentUser();
+        public Task<MoralisUser> GetCurrentUser() => this.ServiceHub.GetCurrentUser();
 
 
         public void Dispose()

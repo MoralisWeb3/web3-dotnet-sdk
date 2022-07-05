@@ -1,5 +1,5 @@
-﻿using Moralis.Platform.Queries.Live;
-using Moralis.Platform.Objects;
+﻿using Moralis.Platform.Objects;
+using Moralis.Platform.Queries.Live;
 
 namespace Moralis.Platform.Abstractions
 {

@@ -61,8 +61,21 @@ namespace Moralis.Platform.Services.ClientServices
                 }));
             }
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WhenAll(tasks.ToArray());
         }
+
+        #if UNITY_WEBGL
+        /// <summary>
+        /// For WebGL Only should be called on Unity Update.
+        /// </summary>
+        public void HandleUpdateEvent()
+        {
+            foreach (ILiveQueryClient c in clients)
+            {
+                c.HandleUpdateEvent();
+            }
+        }
+        #endif
 
         /// <summary>
         /// Create and return a subscription to the specified query.
@@ -91,5 +104,12 @@ namespace Moralis.Platform.Services.ClientServices
         {
             instance.Dispose();
         }
+
+        #if UNITY_WEBGL
+        public static void UpdateWebSockets()
+        {
+            instance.HandleUpdateEvent();
+        }
+        #endif
     }
 }

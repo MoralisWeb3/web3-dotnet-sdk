@@ -1,9 +1,11 @@
 ﻿using System.Threading;
+using Moralis.Platform.Utilities;
 using System.Threading.Tasks;
+using System.Net;
+using System;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Objects;
 using Moralis.Platform.Services.Models;
-using Moralis.Platform.Utilities;
 
 namespace Moralis.Platform.Services.ClientServices
 {
@@ -15,29 +17,38 @@ namespace Moralis.Platform.Services.ClientServices
 
         public MoralisSessionService(IMoralisCommandRunner commandRunner, IJsonSerializer jsonSerializer) => (CommandRunner, JsonSerializer) = (commandRunner, jsonSerializer);
 
-        public Task<MoralisSession> GetSessionAsync(string sessionToken, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) => CommandRunner.RunCommandAsync(new MoralisCommand("sessions/me", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken).OnSuccess(task =>
+        public async Task<MoralisSession> GetSessionAsync(string sessionToken, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
         {
-            MoralisSession resp = default;
-            if ((int)task.Result.Item1 < 300)
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("sessions/me", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+         
+            MoralisSession session = default;
+
+            if ((int)cmdResp.Item1 < 300)
             {
-                resp = JsonSerializer.Deserialize<MoralisSession>(task.Result.Item2);
+                session = JsonSerializer.Deserialize<MoralisSession>(cmdResp.Item2);
             }
 
-            return resp;
-        });
+            return session;
+        }
 
-        public Task RevokeAsync(string sessionToken, CancellationToken cancellationToken = default) => CommandRunner.RunCommandAsync(new MoralisCommand("logout", method: "POST", sessionToken: sessionToken, data: "{}"), cancellationToken: cancellationToken);
-
-        public Task<MoralisSession> UpgradeToRevocableSessionAsync(string sessionToken, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) => CommandRunner.RunCommandAsync(new MoralisCommand("upgradeToRevocableSession", method: "POST", sessionToken: sessionToken, data: "{}"), cancellationToken: cancellationToken).OnSuccess(task =>
+        public async Task RevokeAsync(string sessionToken, CancellationToken cancellationToken = default)
         {
-            MoralisSession resp = default;
-            if ((int)task.Result.Item1 < 300)
+            await CommandRunner.RunCommandAsync(new MoralisCommand("logout", method: "POST", sessionToken: sessionToken, data: "{}"), cancellationToken: cancellationToken);
+        }
+
+        public async Task<MoralisSession> UpgradeToRevocableSessionAsync(string sessionToken, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
+        {
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("upgradeToRevocableSession", method: "POST", sessionToken: sessionToken, data: "{}"), cancellationToken: cancellationToken);
+              
+            MoralisSession session = default;
+
+            if ((int)cmdResp.Item1 < 300)
             {
-                resp = JsonSerializer.Deserialize<MoralisSession>(task.Result.Item2);
+                session = JsonSerializer.Deserialize<MoralisSession>(cmdResp.Item2);
             }
 
-            return resp;
-        });
+            return session;
+        }
 
         public bool IsRevocableSessionToken(string sessionToken) => sessionToken.Contains("r:");
     }

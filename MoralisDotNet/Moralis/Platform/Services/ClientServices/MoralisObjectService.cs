@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
 using Moralis.Platform.Objects;
-using Moralis.Platform.Queries;
 using Moralis.Platform.Services.Models;
 using Moralis.Platform.Utilities;
+using Moralis.Core.Exceptions;
 
 namespace Moralis.Platform.Services.ClientServices
 {
     public class MoralisObjectService : IObjectService
     {
-        //IServiceHub<MoralisUser> Services { get; }
         IMoralisCommandRunner CommandRunner { get; }
 
         IServerConnectionData ServerConnectionData { get; }
@@ -24,77 +24,53 @@ namespace Moralis.Platform.Services.ClientServices
         public MoralisObjectService(IMoralisCommandRunner commandRunner, IServerConnectionData serverConnectionData, IJsonSerializer jsonSerializer)
         {
             CommandRunner = commandRunner;
-            //Services = serviceHub;
             ServerConnectionData = serverConnectionData;
             JsonSerializer = jsonSerializer;
-
-            
         }
 
-        public Task<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
+        public async Task<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
         {
             MoralisCommand command = new MoralisCommand($"server/classes/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.objectId)}", method: "GET", sessionToken: sessionToken, data: default);
-            return CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken).OnSuccess(task =>
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
+         
+            T resp = default;
+
+            if ((int)cmdResp.Item1 < 400)
             {
-                T resp = default;
+                resp = (T)JsonSerializer.Deserialize<T>(cmdResp.Item2);
+                    
+            }
 
-                if ((int)task.Result.Item1 < 400)
-                {
-                    resp = (T)JsonSerializer.Deserialize<T>(task.Result.Item2);
-
-                    resp.ObjectService = this;
-                }
-
-                return resp;
-            });
+            return resp;
         }
 
-        public Task<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default)
+        public async Task<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default)
         {
             MoralisCommand command = new MoralisCommand(item.objectId == null ? $"server/classes/{Uri.EscapeDataString(item.ClassName)}" : $"server/classes/{Uri.EscapeDataString(item.ClassName)}/{item.objectId}", method: item.objectId is null ? "POST" : "PUT", sessionToken: sessionToken, data: operations is { } && operations.Count > 0 ? JsonSerializer.Serialize(operations, JsonSerializer.DefaultOptions).JsonInsertParseDate() : JsonSerializer.Serialize(item, JsonSerializer.DefaultOptions).JsonInsertParseDate());
-            return CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken).OnSuccess(task => 
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
+            
+            string resp = default;
+
+            if ((int)cmdResp.Item1 < 400)
             {
-                string resp = default;
+                resp = cmdResp.Item2;
+            }
+            else
+            {
+                throw new MoralisSaveException(cmdResp.Item2);
+            }
 
-                if ((int)task.Result.Item1 < 400)
-                {
-                    resp = task.Result.Item2;
-                }
-
-                return resp;
-            });
+            return resp;
         }
 
-        //public IList<Task<T>> SaveAllAsync<T>(IList<T> items, IList<IDictionary<string, IMoralisFieldOperation>> operationsList, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject => ExecuteBatchRequests<T>(items.Zip(operationsList, (item, operations) => new MoralisCommand(item.ObjectId is null ? $"server/classes/{Uri.EscapeDataString(item.ClassName)}" : $"server/classes/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.ObjectId)}", method: item.ObjectId is null ? "POST" : "PUT", data: operations is { } && operations.Count > 0 ? JsonConvert.SerializeObject(operations, jsonSettings).JsonInsertParseDate() : JsonConvert.SerializeObject(item, jsonSettings).JsonInsertParseDate())).ToList(), sessionToken, cancellationToken).Select(task => task.Result).ToList();
-
-        public Task DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default) => CommandRunner.RunCommandAsync(new MoralisCommand($"server/classes/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+        public async Task DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default)
+        {
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/classes/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+         }
                
-        //public IList<Task> DeleteAllAsync<T>(IList<T> items, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject => ExecuteBatchRequests<T>(items.Where(item => item.ObjectId is { }).Select(item => new MoralisCommand($"server/classes/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.ObjectId)}", method: "DELETE", data: default)).ToList(), sessionToken, cancellationToken).Cast<Task>().ToList();
-
         int MaximumBatchSize { get; } = 50;
 
-
-        //internal IList<Task<T>> ExecuteBatchRequests<T>(IList<MoralisCommand> requests, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
-        //{
-        //    List<Task<T>> tasks = new List<Task<T>>();
-        //    int batchSize = requests.Count;
-
-        //    IEnumerable<MoralisCommand> remaining = requests;
-
-        //    while (batchSize > MaximumBatchSize)
-        //    {
-        //        List<MoralisCommand> process = remaining.Take(MaximumBatchSize).ToList();
-
-        //        remaining = remaining.Skip(MaximumBatchSize);
-        //        tasks.AddRange(ExecuteBatchRequest<T>(process, sessionToken, cancellationToken));
-        //        batchSize = remaining.Count();
-        //    }
-
-        //    tasks.AddRange(ExecuteBatchRequest(remaining.ToList(), sessionToken, cancellationToken));
-        //    return tasks;
-        //}
-
-        IList<Task<IDictionary<string, object>>> ExecuteBatchRequest<T>(IList<MoralisCommand> requests, string sessionToken, CancellationToken cancellationToken = default)
+        async Task<IList<Task<IDictionary<string, object>>>> ExecuteBatchRequestAsync<T>(IList<MoralisCommand> requests, string sessionToken, CancellationToken cancellationToken = default)
         {
             int batchSize = requests.Count;
 
@@ -125,46 +101,46 @@ namespace Moralis.Platform.Services.ClientServices
 
             MoralisCommand command = new MoralisCommand("batch", method: "POST", sessionToken: sessionToken, data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(requests)] = encodedRequests }, JsonSerializer.DefaultOptions));
 
-            CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken).ContinueWith(task =>
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
+
+            if ((int)cmdResp.Item1 < 400)
             {
-                if (task.IsFaulted || task.IsCanceled)
+                foreach (TaskCompletionSource<IDictionary<string, object>> tcs in completionSources)
                 {
-                    foreach (TaskCompletionSource<IDictionary<string, object>> tcs in completionSources)
-                        if (task.IsFaulted)
-                            tcs.TrySetException(task.Exception);
-                        else if (task.IsCanceled)
-                            tcs.TrySetCanceled();
-
-                    return;
+                    if (TaskStatus.Faulted.Equals(tcs.Task.Status))
+                        tcs.TrySetException(new Exception("Update failed."));
+                    else if (TaskStatus.Canceled.Equals(tcs.Task.Status))
+                        tcs.TrySetCanceled();
                 }
+                
 
-                IList<object> resultsArray = Conversion.As<IList<object>>(task.Result.Item2);
+                IList<object> resultsArray = Conversion.As<IList<object>>(cmdResp.Item2);
                 int resultLength = resultsArray.Count;
 
                 if (resultLength != batchSize)
                 {
                     foreach (TaskCompletionSource<IDictionary<string, object>> completionSource in completionSources)
                         completionSource.TrySetException(new InvalidOperationException($"Batch command result count expected: {batchSize} but was: {resultLength}."));
-
-                    return;
                 }
-
-                for (int i = 0; i < batchSize; ++i)
+                else
                 {
-                    Dictionary<string, object> result = resultsArray[i] as Dictionary<string, object>;
-                    TaskCompletionSource<IDictionary<string, object>> target = completionSources[i];
-
-                    if (result.ContainsKey("success"))
-                        target.TrySetResult(result["success"] as IDictionary<string, object>);
-                    else if (result.ContainsKey("error"))
+                    for (int i = 0; i < batchSize; ++i)
                     {
-                        IDictionary<string, object> error = result["error"] as IDictionary<string, object>;
-                        target.TrySetException(new MoralisFailureException((MoralisFailureException.ErrorCode)(long)error["code"], error[nameof(error)] as string));
+                        Dictionary<string, object> result = resultsArray[i] as Dictionary<string, object>;
+                        TaskCompletionSource<IDictionary<string, object>> target = completionSources[i];
+
+                        if (result.ContainsKey("success"))
+                            target.TrySetResult(result["success"] as IDictionary<string, object>);
+                        else if (result.ContainsKey("error"))
+                        {
+                            IDictionary<string, object> error = result["error"] as IDictionary<string, object>;
+                            target.TrySetException(new MoralisFailureException((MoralisFailureException.ErrorCode)(long)error["code"], error[nameof(error)] as string));
+                        }
+                        else
+                            target.TrySetException(new InvalidOperationException("Invalid batch command response."));
                     }
-                    else
-                        target.TrySetException(new InvalidOperationException("Invalid batch command response."));
                 }
-            });
+            }
 
             return tasks;
         }

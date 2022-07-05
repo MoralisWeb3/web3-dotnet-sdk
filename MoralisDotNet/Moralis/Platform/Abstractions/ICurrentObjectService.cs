@@ -42,6 +42,6 @@ namespace Moralis.Platform.Abstractions
         /// <summary>
         /// Clears current <see cref="MoralisObject"/> from disk.
         /// </summary>
-        void ClearFromDisk();
+        Task ClearFromDiskAsync();
     }
 }

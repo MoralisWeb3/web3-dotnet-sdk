@@ -1,65 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Reflection;
-using Moralis.Platform.Abstractions;
+using System.Threading;
 using Moralis.Platform.Utilities;
+using System.Threading.Tasks;
+using Moralis.Platform.Abstractions;
 using Newtonsoft.Json;
+using Moralis.Core.Exceptions;
 
 namespace Moralis.Platform.Objects
 {
+
     class MoralisUserJsonConvertor : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
             return true;
         }
+        public override bool CanRead
+        {
+            get { return false; }
+        }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            //MyCustomType myCustomType = new MyCustomType();//for null values        
-            Dictionary<string, object> acl = new Dictionary<string, object>();
-            string key = String.Empty;
-
-            while (reader.Read())
-            {
-                var tokenType = reader.TokenType;
-                if (reader.TokenType == JsonToken.PropertyName)
-                {
-                    key = (reader.Value as string) ?? string.Empty;
-                }
-                else if (reader.TokenType == JsonToken.StartObject)
-                {
-                    Dictionary<string, object> cntlDict = new Dictionary<string, object>();
-                    var cntlKey = string.Empty;
-
-                    while (reader.Read())
-                    {
-                        if (reader.TokenType == JsonToken.PropertyName)
-                        {
-                            cntlKey = (reader.Value as string) ?? string.Empty;
-                        }
-                        else if (reader.TokenType == JsonToken.Boolean)
-                        {
-                            bool? b = reader.Value as bool?;
-                            cntlDict.Add(cntlKey, b.Value);
-                        }
-                        if (reader.TokenType == JsonToken.EndObject)
-                        {
-                            acl.Add(key, cntlDict);
-                            break;
-                        }
-                    }
-                }
-                else if (reader.TokenType == JsonToken.EndObject)
-                {
-                    break;
-                }
-            }
-
-            return new MoralisAcl(acl);
+            throw new NotImplementedException("Unnecessary because CanRead is false. The type will skip the converter.");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -75,7 +41,6 @@ namespace Moralis.Platform.Objects
             serializer.Serialize(writer, user);
         }
     }
-
 
     [JsonConverter(typeof(MoralisUserJsonConvertor))]
     public class MoralisUser : MoralisObject
@@ -93,49 +58,91 @@ namespace Moralis.Platform.Objects
             DateTime? createdAt = null,
             DateTime? updatedAt = null,
             MoralisAcl ACL = null,
-            string sessionToken = null) : base("_User", objectId, sessionToken, createdAt, updatedAt, ACL)
+            string sessionToken = null,
+            string ethAddress = null
+            ) : base("_User", objectId, sessionToken, createdAt, updatedAt, ACL)
         {
             this.username = userName;
-            this.authData = authData ?? new Dictionary<string, IDictionary<string, object>>();
+            this.authData = authData != null ? authData : new Dictionary<string, IDictionary<string, object>>();
+
+            if (!String.IsNullOrEmpty(ethAddress))
+            {
+                this.ethAddress = ethAddress;
+                this.accounts = new string[1];
+                this.accounts[0] = ethAddress;
+            }
+            else
+            {
+                accounts = new string[0];
+            }
         }
 
         public string username;
 
         public IDictionary<string, IDictionary<string, object>> authData; 
 
-        //public string sessionToken;
         public string password;
         public string email;
+        public string ethAddress;
+        public string[] accounts;
 
         internal static IDictionary<string, IAuthenticationProvider> Authenticators { get; } = new Dictionary<string, IAuthenticationProvider> { };
     
-        internal static HashSet<string> ImmutableKeys { get; } = new HashSet<string> { "sessionToken", "isNew" };
+        internal static HashSet<string> ImmutableKeys { get; } = new HashSet<string> { "classname", "sessionToken", "isNew" };
        
         internal ICurrentUserService<MoralisUser> CurrentUserService { get; set; }
 
+        internal async Task SignUpAsync(Task toAwait, CancellationToken cancellationToken)
+        {
+            if (String.IsNullOrEmpty(this.objectId))
+            {
+                if (String.IsNullOrEmpty(this.username)) throw new ArgumentException("User username required for this action.");
+                if (String.IsNullOrEmpty(this.password)) throw new ArgumentException("User password required for this action.");
 
-        internal Task SignUpAsync(Task toAwait, CancellationToken cancellationToken) => throw new NotFiniteNumberException();
+                await this.SaveAsync();
+            }
+        }
 
         public Dictionary<string, object> ToParameterDictionary()
         {
-            List<string> propertiesToSkip = new List<string>(new string[]{ "createdat", "sessiontoken" });
+            List<string> propertiesToSkip = new List<string>(new string[] { "classname", "createdat", "sessiontoken" });
             Dictionary<string, object> result = new Dictionary<string, object>();
 
             // Use reflection to get all string properties 
             // that have getters and setters
-            var properties = from p in this.GetType().GetProperties()
-                             where p.CanRead &&
-                                   p.CanWrite
-                             select p;
+            IEnumerable<PropertyInfo> properties = from p in this.GetType().GetProperties()
+                                                   where p.CanRead &&
+                                                         p.CanWrite
+                                                   select p;
 
-            foreach (var property in properties)
+            foreach (PropertyInfo property in properties)
             {
                 // Not all properties should be included on save
                 if (isSaving && propertiesToSkip.Contains(property.Name.ToLower())) continue;
 
                 var value = property.GetValue(this);
 
-                result.Add(property.Name, value);
+                if (value != null)
+                {
+                    result.Add(property.Name, value);
+                }
+            }
+
+            IEnumerable<FieldInfo> fields = from f in this.GetType().GetFields()
+                                            where f.IsPublic
+                                            select f;
+
+            foreach (FieldInfo field in fields)
+            {
+                // Not all properties should be included on save
+                if (isSaving && propertiesToSkip.Contains(field.Name.ToLower())) continue;
+
+                var value = field.GetValue(this);
+
+                if (value != null)
+                {
+                    result.Add(field.Name, value);
+                }
             }
 
             return result;
@@ -147,7 +154,7 @@ namespace Moralis.Platform.Objects
         /// password must be set before calling SignUpAsync.
         /// </summary>
         public Task SignUpAsync() => SignUpAsync(CancellationToken.None);
-
+        
         public void SetSaving(bool val)
         {
             isSaving = val;
@@ -159,50 +166,23 @@ namespace Moralis.Platform.Objects
         /// password must be set before calling SignUpAsync.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
-        public Task SignUpAsync(CancellationToken cancellationToken) => TaskQueue.Enqueue(toAwait => SignUpAsync(toAwait, cancellationToken), cancellationToken);
+        public async Task SignUpAsync(CancellationToken cancellationToken) //=> TaskQueue.Enqueue(toAwait => SignUpAsync(toAwait, cancellationToken), cancellationToken);
+        {
+            if (String.IsNullOrEmpty(this.objectId))
+            {
+                if (String.IsNullOrEmpty(this.username)) throw new ArgumentException("User username required for this action.");
+                if (String.IsNullOrEmpty(this.password)) throw new ArgumentException("User password required for this action.");
 
-        //protected override Task SaveAsync(Task toAwait, CancellationToken cancellationToken)
-        //{
-        //    lock (Mutex)
-        //    {
-        //        if (ObjectId is null)
-        //        {
-        //            throw new InvalidOperationException("You must call SignUpAsync before calling SaveAsync.");
-        //        }
-
-        //        return base.SaveAsync(toAwait, cancellationToken).OnSuccess(_ => Services.CurrentUserController.IsCurrent(this) ? Services.SaveCurrentUserAsync(this) : Task.CompletedTask).Unwrap();
-        //    }
-        //}
-
-        // If this is already the current user, refresh its state on disk.
-        //internal override Task<ParseObject> FetchAsyncInternal(Task toAwait, CancellationToken cancellationToken) => base.FetchAsyncInternal(toAwait, cancellationToken).OnSuccess(t => !Services.CurrentUserController.IsCurrent(this) ? Task.FromResult(t.Result) : Services.SaveCurrentUserAsync(this).OnSuccess(_ => t.Result)).Unwrap();
-
-        //internal Task LogOutAsync(Task toAwait, CancellationToken cancellationToken)
-        //{
-        //    string oldSessionToken = SessionToken;
-        //    if (oldSessionToken == null)
-        //    {
-        //        return Task.FromResult(0);
-        //    }
-
-        //    // Cleanup in-memory session.
-        //    this.SessionToken = null;
-        //    return Task.WhenAll(CurrentUserService.LogOutAsync();
-        //}
-
-        //internal Task UpgradeToRevocableSessionAsync() => UpgradeToRevocableSessionAsync(CancellationToken.None);
-
-        //internal Task UpgradeToRevocableSessionAsync(CancellationToken cancellationToken) => TaskQueue.Enqueue(toAwait => UpgradeToRevocableSessionAsync(toAwait, cancellationToken), cancellationToken);
-
-        //internal Task UpgradeToRevocableSessionAsync(Task toAwait, CancellationToken cancellationToken)
-        //{
-        //    string sessionToken = SessionToken;
-
-        //    return toAwait.OnSuccess(_ => Services.UpgradeToRevocableSessionAsync(sessionToken, cancellationToken)).Unwrap().OnSuccess(task => SetSessionTokenAsync(task.Result)).Unwrap();
-        //}
-
-
-
+                try
+                {
+                    await this.SaveAsync();
+                }
+                catch (MoralisSaveException msexp)
+                {
+                    throw new MoralisSignupException(msexp.Message);
+                }
+            }
+        }
 
         /// <summary>
         /// Removes null values from authData (which exist temporarily for unlinking)
@@ -269,33 +249,7 @@ namespace Moralis.Platform.Objects
                     restorationSuccess = provider.RestoreAuthentication(data);
                 }
             }
-
-            //if (!restorationSuccess)
-            //{
-            //    UnlinkFromAsync(provider.AuthType, CancellationToken.None);
-            //}
         }
-
-        //internal Task LinkWithAsync(string authType, IDictionary<string, object> data, CancellationToken cancellationToken) => TaskQueue.Enqueue(toAwait =>
-        //{
-        //    IDictionary<string, IDictionary<string, object>> authData = AuthData;
-
-        //    if (authData == null)
-        //    {
-        //        authData = AuthData = new Dictionary<string, IDictionary<string, object>>();
-        //    }
-
-        //    authData[authType] = data;
-        //    AuthData = authData;
-
-        //    return SaveAsync(cancellationToken);
-        //}, cancellationToken);
-
-
-        /// <summary>
-        /// Unlinks a user from a service.
-        /// </summary>
-        //internal Task UnlinkFromAsync(string authType, CancellationToken cancellationToken) => LinkWithAsync(authType, null, cancellationToken);
 
         /// <summary>
         /// Checks whether a user is linked to a service.

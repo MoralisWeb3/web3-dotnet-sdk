@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -6,6 +7,7 @@ using Moralis.Platform.Exceptions;
 using static Moralis.Platform.Exceptions.MoralisFailureException;
 using System.Collections.Generic;
 using Moralis.Platform.Abstractions;
+using Moralis.Platform.Queries.Live;
 
 namespace Moralis.Platform.Queries.Live
 {
@@ -52,7 +54,7 @@ namespace Moralis.Platform.Queries.Live
 
         private IClientWebSocket webSocket;
 
-        public SubscribableWebSocket(byte[] subRequest, IServerConnectionData connectionData, int requestId, string installationId, string sessionToken, IJsonSerializer jsonSerializer )
+        public SubscribableWebSocket(byte[] subRequest, IServerConnectionData connectionData, int requestId, string installationId, string sessionToken, IJsonSerializer jsonSerializer)
         {
             subscriptionRequest = subRequest;
             ConncetionData = connectionData;
@@ -77,7 +79,7 @@ namespace Moralis.Platform.Queries.Live
             bool receiving = false;
             List<byte> messageBytes = new List<byte>();
 
-            using (IClientWebSocket ws = webSocket switch 
+            using (IClientWebSocket ws = webSocket switch
             {
                 { } => webSocket,
                 _ => new MoralisClientWebSocket()
@@ -112,7 +114,7 @@ namespace Moralis.Platform.Queries.Live
                             msgSent = true;
                         }
                         // If in closing status, create and send an unsubscribe request.
-                        else if (!unsubscribeSent &&  LiveQueryClientStatusTypes.Closing.Equals(ClientStatus))
+                        else if (!unsubscribeSent && LiveQueryClientStatusTypes.Closing.Equals(ClientStatus))
                         {
                             SendGeneralMessage("Sending unsubscribe request.");
                             byte[] bytes = CreateUnsubscribeRequest();
@@ -170,7 +172,7 @@ namespace Moralis.Platform.Queries.Live
         /// </summary>
         /// <param name="ws"></param>
         public void SetWebsocket(IClientWebSocket ws) => webSocket = ws;
-        
+
         private byte[] CreateConnectRequest()
         {
             ConnectRequest msg = new ConnectRequest()

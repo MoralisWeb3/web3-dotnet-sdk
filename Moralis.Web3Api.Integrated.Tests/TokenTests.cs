@@ -2,7 +2,6 @@
 using Moralis.Web3Api.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Moralis.Web3Api.Integrated.Tests
@@ -23,7 +22,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetAllTokenIds", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetContractNFTTransfers");
             if (await GetContractNFTTransfers(web3Api))
@@ -33,7 +35,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetContractNFTTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTLowestPrice");
             if (await GetNFTLowestPrice(web3Api))
@@ -43,7 +48,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTLowestPrice", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTMetadata");
             if (await GetNFTMetadata(web3Api))
@@ -53,7 +61,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTOwners");
             if (await GetNFTOwners(web3Api))
@@ -63,7 +74,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTOwners", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNFTTrades");
             if (await GetNFTTrades(web3Api))
@@ -73,7 +87,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNFTTrades", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetNftTransfersFromToBlock");
             if (await GetNftTransfersFromToBlock(web3Api))
@@ -83,7 +100,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetNftTransfersFromToBlock", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenAdressTransfers");
             if (await GetTokenAdressTransfers(web3Api))
@@ -93,7 +113,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenAdressTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenIdMetadata");
             if (await GetTokenIdMetadata(web3Api))
@@ -103,7 +126,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenIdMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenIdOwners");
             if (await GetTokenIdOwners(web3Api))
@@ -113,7 +139,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenIdOwners", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenMetadata");
             if (await GetTokenMetadata(web3Api))
@@ -123,7 +152,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenMetadataBySymbol");
             if (await GetTokenMetadataBySymbol(web3Api))
@@ -133,7 +165,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenMetadataBySymbol", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenPrice");
             if (await GetTokenPrice(web3Api))
@@ -143,7 +178,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenPrice", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetWalletTokenIdTransfers");
             if (await GetWalletTokenIdTransfers(web3Api))
@@ -153,7 +191,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetWalletTokenIdTransfers", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test SearchNFTs");
             if (await SearchNFTs(web3Api))
@@ -163,7 +204,10 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("SearchNFTs", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
+
+            await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenAllowance");
             if (await GetTokenAllowance(web3Api))
@@ -173,6 +217,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             else
             {
                 testResults.FailedTests.Add("GetTokenAllowance", "FAILED");
+                Console.WriteLine("\tFAILED");
             }
             
             return testResults;
@@ -184,7 +229,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftCollection resp = await web3Api.Token.GetAllTokenIds("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftCollection resp = await web3Api.Token.GetAllTokenIds("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -202,7 +247,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftTransferCollection resp = await web3Api.Token.GetContractNFTTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetContractNFTTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -256,7 +301,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftOwnerCollection resp = await web3Api.Token.GetNFTOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, 0, 10);
+                NftOwnerCollection resp = await web3Api.Token.GetNFTOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -273,7 +318,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, null, 0, 10);
+                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -287,7 +332,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             try
             {
                 // Fails same in Admin Consel - Invalid HEX values
-                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, 99999, 25999999, null, null, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetNftTransfersFromToBlock(ChainList.eth, "", 99999, 25999999, null, null, null, 10);
 
                 result = resp is { };
             }
@@ -346,7 +391,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                NftOwnerCollection resp = await web3Api.Token.GetTokenIdOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, 0, 10);
+                NftOwnerCollection resp = await web3Api.Token.GetTokenIdOwners("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -417,7 +462,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             try
             {
-                NftTransferCollection resp = await web3Api.Token.GetWalletTokenIdTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, 0, 10);
+                NftTransferCollection resp = await web3Api.Token.GetWalletTokenIdTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", "10", ChainList.eth, null, "", 10);
 
                 result = resp is { };
             }
@@ -434,7 +479,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Apes", ChainList.eth, null, null, null, null, null, null, 0, 10);
+                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Apes", ChainList.eth, null, null, null, null, null, null, "", 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }

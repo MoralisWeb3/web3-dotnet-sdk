@@ -27,15 +27,18 @@
 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
-*/ 
-            using System;
+*/
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using RestSharp;
 using Newtonsoft.Json;
+using System.Net;
+using System.Threading.Tasks;
 using Moralis.Web3Api.Client;
+using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using System.Linq;
+using System.Net.Http;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -107,7 +110,6 @@ namespace Moralis.Web3Api.CloudApi
 		/// <returns>Returns the pair reserves</returns>
 		public async Task<ReservesCollection> GetPairReserves (string pairAddress, ChainList chain, string toBlock=null, string toDate=null, string providerUrl=null)
 		{
-
 			// Verify the required parameter 'pairAddress' is set
 			if (pairAddress == null) throw new ApiException(400, "Missing required parameter 'pairAddress' when calling GetPairReserves");
 
@@ -122,22 +124,29 @@ namespace Moralis.Web3Api.CloudApi
 			if (toBlock != null) postBody.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
 			if (providerUrl != null) postBody.Add("provider_url", ApiClient.ParameterToString(providerUrl));
-			if(chain != null) postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
+			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairReserves: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairReserves: " + response.ErrorMessage, response.ErrorMessage);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Content, typeof(CloudFunctionResult<ReservesCollection>), response.Headers)).Result;
+				return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<ReservesCollection>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase}");
+			}
 		}
+
 		/// <summary>
 		/// Fetches and returns pair data of the provided token0+token1 combination.
 		/// The token0 and token1 options are interchangable (ie. there is no different outcome in "token0=WETH and token1=USDT" or "token0=USDT and token1=WETH")
@@ -155,7 +164,6 @@ namespace Moralis.Web3Api.CloudApi
 		/// <returns>Returns the pair address of the two tokens</returns>
 		public async Task<ReservesCollection> GetPairAddress (string exchange, string token0Address, string token1Address, ChainList chain, string toBlock=null, string toDate=null)
 		{
-
 			// Verify the required parameter 'exchange' is set
 			if (exchange == null) throw new ApiException(400, "Missing required parameter 'exchange' when calling GetPairAddress");
 
@@ -177,21 +185,27 @@ namespace Moralis.Web3Api.CloudApi
 			if (token1Address != null) postBody.Add("token1_address", ApiClient.ParameterToString(token1Address));
 			if (toBlock != null) postBody.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
-			if(chain != null) postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
+			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
 
-			IRestResponse response = (IRestResponse)(await ApiClient.CallApi(path, Method.POST, queryParams, bodyData, headerParams, formParams, fileParams, authSettings));
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (((int)response.StatusCode) >= 400)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairAddress: " + response.Content, response.Content);
-			else if (((int)response.StatusCode) == 0)
-				throw new ApiException((int)response.StatusCode, "Error calling GetPairAddress: " + response.ErrorMessage, response.ErrorMessage);
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-			return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(response.Content, typeof(CloudFunctionResult<ReservesCollection>), response.Headers)).Result;
+				return ((CloudFunctionResult<ReservesCollection>)ApiClient.Deserialize(data, typeof(CloudFunctionResult<ReservesCollection>), headers)).Result;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+			}
 		}
 	}
 }

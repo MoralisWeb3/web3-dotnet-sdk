@@ -13,8 +13,6 @@ namespace Moralis.Platform.Services.Infrastructure
 
         object Mutex { get; } = new object { };
 
-        TaskQueue TaskQueue { get; } = new TaskQueue { };
-
         ICacheService StorageController { get; }
 
         IJsonSerializer JsonSerializer { get; }
@@ -36,43 +34,61 @@ namespace Moralis.Platform.Services.Infrastructure
             }
         }
 
-        public Task SetAsync(TUser user, CancellationToken cancellationToken) => TaskQueue.Enqueue(toAwait => toAwait.ContinueWith(_ =>
+        public async Task SetAsync(TUser user, CancellationToken cancellationToken)
         {
-            Task saveTask = default;
-
             if (user is null)
-                saveTask = StorageController.LoadAsync().OnSuccess(task => task.Result.RemoveAsync(nameof(CurrentUser))).Unwrap();
+            {
+                IDataCache<string, object> loadResp = await StorageController.LoadAsync();
+                await loadResp.RemoveAsync(nameof(CurrentUser));
+            }
             else
             {
                 string data = JsonSerializer.Serialize(user);
 
-                saveTask = StorageController.LoadAsync().OnSuccess(task => task.Result.AddAsync(nameof(CurrentUser), data)).Unwrap();
+                IDataCache<string, object> loadResp = await StorageController.LoadAsync();
+                await loadResp.AddAsync(nameof(CurrentUser), data);
             }
 
             CurrentUser = user;
-            return saveTask;
-        }).Unwrap(), cancellationToken);
+        }
 
-        public Task<TUser> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) 
+        public async Task<TUser> GetAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) 
         {
-            TUser cachedCurrent;
+            TUser cachedCurrent = null;
 
             lock (Mutex)
                 cachedCurrent = CurrentUser;
 
-            return cachedCurrent is { } ? Task.FromResult(cachedCurrent) : TaskQueue.Enqueue(toAwait => toAwait.ContinueWith(_ => StorageController.LoadAsync().OnSuccess(task =>
+            if (cachedCurrent == null)
             {
-                task.Result.TryGetValue(nameof(CurrentUser), out object data);
+                object data = default;
+                IDataCache<string, object> loadResp = await StorageController.LoadAsync();
+                loadResp.TryGetValue(nameof(CurrentUser), out data);
                 TUser user = default;
 
-                if (data is string { } serialization)
-                    user = (TUser)JsonSerializer.Deserialize<TUser>(serialization);
+                if (data is string)
+                {
+                    user = (TUser)JsonSerializer.Deserialize<TUser>(data.ToString());
+                    CurrentUser = user;
+                    cachedCurrent = user;
+                }
+            }
 
-                return CurrentUser = user;
-            })).Unwrap(), cancellationToken);
+            return cachedCurrent;
         }
 
-        public Task<bool> ExistsAsync(CancellationToken cancellationToken) => CurrentUser is { } ? Task.FromResult(true) : TaskQueue.Enqueue(toAwait => toAwait.ContinueWith(_ => StorageController.LoadAsync().OnSuccess(t => t.Result.ContainsKey(nameof(CurrentUser)))).Unwrap(), cancellationToken);
+        public async Task<bool> ExistsAsync(CancellationToken cancellationToken)
+        {
+            bool result = true;
+
+            if (CurrentUser == null)
+            {
+                IDataCache<string, object> loadResp = await StorageController.LoadAsync();
+                result = loadResp.ContainsKey(nameof(CurrentUser));
+            }
+
+            return result;
+        }
 
         public bool IsCurrent(TUser user)
         {
@@ -82,19 +98,31 @@ namespace Moralis.Platform.Services.Infrastructure
 
         public void ClearFromMemory() => CurrentUser = default;
 
-        public void ClearFromDisk()
+        public async Task ClearFromDiskAsync()
         {
             lock (Mutex)
             {
                 ClearFromMemory();
-
-                TaskQueue.Enqueue(toAwait => toAwait.ContinueWith(_ => StorageController.LoadAsync().OnSuccess(t => t.Result.RemoveAsync(nameof(CurrentUser)))).Unwrap().Unwrap(), CancellationToken.None);
             }
+
+            IDataCache<string, object> loadResp = await StorageController.LoadAsync();
+            await loadResp.RemoveAsync(nameof(CurrentUser));
         }
 
-        public Task<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) => GetAsync(serviceHub, cancellationToken).OnSuccess(task => task.Result?.sessionToken);
+        public async Task<string> GetCurrentSessionTokenAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
+        {
+            string result = null;
+            TUser user = await GetAsync(serviceHub, cancellationToken);
+            result = user?.sessionToken;
 
-        public Task LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default) => TaskQueue.Enqueue(toAwait => toAwait.ContinueWith(_ => GetAsync(serviceHub, cancellationToken)).Unwrap().OnSuccess(task => ClearFromDisk()), cancellationToken);
+            return result;
+        }
+
+        public async Task LogOutAsync(IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
+        {
+            TUser user = await GetAsync(serviceHub, cancellationToken);
+            await ClearFromDiskAsync();
+        }
 
     }
 }

@@ -100,7 +100,14 @@ namespace Moralis.Platform.Operations
             _ => throw new InvalidOperationException("Operation is invalid after previous operation.")
         };
 
-        public object Apply(object oldValue, string key) => oldValue is string ? throw new InvalidOperationException("Cannot increment a non-number type.") : Add(oldValue ?? 0, amount);
+        public object Apply(object oldValue, string key)
+        {
+            if (oldValue is string) throw new InvalidOperationException("Cannot increment a non-number type.");
+
+            if (oldValue == null) oldValue = 0;
+            
+            return Add(oldValue, amount);
+        }
 
        
 

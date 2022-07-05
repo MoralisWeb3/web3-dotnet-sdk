@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Services.Models;
 using Moralis.Platform.Utilities;
@@ -41,7 +42,7 @@ namespace Moralis.Platform.Services
 
         BCLWebClient Client { get; set; }
 
-        public Task<Tuple<HttpStatusCode, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken)
+        public async Task<Tuple<HttpStatusCode, string>> ExecuteAsync(WebRequest httpRequest, IProgress<IDataTransferLevel> uploadProgress, IProgress<IDataTransferLevel> downloadProgress, CancellationToken cancellationToken)
         {
             uploadProgress ??= new Progress<IDataTransferLevel> { };
             downloadProgress ??= new Progress<IDataTransferLevel> { };
@@ -78,62 +79,57 @@ namespace Moralis.Platform.Services
 
             uploadProgress.Report(new DataTransferLevel { Amount = 0 });
 
-            return Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ContinueWith(httpMessageTask =>
+            HttpResponseMessage sendResp = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            //HttpResponseMessage response = httpMessageTask.Result;
+            uploadProgress.Report(new DataTransferLevel { Amount = 1 });
+
+            Stream readStream = await sendResp.Content.ReadAsStreamAsync();
+
+            MemoryStream resultStream = new MemoryStream { };
+            //Stream responseStream = streamTask.Result;
+
+            int bufferSize = 4096;
+            int bytesRead = 0;
+            byte[] buffer = new byte[bufferSize];
+            long totalLength = -1;
+            long readSoFar = 0;
+
+            try
             {
-                HttpResponseMessage response = httpMessageTask.Result;
-                uploadProgress.Report(new DataTransferLevel { Amount = 1 });
+                totalLength = readStream.Length;
+            }
+            catch { };
 
-                return response.Content.ReadAsStreamAsync().ContinueWith(streamTask =>
+            bytesRead = await readStream.ReadAsync(buffer, 0, bufferSize, cancellationToken);
+
+            while (bytesRead > 0)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await resultStream.WriteAsync(buffer, 0, bytesRead, cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
+                readSoFar += bytesRead;
+
+                if (totalLength > -1)
                 {
-                    MemoryStream resultStream = new MemoryStream { };
-                    Stream responseStream = streamTask.Result;
+                    downloadProgress.Report(new DataTransferLevel { Amount = 1.0 * readSoFar / totalLength });
+                }
 
-                    int bufferSize = 4096, bytesRead = 0;
-                    byte[] buffer = new byte[bufferSize];
-                    long totalLength = -1, readSoFar = 0;
+                bytesRead = await readStream.ReadAsync(buffer, 0, bufferSize, cancellationToken);
+            }
 
-                    try
-                    {
-                        totalLength = responseStream.Length;
-                    }
-                    catch { };
+            // If getting stream size is not supported, then report download only once.
+            if (totalLength == -1)
+            {
+                downloadProgress.Report(new DataTransferLevel { Amount = 1.0 });
+            }
 
-                    return InternalExtensions.WhileAsync(() => responseStream.ReadAsync(buffer, 0, bufferSize, cancellationToken).OnSuccess(readTask => (bytesRead = readTask.Result) > 0), () =>
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
+            byte[] resultAsArray = resultStream.ToArray();
+            resultStream.Dispose();
 
-                        return resultStream.WriteAsync(buffer, 0, bytesRead, cancellationToken).OnSuccess(_ =>
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            readSoFar += bytesRead;
-
-                            if (totalLength > -1)
-                            {
-                                downloadProgress.Report(new DataTransferLevel { Amount = 1.0 * readSoFar / totalLength });
-                            }
-                        });
-                    }).ContinueWith(_ =>
-                    {
-                        responseStream.Dispose();
-                        return _;
-                    }).Unwrap().OnSuccess(_ =>
-                    {
-                        // If getting stream size is not supported, then report download only once.
-
-                        if (totalLength == -1)
-                        {
-                            downloadProgress.Report(new DataTransferLevel { Amount = 1.0 });
-                        }
-
-                        byte[] resultAsArray = resultStream.ToArray();
-                        resultStream.Dispose();
-
-                        // Assume UTF-8 encoding.
-
-                        return new Tuple<HttpStatusCode, string>(response.StatusCode, Encoding.UTF8.GetString(resultAsArray, 0, resultAsArray.Length));
-                    });
-                });
-            }).Unwrap().Unwrap();
+            // Assume UTF-8 encoding.
+            return new Tuple<HttpStatusCode, string>(sendResp.StatusCode, Encoding.UTF8.GetString(resultAsArray, 0, resultAsArray.Length));
         }
     }
 }

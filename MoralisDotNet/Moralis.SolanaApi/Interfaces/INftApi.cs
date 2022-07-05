@@ -1,5 +1,5 @@
-﻿using Moralis.SolanaApi.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Moralis.SolanaApi.Models;
 
 namespace Moralis.SolanaApi.Interfaces
 {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Moralis.Platform.Queries;
 using Moralis.Platform.Objects;
+using Moralis.Platform.Queries;
 
 namespace Moralis.Platform.Abstractions
 {
