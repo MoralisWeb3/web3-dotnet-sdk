@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
-using Moralis.SolanaApi.Client;
+using Moralis.Network;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
 using System.Net.Http;

@@ -1,4 +1,5 @@
 ﻿using System;
+using Moralis.Network;
 using Moralis.SolanaApi.Client;
 
 namespace Moralis.SolanaApi

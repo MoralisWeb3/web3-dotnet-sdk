@@ -1,5 +1,6 @@
 ﻿using Moralis.SolanaApi.Api;
 using Moralis.SolanaApi.Interfaces;
+using Moralis.Network;
 
 namespace Moralis.SolanaApi.Client
 {

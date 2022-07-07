@@ -1,7 +1,11 @@
 ﻿
-
-namespace Moralis.Web3Api.Core
+namespace Moralis.Network
 {
+    public enum NetworkTypes { mainnet, testnet };
+
+    /// <summary>
+    /// REST Verbs
+    /// </summary>
     public enum Method
     {
         GET = 0,
@@ -14,6 +18,10 @@ namespace Moralis.Web3Api.Core
         MERGE = 7,
         COPY = 8
     }
+
+    /// <summary>
+    /// Parmeters types
+    /// </summary>
     public enum ParameterType
     {
         Cookie = 0,
@@ -24,6 +32,10 @@ namespace Moralis.Web3Api.Core
         QueryString = 5,
         QueryStringWithoutEncode = 6
     }
+
+    /// <summary>
+    /// Expected / supported format
+    /// </summary>
     public enum DataFormat
     {
         Json = 0,

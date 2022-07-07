@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Moralis.SolanaApi.Client
+namespace Moralis.Network
 {
-    public static class SolanaExtension
+    public static class NetworkExtensions
     {
         public static byte[] ReadAsBytes(this Stream s)
         {

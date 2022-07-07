@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 
-namespace Moralis.Web3Api.Core
+namespace Moralis.Network
 {
     public class Parameter : IEquatable<Parameter>
     {
@@ -50,4 +50,5 @@ namespace Moralis.Web3Api.Core
             return $"Type: {this.Type}, Name: {this.Name}, Value: {this.Value}, ContentType: {this.ContentType}";
         }
     }
+
 }
