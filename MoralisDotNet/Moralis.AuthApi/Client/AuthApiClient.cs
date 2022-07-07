@@ -7,7 +7,7 @@ namespace Moralis.Moralis.AuthApi.Client
     public class AuthApiClient : IAuthClientApi
     {
 
-        private static string defaultServerUrl = "https://deep-index.moralis.io/api/v2";
+        private static string defaultServerUrl = "https://auth-api.do-prod-1.moralis.io/";
 
         /// <summary>
         /// Target Authentication Endpoint.

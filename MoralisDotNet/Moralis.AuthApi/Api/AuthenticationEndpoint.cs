@@ -1,9 +1,13 @@
 ﻿using Moralis.AuthApi.Interfaces;
 using Moralis.AuthApi.Models;
 using Moralis.Network;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Moralis.AuthApi.Api
 {
@@ -58,19 +62,85 @@ namespace Moralis.AuthApi.Api
 		/// <value>An instance of the ApiClient</value>
 		public ApiClient ApiClient { get; set; }
 
-		public ChallengeResponseDto Challenge(ChallengeRequestDto request)
+		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request)
         {
-            throw new NotImplementedException();
-        }
+			// Verify the required parameter 'request' is set
+			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling Challenge");
 
-        public CompleteChallengeResponseDto CompleteChallenge(CompleteChallengeRequestDto request)
-        {
-            throw new NotImplementedException();
-        }
+			var path = "/api/challenge";
 
-        public HealthCheckResponse HealthCheck()
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = JsonConvert.SerializeObject(request);
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, null, null, null, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (ChallengeResponseDto)ApiClient.Deserialize(data, typeof(ChallengeResponseDto), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling Challenge: {response.ReasonPhrase}");
+			}
+		}
+
+        public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request)
         {
-            throw new NotImplementedException();
-        }
+			// Verify the required parameter 'request' is set
+			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling CompleteChallenge");
+
+			var path = "/api/challenge/complete";
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = JsonConvert.SerializeObject(request);
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, null, null, null, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (CompleteChallengeResponseDto)ApiClient.Deserialize(data, typeof(CompleteChallengeResponseDto), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling Challenge: {response.ReasonPhrase}");
+			}
+		}
+
+        public async Task<HealthCheckResponse> HealthCheck()
+        {
+			var headerParams = new Dictionary<String, String>();
+
+			var path = "/health";
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
+
+			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			{
+				string data = await response.Content.ReadAsStringAsync();
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (HealthCheckResponse)ApiClient.Deserialize(data, typeof(HealthCheckResponse), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling Authentication Health Check: {response.ReasonPhrase}");
+			}
+		}
     }
 }
