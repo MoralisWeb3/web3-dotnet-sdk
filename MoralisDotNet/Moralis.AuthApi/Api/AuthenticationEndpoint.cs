@@ -64,20 +64,24 @@ namespace Moralis.AuthApi.Api
 
 		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request)
         {
+			var headerParams = new Dictionary<String, String>();
+			//headerParams["Content-Type"] = "application/json";
+			//headerParams["accept"] = "application/json";
+
 			// Verify the required parameter 'request' is set
 			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling Challenge");
 
-			var path = "/api/challenge";
+			var path = "/challenge";
 
 			// Authentication setting, if any
-			String[] authSettings = new String[] { "ApiKeyAuth" };
+			String[] authSettings = new String[] { }; // "ApiKeyAuth" };
 
 			string bodyData = JsonConvert.SerializeObject(request);
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, null, null, null, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if (HttpStatusCode.Created.Equals(response.StatusCode))
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -92,10 +96,12 @@ namespace Moralis.AuthApi.Api
 
         public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request)
         {
+			var headerParams = new Dictionary<String, String>();
+
 			// Verify the required parameter 'request' is set
 			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling CompleteChallenge");
 
-			var path = "/api/challenge/complete";
+			var path = "/challenge/complete";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
@@ -103,9 +109,9 @@ namespace Moralis.AuthApi.Api
 			string bodyData = JsonConvert.SerializeObject(request);
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, null, null, null, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if (HttpStatusCode.Created.Equals(response.StatusCode))
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);

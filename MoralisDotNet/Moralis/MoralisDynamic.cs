@@ -359,11 +359,11 @@ namespace Moralis
         /// </summary>
         public static HostManifestData ManifestData
         {
-            get => Moralis.Platform.Services.ServiceHub<TUser>.ManifestData;
+            get => Platform.Services.ServiceHub<TUser>.ManifestData;
             set
             {
-                Moralis.Platform.Services.ServiceHub<TUser>.ManifestData = value;
-                Moralis.Platform.Services.MutableServiceHub<TUser>.ManifestData = value;
+                Platform.Services.ServiceHub<TUser>.ManifestData = value;
+                Platform.Services.MutableServiceHub<TUser>.ManifestData = value;
             }
         }
     }

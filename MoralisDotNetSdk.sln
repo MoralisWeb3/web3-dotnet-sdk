@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis", "MoralisDotNet\Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Web3Api.Integrated.Tests", "Moralis.Web3Api.Integrated.Tests\Moralis.Web3Api.Integrated.Tests.csproj", "{7E70DD68-D987-4019-8C4E-E72CE863721B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.Platform.Integrated.Tests", "Moralis.Platform.Integrated.Tests\Moralis.Platform.Integrated.Tests.csproj", "{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Platform.Integrated.Tests", "Moralis.Platform.Integrated.Tests\Moralis.Platform.Integrated.Tests.csproj", "{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.AuthApi.Integrated.Tests", "Moralis.AuthApi.Integrated.Tests\Moralis.AuthApi.Integrated.Tests.csproj", "{97FBE648-520E-4887-BC75-D94551BBAB91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97FBE648-520E-4887-BC75-D94551BBAB91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97FBE648-520E-4887-BC75-D94551BBAB91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97FBE648-520E-4887-BC75-D94551BBAB91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97FBE648-520E-4887-BC75-D94551BBAB91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

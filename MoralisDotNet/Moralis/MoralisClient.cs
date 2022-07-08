@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Moralis.Web3Api.Interfaces;
 using Moralis.SolanaApi.Interfaces;
+using Moralis.AuthApi.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
-using System.Threading.Tasks;
 
 namespace Moralis
 {
@@ -20,7 +20,7 @@ namespace Moralis
         string serverAuthToken = "";
         string serverAuthType = "";
 
-        public MoralisClient(ServerConnectionData connectionData, IWeb3Api web3Api = null, ISolanaApi solanaApi = null, IJsonSerializer jsonSerializer = null)
+        public MoralisClient(ServerConnectionData connectionData, IWeb3Api web3Api = null, ISolanaApi solanaApi = null, IJsonSerializer jsonSerializer = null, IAuthClientApi authApi = null)
         {
             if (jsonSerializer == null)
             {
@@ -326,16 +326,21 @@ namespace Moralis
         public ISolanaApi SolanaApi { get; private set; }
 
         /// <summary>
+        /// Provide an object hook for AuthAppi
+        /// </summary>
+        public IAuthClientApi AuthenticationApi { get; private set; }
+
+        /// <summary>
         /// Included so that this can be set prior to initialization for systems
         /// (Unity, Xamarin, etc.) that may not have Assembly Attributes available.
         /// </summary>
         public static HostManifestData ManifestData
         {
-            get => Moralis.Platform.Services.ServiceHub<MoralisUser>.ManifestData;
+            get => Platform.Services.ServiceHub<MoralisUser>.ManifestData;
             set
             {
-                Moralis.Platform.Services.ServiceHub<MoralisUser>.ManifestData = value;
-                Moralis.Platform.Services.MutableServiceHub<MoralisUser>.ManifestData = value;
+                Platform.Services.ServiceHub<MoralisUser>.ManifestData = value;
+                Platform.Services.MutableServiceHub<MoralisUser>.ManifestData = value;
             }
         }
     }
