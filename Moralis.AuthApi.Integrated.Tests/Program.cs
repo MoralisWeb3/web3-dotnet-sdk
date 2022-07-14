@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Moralis.AuthApi;
+using Moralis;
+using Moralis.AuthApi.Client;
+using Moralis.Platform;
 
 namespace Moralis.AuthApi.Integrated.Tests
 {
@@ -13,13 +15,21 @@ namespace Moralis.AuthApi.Integrated.Tests
 
             foreach (IIntegratedTest test in testGroups)
             {
-                MoralisClient.Initialize("https://auth-api.do-prod-1.moralis.io/");
+                ServerConnectionData connectionData = new ServerConnectionData()
+                {
+                    AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
+                    ApplicationID = "APP_ID",
+                    ServerURI = "http://www.moralis.io"
+                };
+
+                //MoralisClient.Initialize("https://auth-api.do-prod-1.moralis.io/");
+                Moralis.MoralisClient client = new Moralis.MoralisClient(connectionData,null,null,new NewtonsoftJsonSerializer(), new AuthApiClient());
                 string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7";
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");
 
                 Task<IntegratedTestResult> testTask =
-                    Task.Run(() => test.RunTests(MoralisClient.AuthenticationApi, addr));
+                    Task.Run(() => test.RunTests(client.AuthenticationApi, addr));
                 
                 testTask.Wait();
 

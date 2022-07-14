@@ -12,5 +12,9 @@ namespace Moralis.AuthApi.Models
         [DataMember(Name = "message", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
+
+        [DataMember(Name = "profileId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "profileId")]
+        public string ProfileId { get; set; }
     }
 }

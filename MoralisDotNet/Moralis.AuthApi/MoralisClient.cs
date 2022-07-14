@@ -1,4 +1,4 @@
-﻿using Moralis.Moralis.AuthApi.Client;
+﻿using Moralis.AuthApi.Client;
 using Moralis.Network;
 using System;
 

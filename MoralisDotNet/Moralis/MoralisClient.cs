@@ -71,6 +71,16 @@ namespace Moralis
                     this.SolanaApi.Initialize(connectionData.ServerURI);
                 }
             }
+
+            this.AuthenticationApi = authApi;
+
+            if (this.AuthenticationApi is { })
+            {
+                if (connectionData.AuthenticationApiUrl is { })
+                { 
+                    this.AuthenticationApi.Initialize(connectionData.AuthenticationApiUrl);
+                }
+            }
         }
 
 

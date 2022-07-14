@@ -48,6 +48,11 @@ namespace Moralis.Platform
         public string LocalStoragePath { get; set; }
 
         /// <summary>
+        /// URL for the Authentication 2.0 API
+        /// </summary>
+        public string AuthenticationApiUrl { get; set; }
+
+        /// <summary>
         /// Additional HTTP headers to be sent with network requests from the SDK.
         /// </summary>
         public IDictionary<string, string> Headers { get; set; }

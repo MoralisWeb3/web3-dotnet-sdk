@@ -49,5 +49,9 @@ namespace Moralis.AuthApi.Models
         [DataMember(Name = "nonce", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "nonce")]
         public string Nonce { get; set; }
+
+        [DataMember(Name = "profileId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "profileId")]
+        public string ProfileId { get; set; }
     }
 }

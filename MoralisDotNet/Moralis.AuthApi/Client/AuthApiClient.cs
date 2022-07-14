@@ -2,7 +2,7 @@
 using Moralis.AuthApi.Interfaces;
 using Moralis.Network;
 
-namespace Moralis.Moralis.AuthApi.Client
+namespace Moralis.AuthApi.Client
 {
     public class AuthApiClient : IAuthClientApi
     {
