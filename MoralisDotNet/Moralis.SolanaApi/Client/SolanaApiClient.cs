@@ -50,20 +50,8 @@ namespace Moralis.SolanaApi.Client
             // Initialize client
             ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
 
-            // Set endpoints based on api key. If apikey is set
-            // use the direct Web3Api server.
-            if (Configuration.ApiKey.ContainsKey("X-API-Key"))
-            {
-                this.Account = new AccountApi(client);
-                this.Nft = new NftApi(client);
-            }
-            // Api key not set assume the url is for moralis personal server
-            // and Cloud Function API should be used.
-            else
-            {
-                this.Account = new CloudApi.AccountApi(client);
-                this.Nft = new CloudApi.NftApi(client);
-            }
+            this.Account = new AccountApi(client);
+            this.Nft = new NftApi(client);
 
             // Indicate that the client is initialized.
             this.IsInitialized = true;

@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Platform.Tests", "MoralisDotNet.Platform.Tests\Moralis.Platform.Tests.csproj", "{5BAD7E55-86FE-4003-87B0-6DAE0A51CF8D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis", "MoralisDotNet\Moralis.csproj", "{5CE743DA-F956-4668-A679-753844FDC1F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Web3Api.Integrated.Tests", "Moralis.Web3Api.Integrated.Tests\Moralis.Web3Api.Integrated.Tests.csproj", "{7E70DD68-D987-4019-8C4E-E72CE863721B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Platform.Integrated.Tests", "Moralis.Platform.Integrated.Tests\Moralis.Platform.Integrated.Tests.csproj", "{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.AuthApi.Integrated.Tests", "Moralis.AuthApi.Integrated.Tests\Moralis.AuthApi.Integrated.Tests.csproj", "{97FBE648-520E-4887-BC75-D94551BBAB91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.AuthApi.Integrated.Tests", "Moralis.AuthApi.Integrated.Tests\Moralis.AuthApi.Integrated.Tests.csproj", "{97FBE648-520E-4887-BC75-D94551BBAB91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5BAD7E55-86FE-4003-87B0-6DAE0A51CF8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BAD7E55-86FE-4003-87B0-6DAE0A51CF8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BAD7E55-86FE-4003-87B0-6DAE0A51CF8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BAD7E55-86FE-4003-87B0-6DAE0A51CF8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5CE743DA-F956-4668-A679-753844FDC1F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5CE743DA-F956-4668-A679-753844FDC1F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CE743DA-F956-4668-A679-753844FDC1F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,10 +23,6 @@ Global
 		{7E70DD68-D987-4019-8C4E-E72CE863721B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E70DD68-D987-4019-8C4E-E72CE863721B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E70DD68-D987-4019-8C4E-E72CE863721B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D147D0EE-C12E-41BA-9C22-EC5B9A24F8D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{97FBE648-520E-4887-BC75-D94551BBAB91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{97FBE648-520E-4887-BC75-D94551BBAB91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97FBE648-520E-4887-BC75-D94551BBAB91}.Release|Any CPU.ActiveCfg = Release|Any CPU

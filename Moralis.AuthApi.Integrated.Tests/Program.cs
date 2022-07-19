@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moralis;
 using Moralis.AuthApi.Client;
-using Moralis.Platform;
+using Moralis.AuthApi.Interfaces;
+using Moralis.Models;
 
 namespace Moralis.AuthApi.Integrated.Tests
 {
@@ -13,23 +14,25 @@ namespace Moralis.AuthApi.Integrated.Tests
         {
             List<IIntegratedTest> testGroups = TestGroups();
 
+            MoralisClient.ConnectionData = new ServerConnectionData()
+            {
+                AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
+                ApplicationID = "foCDSL08ibUWfLHunP6RrCxPGKE6HpwYiiLa5QPV",
+                DappUrl = "https://ltvaqg1whdgl.usemoralis.com:2053/server",
+                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns",
+                MasterKey = "RU70zK1m50qEuaLNHBTM2PlqOQ7OzYuVeImcMq4w"
+            };
+
             foreach (IIntegratedTest test in testGroups)
             {
-                ServerConnectionData connectionData = new ServerConnectionData()
-                {
-                    AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
-                    ApplicationID = "APP_ID",
-                    ServerURI = "http://www.moralis.io"
-                };
-
-                //MoralisClient.Initialize("https://auth-api.do-prod-1.moralis.io/");
-                Moralis.MoralisClient client = new Moralis.MoralisClient(connectionData,null,null,new NewtonsoftJsonSerializer(), new AuthApiClient());
                 string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7";
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");
 
+                IAuthClientApi authClient = MoralisClient.AuthenticationApi;
+
                 Task<IntegratedTestResult> testTask =
-                    Task.Run(() => test.RunTests(client.AuthenticationApi, addr));
+                    Task.Run(() => test.RunTests(authClient, addr));
                 
                 testTask.Wait();
 

@@ -12,7 +12,7 @@ namespace Moralis.AuthApi.Client
         /// <summary>
         /// Target Authentication Endpoint.
         /// </summary>
-        public IAuthEndpoint AuthEndpoint { get; private set; }
+        public IAuthenticationApi AuthEndpoint { get; private set; }
 
         /// <summary>
         /// Indicates that the client has been initialized.
@@ -43,7 +43,7 @@ namespace Moralis.AuthApi.Client
             // Initialize client
             ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
 
-            AuthEndpoint = new AuthenticationEndpoint(client);
+            AuthEndpoint = new AuthenticationApi(client);
 
             // Indicate that the client is initialized.
             this.IsInitialized = true;

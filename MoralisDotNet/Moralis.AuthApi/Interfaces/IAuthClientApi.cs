@@ -9,7 +9,7 @@ namespace Moralis.AuthApi.Interfaces
         /// <summary>
         /// Target Authentication Endpoint.
         /// </summary>
-        IAuthEndpoint AuthEndpoint { get; }
+        IAuthenticationApi AuthEndpoint { get; }
 
         /// <summary>
         /// Indicates that the client has been initialized.

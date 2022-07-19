@@ -1,358 +1,202 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Moralis.Platform;
-using Moralis.Platform.Abstractions;
-using Moralis.Platform.Objects;
-using Moralis.Platform.Queries;
-using Moralis.Platform.Services.ClientServices;
-using Moralis.Platform.Utilities;
-using System.Collections.Generic;
-using System.Threading;
+using Moralis.AuthApi.Interfaces;
 using Moralis.Web3Api.Interfaces;
 using Moralis.SolanaApi.Interfaces;
-using Moralis.AuthApi.Interfaces;
-using Moralis.Platform.Services.Infrastructure;
+using Moralis.Models;
+using Moralis.SolanaApi;
+using Moralis.Web3Api;
+using Moralis.AuthApi;
 
 namespace Moralis
 {
-    public class MoralisClient : IDisposable
+    /// <summary>
+    /// Main object used to access Moralis APIs and other functioinality.
+    /// </summary>
+    public class MoralisClient
     {
-        string serverAuthToken = "";
-        string serverAuthType = "";
+        #region Instance variables
+        private IAuthClientApi AuthenticationApiClient { get; set; }
+        private ISolanaApi SolanaApiClient { get; set; }
+        private IWeb3Api Web3ApiClient { get; set; }
+        #endregion
 
-        public MoralisClient(ServerConnectionData connectionData, IWeb3Api web3Api = null, ISolanaApi solanaApi = null, IJsonSerializer jsonSerializer = null, IAuthClientApi authApi = null)
+        #region Class level variables
+        private static MoralisClient instance;
+
+        /// <summary>
+        /// Instance of the Authentication API
+        /// </summary>
+        public static IAuthClientApi AuthenticationApi
         {
-            if (jsonSerializer == null)
+            get
             {
-                throw new ArgumentException("jsonSerializer cannot be null.");
-            }
-
-            connectionData.Key = connectionData.Key ?? "";
-
-            moralisService = new MoralisService<MoralisUser>(connectionData.ApplicationID, connectionData.ServerURI, connectionData.Key, jsonSerializer);
-            moralisService.ServerConnectionData.Key = connectionData.Key;
-            moralisService.ServerConnectionData.ServerURI = connectionData.ServerURI;
-            moralisService.ServerConnectionData.ApplicationID = connectionData.ApplicationID;
-            moralisService.ServerConnectionData.LocalStoragePath = connectionData.LocalStoragePath;
-
-            // Make sure local folder for Unity apps is used if defined.
-            MoralisCacheService<MoralisUser>.BaseFilePath = connectionData.LocalStoragePath;
-
-            // Make sure singleton instance is available.
-            moralisService.Publicize();
-
-            // Default to always save.
-            ServiceHub.AlwaysSave = true;
-
-            this.Web3Api = web3Api;
-
-            if (this.Web3Api is { })
-            {
-                if (connectionData.ApiKey is { })
+                // Initialize Moralis using default values if it has not been initialized.
+                if (!IsInitialized)
                 {
-                    this.Web3Api.Initialize();
+                    Start();
                 }
-                else
+
+                return instance.AuthenticationApiClient;
+            }
+        }
+
+        /// <summary>
+        /// The information used to connect to Moralis Services
+        /// </summary>
+        public static ServerConnectionData ConnectionData { get; set; }
+
+        /// <summary>
+        /// Indicates if the Moralis Client has been initialized.
+        /// </summary>
+        public static bool IsInitialized
+        {
+            get { return instance != null; }
+        }
+
+        /// <summary>
+        /// Instance of the Solana API
+        /// </summary>
+        public static ISolanaApi SolanaApi
+        {
+            get
+            {
+                // Initialize Moralis using default values if it has not been initialized.
+                if (!IsInitialized)
                 {
-                    this.Web3Api.Initialize(connectionData.ServerURI);
+                    Start();
                 }
+
+                return instance.SolanaApiClient;
             }
+        }
 
-            this.SolanaApi = solanaApi;
-
-            if (this.SolanaApi is { })
+        /// <summary>
+        /// Instance of the Web3 Api
+        /// </summary>
+        public static IWeb3Api Web3Api
+        {
+            get
             {
-                if (connectionData.ApiKey is { })
+                // Initialize Moralis using default values if it has not been initialized.
+                if (!IsInitialized)
                 {
-                    this.SolanaApi.Initialize();
+                    Start();
                 }
-                else
-                {
-                    this.SolanaApi.Initialize(connectionData.ServerURI);
-                }
-            }
 
-            this.AuthenticationApi = authApi;
-
-            if (this.AuthenticationApi is { })
-            {
-                if (connectionData.AuthenticationApiUrl is { })
-                { 
-                    this.AuthenticationApi.Initialize(connectionData.AuthenticationApiUrl);
-                }
+                return instance.Web3ApiClient;
             }
         }
 
-
-        public string EthAddress { get; }
-
-        public IServiceHub<MoralisUser> ServiceHub => moralisService.Services;
-
-        MoralisService<MoralisUser> moralisService;
-
-        public void SetLocalDatastoreController()
+        /// <summary>
+        /// Default initializer of the Moralis Client
+        /// </summary>
+        /// <exception cref="ArgumentNullException">ConnectionData must be supplied.</exception>
+        public static void Start()
         {
-            throw new NotImplementedException();
-        }
-
-        public string ApplicationId
-        {
-            get => moralisService.ServerConnectionData.ApplicationID;
-            set
+            if (ConnectionData is { })
             {
-                moralisService.ServerConnectionData.ApplicationID = value;
+                Start(ConnectionData);
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(ConnectionData));
             }
         }
+        #endregion
 
-        public string Key
+        /// <summary>
+        /// Initialize Moralis Client using Connection Data to derive all API clients
+        /// </summary>
+        /// <param name="connectionData"></param>
+        public static void Start(ServerConnectionData connectionData)
+        { 
+            Start(connectionData, null, null, null);
+        }
+
+        /// <summary>
+        /// Initialize Moralis Client by providing connection data and pre-initialized Api Clients
+        /// </summary>
+        /// <param name="connectionData"></param>
+        /// <param name="authApi"></param>
+        /// <param name="solanaApi"></param>
+        /// <param name="web3Api"></param>
+        public static void Start(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IWeb3Api web3Api = null)
+        { 
+            instance = new MoralisClient(connectionData, authApi, solanaApi, web3Api);  
+        }
+
+        /// <summary>
+        /// Creates an instance of the Moralis Client.
+        /// </summary>
+        /// <param name="connectionData"></param>
+        /// <param name="authApi"></param>
+        /// <param name="solanaApi"></param>
+        /// <param name="web3Api"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        private MoralisClient(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IWeb3Api web3Api = null)
         {
-            get => moralisService.ServerConnectionData.Key;
-            set
+            // Api Key is required
+            if (string.IsNullOrEmpty(connectionData.ApiKey)) throw new ArgumentNullException(nameof(connectionData.ApiKey));
+            // Master Key is required.
+            if (string.IsNullOrEmpty(connectionData.MasterKey)) throw new ArgumentNullException(nameof(connectionData.MasterKey));
+            // Auth 2.0 Api URI is required.
+            if (string.IsNullOrEmpty(connectionData.AuthenticationApiUrl)) throw new ArgumentNullException(nameof(connectionData.AuthenticationApiUrl));
+
+            ConnectionData = connectionData;
+
+            // --------------------------------------------------------------------------------
+            // Setp Authentication Api
+            // --------------------------------------------------------------------------------
+            AuthenticationApiClient = authApi;
+
+            if (AuthenticationApiClient is { })
             {
-                moralisService.ServerConnectionData.Key = value;
+                AuthenticationApiClient.Initialize(connectionData.AuthenticationApiUrl);
             }
-        }
-
-        public string MasterKey
-        {
-            get => moralisService.ServerConnectionData.MasterKey;
-            set
+            else
             {
-                moralisService.ServerConnectionData.MasterKey = value;
+                MoralisAuthApiClient.Initialize(connectionData.AuthenticationApiUrl, connectionData.ApiKey);
+
+                AuthenticationApiClient = MoralisAuthApiClient.AuthenticationApi;
             }
-        }
 
-        public string ServerUrl
-        {
-            get => moralisService.ServerConnectionData.ServerURI;
-            set
+            // --------------------------------------------------------------------------------
+            // Setup Solana Api
+            // --------------------------------------------------------------------------------
+            SolanaApiClient = solanaApi;
+
+            if (SolanaApiClient is { })
             {
-                moralisService.ServerConnectionData.ServerURI = value;
-
-                if (string.IsNullOrWhiteSpace(moralisService.ServerConnectionData.LiveQueryServerURI))
-                {
-                    LiveQueryServerUrl = Conversion.WebUriToWsURi(moralisService.ServerConnectionData.ServerURI);
-                }
+                SolanaApiClient.Initialize();
             }
-        }
-
-        public string LiveQueryServerUrl
-        {
-            get => moralisService.ServerConnectionData.LiveQueryServerURI;
-            set => moralisService.ServerConnectionData.LiveQueryServerURI = value;
-        }
-
-        public void SetServerAuthToken(string value)
-        {
-            serverAuthToken = value;
-        }
-
-        public string GetServerAuthToken()
-        {
-            return serverAuthToken;
-        }
-
-        public void SetServerAuthType(string value)
-        {
-            serverAuthToken = value;
-        }
-
-        public string GetServerAuthType()
-        {
-            return serverAuthToken;
-        }
-        public IFileService File => moralisService.FileService;
-        public IInstallationService InstallationService => moralisService.InstallationService;
-        public IQueryService QueryService => moralisService.QueryService;
-        public ISessionService<MoralisUser> Session => moralisService.SessionService;
-        public IUserService<MoralisUser> UserService => moralisService.UserService;
-
-        public MoralisCloud<MoralisUser> Cloud => moralisService.Cloud;
-
-        public async Task<Guid?> GetInstallationIdAsync() => await InstallationService.GetAsync();
-
-        public async Task<MoralisQuery<T>> Query<T>() where T : MoralisObject
-        {
-            MoralisUser user = await GetCurrentUser();
-
-            return new MoralisQuery<T>(this.QueryService, InstallationService, moralisService.ServerConnectionData, moralisService.JsonSerializer, user != null ? user.sessionToken : null); //, logger);
-        }
-
-        public T Create<T>(object[] parameters = null) where T : MoralisObject
-        {
-            return this.ServiceHub.Create<T>(parameters);
-        }
-
-        public Task<MoralisUser> GetCurrentUser() => this.ServiceHub.GetCurrentUser();
-
-
-        public void Dispose()
-        {
-            MoralisLiveQueryManager.DisposeService();
-
-        }
-
-        /// <summary>
-        /// Retrieve user object by sesion token.
-        /// </summary>
-        /// <param name="sessionToken"></param>
-        /// <returns>Task<MoralisUser</returns>
-        public Task<MoralisUser> UserFromSession(string sessionToken)
-        {
-            return this.ServiceHub.BecomeAsync<MoralisUser>(sessionToken);
-        }
-
-        /// <summary>
-        /// Provid async user login.
-        /// data: 
-        ///     id: Address
-        ///     signature: Signature from wallet
-        ///     data: Message that was signed
-        /// </summary>
-        /// <param name="data">Authentication data</param>
-        /// <returns>Task<MoralisUser></returns>
-        public Task<MoralisUser> LogInAsync(IDictionary<string, object> data)
-        {
-            return this.LogInAsync(data, CancellationToken.None);
-        }
-
-
-        /// Provid async user login.
-        /// data: 
-        ///     id: Address
-        ///     signature: Signature from wallet
-        ///     data: Message that was signed
-        /// </summary>
-        /// <param name="data">Authentication data</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Task<MoralisUser></returns>
-        public Task<MoralisUser> LogInAsync(IDictionary<string, object> data, CancellationToken cancellationToken)
-        {
-            return this.ServiceHub.LogInWithAsync("moralisEth", data, cancellationToken);
-        }
-
-        /// <summary>
-        /// Logs out the current user.
-        /// </summary>
-        /// <returns></returns>
-        public Task LogOutAsync()
-        {
-            return this.ServiceHub.LogOutAsync();
-        }
-
-        /// <summary>
-        /// Constructs a query that is the and of the given queries.
-        /// </summary>
-        /// <typeparam name="T">The type of MoralisObject being queried.</typeparam>
-        /// <param name="serviceHub"></param>
-        /// <param name="source">An initial query to 'and' with additional queries.</param>
-        /// <param name="queries">The list of MoralisQueries to 'and' together.</param>
-        /// <returns>A query that is the and of the given queries.</returns>
-        public MoralisQuery<T> BuildAndQuery<T>(MoralisQuery<T> source, params MoralisQuery<T>[] queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructAndQuery<T, MoralisUser>(source, queries);
-        }
-
-        /// <summary>
-        /// Construct a query that is the and of two or more queries.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serviceHub"></param>
-        /// <param name="queries">The list of MoralisQueries to 'and' together.</param>
-        /// <returns>A MoralisQquery that is the 'and' of the passed in queries.</returns>
-        public MoralisQuery<T> BuildAndQuery<T>(IEnumerable<MoralisQuery<T>> queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructAndQuery<T, MoralisUser>(queries);
-        }
-        
-        /// <summary>
-        /// Constructs a query that is the or of the given queries.
-        /// </summary>
-        /// <typeparam name="T">The type of MoralisObject being queried.</typeparam>
-        /// <param name="source">An initial query to 'or' with additional queries.</param>
-        /// <param name="queries">The list of MoralisQueries to 'or' together.</param>
-        /// <returns>A query that is the or of the given queries.</returns>
-        public MoralisQuery<T> BuildOrQuery<T>(MoralisQuery<T> source, params MoralisQuery<T>[] queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructOrQuery<T, MoralisUser>(source, queries);
-        }
-
-        /// <summary>
-        /// Construct a query that is the 'or' of two or more queries.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serviceHub"></param>
-        /// <param name="queries">The list of MoralisQueries to 'and' together.</param>
-        /// <returns>A MoralisQquery that is the 'or' of the passed in queries.</returns>
-        public MoralisQuery<T> BuildOrQuery<T>(IEnumerable<MoralisQuery<T>> queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructOrQuery<T, MoralisUser>(queries);
-        }
-
-        /// <summary>
-        /// Constructs a query that is the nor of the given queries.
-        /// </summary>
-        /// <typeparam name="T">The type of MoralisObject being queried.</typeparam>
-        /// <param name="source">An initial query to 'or' with additional queries.</param>
-        /// <param name="queries">The list of MoralisQueries to 'or' together.</param>
-        /// <returns>A query that is the nor of the given queries.</returns>
-        public MoralisQuery<T> BuildNorQuery<T>(MoralisQuery<T> source, params MoralisQuery<T>[] queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructNorQuery<T, MoralisUser>(source, queries);
-        }
-
-        /// <summary>
-        /// Construct a query that is the 'nor' of two or more queries.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="serviceHub"></param>
-        /// <param name="queries">The list of MoralisQueries to 'and' together.</param>
-        /// <returns>A MoralisQquery that is the 'nor' of the passed in queries.</returns>
-        public MoralisQuery<T> BuildNorQuery<T>(IEnumerable<MoralisQuery<T>> queries) where T : MoralisObject
-        {
-            return ServiceHub.ConstructNorQuery<T, MoralisUser>(queries);
-        }
-
-        /// <summary>
-        /// Deletes target object from the Moralis database.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public Task DeleteAsync<T>(T target) where T : MoralisObject
-        {
-            return target.DeleteAsync();
-        }
-
-        /// <summary>
-        /// Provide an object hook for Web3Api incase developer supplies a
-        /// web3api client at initialize
-        /// </summary>
-        public IWeb3Api Web3Api { get; private set; }
-
-        /// <summary>
-        /// Provide an object hook for SolanaApi
-        /// </summary>
-        public ISolanaApi SolanaApi { get; private set; }
-
-        /// <summary>
-        /// Provide an object hook for AuthAppi
-        /// </summary>
-        public IAuthClientApi AuthenticationApi { get; private set; }
-
-        /// <summary>
-        /// Included so that this can be set prior to initialization for systems
-        /// (Unity, Xamarin, etc.) that may not have Assembly Attributes available.
-        /// </summary>
-        public static HostManifestData ManifestData
-        {
-            get => Platform.Services.ServiceHub<MoralisUser>.ManifestData;
-            set
+            else
             {
-                Platform.Services.ServiceHub<MoralisUser>.ManifestData = value;
-                Platform.Services.MutableServiceHub<MoralisUser>.ManifestData = value;
+                // Api URI is required.
+                if (string.IsNullOrEmpty(connectionData.Web3ApiUrl)) throw new ArgumentNullException(nameof(connectionData.Web3ApiUrl));
+
+                MoralisSolanaApiClient.Initialize(connectionData.Web3ApiUrl, connectionData.ApiKey);
+
+                SolanaApiClient = MoralisSolanaApiClient.SolanaApi;
+            }
+
+            // --------------------------------------------------------------------------------
+            // Setp Web3 Api
+            // --------------------------------------------------------------------------------
+            Web3ApiClient = web3Api;
+
+            if (Web3ApiClient is { })
+            {
+                Web3ApiClient.Initialize();
+            }
+            else
+            {
+                // Api URI is required.
+                if (string.IsNullOrEmpty(connectionData.Web3ApiUrl)) throw new ArgumentNullException(nameof(connectionData.Web3ApiUrl));
+
+                MoralisWeb3ApiClient.Initialize(connectionData.Web3ApiUrl, connectionData.ApiKey);
+
+                Web3ApiClient = MoralisWeb3ApiClient.Web3Api;
             }
         }
     }
 }
-

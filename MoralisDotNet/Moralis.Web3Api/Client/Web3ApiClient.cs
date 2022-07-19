@@ -75,30 +75,13 @@ namespace Moralis.Web3Api.Client
             // Initialize client
             ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
 
-            // Set endpoints based on api key. If apikey is set
-            // use the direct Web3Api server.
-            if (Configuration.ApiKey.ContainsKey("X-API-Key"))
-            {
-                this.Account = new AccountApi(client);
-                this.Defi = new DefiApi(client);
-                this.Info = new InfoApi(client);
-                this.Native = new NativeApi(client);
-                this.Resolve = new ResolveApi(client);
-                this.Storage = new StorageApi(client);
-                this.Token = new TokenApi(client);
-            }
-            // Api key not set assume the url is for moralis personal server
-            // and Cloud Function API should be used.
-            else
-            {
-                this.Account = new CloudApi.AccountApi(client);
-                this.Defi = new CloudApi.DefiApi(client);
-                this.Info = new CloudApi.InfoApi(client);
-                this.Native = new CloudApi.NativeApi(client);
-                this.Resolve = new CloudApi.ResolveApi(client);
-                this.Storage = new CloudApi.StorageApi(client);
-                this.Token = new CloudApi.TokenApi(client);
-            }
+            this.Account = new AccountApi(client);
+            this.Defi = new DefiApi(client);
+            this.Info = new InfoApi(client);
+            this.Native = new NativeApi(client);
+            this.Resolve = new ResolveApi(client);
+            this.Storage = new StorageApi(client);
+            this.Token = new TokenApi(client);
 
             // Indicate that the client is initialized.
             this.IsInitialized = true;

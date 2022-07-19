@@ -1,4 +1,5 @@
-﻿using Moralis.Web3Api.Interfaces;
+﻿using Moralis.Models;
+using Moralis.Web3Api.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,16 +13,27 @@ namespace Moralis.Web3Api.Integrated.Tests
         {
             List<IIntegratedTest> testGroups = TestGroups();
 
+            MoralisClient.ConnectionData = new ServerConnectionData()
+            {
+                AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
+                ApplicationID = "foCDSL08ibUWfLHunP6RrCxPGKE6HpwYiiLa5QPV",
+                DappUrl = "https://ltvaqg1whdgl.usemoralis.com:2053/server",
+                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns",
+                MasterKey = "RU70zK1m50qEuaLNHBTM2PlqOQ7OzYuVeImcMq4w",
+                Web3ApiUrl = "https://deep-index.moralis.io/api/v2"
+            };
+
+
             foreach (IIntegratedTest test in testGroups)
             {
-                //MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
-                MoralisClient.Initialize("https://arw2wxg84h6b.moralishost.com:2053/server");
                 string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7".ToLower();
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");
 
+                IWeb3Api apiClient = MoralisClient.Web3Api;
+
                 Task<IntegratedTestResult> testTask =
-                    Task.Run(() => test.RunTests(MoralisClient.Web3Api, addr));
+                    Task.Run(() => test.RunTests(apiClient, addr));
                 testTask.Wait();
                 IntegratedTestResult result = testTask.Result;
 
