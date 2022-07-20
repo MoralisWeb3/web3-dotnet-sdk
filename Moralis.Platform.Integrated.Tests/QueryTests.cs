@@ -149,7 +149,7 @@ namespace Moralis.Platform.Integrated.Tests
             try
             {
                 MoralisQuery<Hero> q = await moralisClient.Query<Hero>();
-                q = q.WhereEqualTo("Level", 2);
+                q = q.WhereEqualTo("Warcry", "Decaf is a lie!");
                 IEnumerable<Hero> heros = await q.FindAsync();
 
                 if (heros != null && heros.Count() > 0)

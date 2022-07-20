@@ -33,11 +33,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
-using Moralis.Web3Api.Client;
-using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 using System.Net.Http;
+using Moralis.Network;
 
 namespace Moralis.Web3Api.CloudApi
 {
@@ -169,6 +168,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTTrades");
 
+			address = address.ToLower();
+
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
@@ -183,7 +184,7 @@ namespace Moralis.Web3Api.CloudApi
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
 			if (providerUrl != null) postBody.Add("provider_url", ApiClient.ParameterToString(providerUrl));
 			if (marketplace != null) postBody.Add("marketplace", ApiClient.ParameterToString(marketplace));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -223,6 +224,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTLowestPrice");
+
+			address = address.ToLower();
 
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
@@ -316,6 +319,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenPrice");
 
+			address = address.ToLower();
+
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
@@ -380,6 +385,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenAddressTransfers");
 
+			address = address.ToLower();
+
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
@@ -431,6 +438,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenAllowance");
+
+			address = address.ToLower();
 
 			// Verify the required parameter 'ownerAddress' is set
 			if (ownerAddress == null) throw new ApiException(400, "Missing required parameter 'ownerAddress' when calling GetTokenAllowance");
@@ -517,7 +526,7 @@ namespace Moralis.Web3Api.CloudApi
 			if (toBlock != null) postBody.Add("to_block", ApiClient.ParameterToString(toBlock));
 			if (fromDate != null) postBody.Add("from_date", ApiClient.ParameterToString(fromDate));
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -580,7 +589,7 @@ namespace Moralis.Web3Api.CloudApi
 			if (fromDate != null) postBody.Add("from_date", ApiClient.ParameterToString(fromDate));
 			if (toDate != null) postBody.Add("to_date", ApiClient.ParameterToString(toDate));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -622,6 +631,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetAllTokenIds");
 
+			address = address.ToLower();
+
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
@@ -631,7 +642,7 @@ namespace Moralis.Web3Api.CloudApi
 			var path = "/functions/getAllTokenIds";
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -669,6 +680,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetContractNFTTransfers");
+			
+			address = address.ToLower();
 
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
@@ -679,7 +692,7 @@ namespace Moralis.Web3Api.CloudApi
 			var path = "/functions/getContractNFTTransfers";
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -722,6 +735,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTOwners");
 
+			address = address.ToLower();
+
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
 			var headerParams = new Dictionary<String, String>();
@@ -731,7 +746,7 @@ namespace Moralis.Web3Api.CloudApi
 			var path = "/functions/getNFTOwners";
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -768,6 +783,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetNFTMetadata");
+
+			address = address.ToLower();
 
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
@@ -814,6 +831,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenIdMetadata");
+
+			address = address.ToLower();
 
 			// Verify the required parameter 'tokenId' is set
 			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling GetTokenIdMetadata");
@@ -870,6 +889,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetTokenIdOwners");
 
+			address = address.ToLower();
+
 			// Verify the required parameter 'tokenId' is set
 			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling GetTokenIdOwners");
 
@@ -883,7 +904,7 @@ namespace Moralis.Web3Api.CloudApi
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
 			if (tokenId != null) postBody.Add("token_id", ApiClient.ParameterToString(tokenId));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
 
@@ -924,6 +945,8 @@ namespace Moralis.Web3Api.CloudApi
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling GetWalletTokenIdTransfers");
 
+			address = address.ToLower();
+
 			// Verify the required parameter 'tokenId' is set
 			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling GetWalletTokenIdTransfers");
 
@@ -937,7 +960,7 @@ namespace Moralis.Web3Api.CloudApi
 			if (address != null) postBody.Add("address", ApiClient.ParameterToString(address));
 			if (tokenId != null) postBody.Add("token_id", ApiClient.ParameterToString(tokenId));
 			if (format != null) postBody.Add("format", ApiClient.ParameterToString(format));
-			if (cursor != null) postBody.Add("offset", ApiClient.ParameterToString(cursor));
+			if (cursor != null) postBody.Add("cursor", ApiClient.ParameterToString(cursor));
 			if (limit != null) postBody.Add("limit", ApiClient.ParameterToString(limit));
 			if (order != null) postBody.Add("order", ApiClient.ParameterToString(order));
 			postBody.Add("chain", ApiClient.ParameterToHex((long)chain));
@@ -977,6 +1000,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling ReSyncMetadata");
+
+			address = address.ToLower();
 
 			// Verify the required parameter 'tokenId' is set
 			if (tokenId == null) throw new ApiException(400, "Missing required parameter 'tokenId' when calling ReSyncMetadata");
@@ -1020,6 +1045,8 @@ namespace Moralis.Web3Api.CloudApi
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling SyncNFTContract");
+
+			address = address.ToLower();
 
 			var postBody = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();

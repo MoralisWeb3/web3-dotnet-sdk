@@ -1,4 +1,5 @@
-﻿using Moralis.Web3Api.Api;
+﻿using Moralis.Network;
+using Moralis.Web3Api.Api;
 using Moralis.Web3Api.Interfaces;
 
 namespace Moralis.Web3Api.Client

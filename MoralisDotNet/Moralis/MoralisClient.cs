@@ -12,6 +12,8 @@ using Moralis.Web3Api.Interfaces;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
 using System.Threading.Tasks;
+using Moralis.AuthApi.Interfaces;
+using Moralis.Network;
 
 namespace Moralis
 {
@@ -20,7 +22,7 @@ namespace Moralis
         string serverAuthToken = "";
         string serverAuthType = "";
 
-        public MoralisClient(ServerConnectionData connectionData, IWeb3Api web3Api = null, ISolanaApi solanaApi = null, IJsonSerializer jsonSerializer = null)
+        public MoralisClient(ServerConnectionData connectionData, IAuthClientApi authApi = null, IWeb3Api web3Api = null, ISolanaApi solanaApi = null, IJsonSerializer jsonSerializer = null)
         {
             if (jsonSerializer == null)
             {
@@ -43,6 +45,20 @@ namespace Moralis
 
             // Default to always save.
             ServiceHub.AlwaysSave = true;
+
+            this.AuthenticationApi = authApi;
+
+            if (AuthenticationApi is { })
+            {
+                Configuration.ApiKey["X-API-Key"] = connectionData.ApiKey;
+                AuthenticationApi.Initialize(connectionData.AuthenticationApiUrl);
+            }
+            else
+            {
+                AuthApi.MoralisClient.Initialize(connectionData.AuthenticationApiUrl, connectionData.ApiKey);
+
+                AuthenticationApi = AuthApi.MoralisClient.AuthenticationApi;
+            }
 
             this.Web3Api = web3Api;
 
@@ -313,6 +329,11 @@ namespace Moralis
         {
             return target.DeleteAsync();
         }
+
+        /// <summary>
+        /// Provide an object hook for the Auth 2.0 API client.
+        /// </summary>
+        public IAuthClientApi AuthenticationApi { get; private set; }
 
         /// <summary>
         /// Provide an object hook for Web3Api incase developer supplies a

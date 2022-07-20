@@ -5,12 +5,11 @@ using System.IO;
 using System.Web;
 using System.Text;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
-using System.Net.Http;
-using Moralis.SolanaApi.Models;
 
-namespace Moralis.SolanaApi.Client
+namespace Moralis.Network
 {
     /// <summary>
     /// API client is mainly responible for making the HTTP call to the API backend.
@@ -63,7 +62,7 @@ namespace Moralis.SolanaApi.Client
         /// <returns>Object</returns>
         public async Task<HttpResponseMessage> CallApi(String path, HttpMethod method, Dictionary<String, String> queryParams, String postBody,
             Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
-            Dictionary<String, Models.FileParameter> fileParams, String[] authSettings)
+            Dictionary<String, FileParameter> fileParams, String[] authSettings)
         {
             HttpResponseMessage response = null;
             string url = path;
@@ -188,12 +187,12 @@ namespace Moralis.SolanaApi.Client
         /// <param name="name">Parameter name.</param>
         /// <param name="stream">Input stream.</param>
         /// <returns>FileParameter.</returns>
-        public Models.FileParameter ParameterToFile(string name, Stream stream)
+        public FileParameter ParameterToFile(string name, Stream stream)
         {
             if (stream is FileStream)
-                return Models.FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
+                return FileParameter.Create(name, stream.ReadAsBytes(), Path.GetFileName(((FileStream)stream).Name));
             else
-                return Models.FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
+                return FileParameter.Create(name, stream.ReadAsBytes(), "no_file_name_provided");
         }
 
         /// <summary>

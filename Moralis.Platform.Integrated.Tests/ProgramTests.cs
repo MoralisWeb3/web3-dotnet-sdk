@@ -7,6 +7,7 @@ using Moralis;
 using Moralis.Platform;
 using Moralis.Web3Api.Client;
 using Moralis.SolanaApi.Client;
+using Moralis.AuthApi.Client;
 
 namespace Moralis.Platform.Integrated.Tests
 {
@@ -26,7 +27,7 @@ namespace Moralis.Platform.Integrated.Tests
                 };
 
                 //MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");
-                MoralisClient moralis = new MoralisClient(conData, new Web3ApiClient(), new SolanaApiClient(), new NewtonsoftJsonSerializer());
+                MoralisClient moralis = new MoralisClient(conData, new AuthApiClient(), new Web3ApiClient(), new SolanaApiClient(), new NewtonsoftJsonSerializer());
                 string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7".ToLower();
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");

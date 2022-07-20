@@ -1,6 +1,7 @@
-﻿using System;
+﻿#nullable enable
+using System;
 
-namespace Moralis.SolanaApi.Models
+namespace Moralis.Network
 {
     public class Parameter : IEquatable<Parameter>
     {

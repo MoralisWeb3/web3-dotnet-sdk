@@ -7,6 +7,7 @@ using Moralis.SolanaApi.Client;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
 using System.Net.Http;
+using Moralis.Network;
 
 namespace Moralis.SolanaApi.CloudApi
 {

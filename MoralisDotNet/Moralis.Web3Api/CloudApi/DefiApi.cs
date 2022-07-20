@@ -33,12 +33,11 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
-using Moralis.Web3Api.Client;
-using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 using System.Linq;
 using System.Net.Http;
+using Moralis.Network;
 
 namespace Moralis.Web3Api.CloudApi
 {

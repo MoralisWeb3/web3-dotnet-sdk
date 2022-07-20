@@ -34,10 +34,9 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
-using Moralis.Web3Api.Client;
-using Moralis.Web3Api.Core;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
+using Moralis.Network;
 
 namespace Moralis.Web3Api.Api
 {

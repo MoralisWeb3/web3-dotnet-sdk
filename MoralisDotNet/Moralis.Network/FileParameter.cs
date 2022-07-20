@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Moralis.SolanaApi.Models
+namespace Moralis.Network
 {
     public class FileParameter
     {
@@ -10,10 +10,11 @@ namespace Moralis.SolanaApi.Models
         public long ContentLength { get; set; }
         public Action<Stream> Writer { get; set; }
         public string FileName { get; set; }
-        #nullable enable
+#nullable enable
         public string? ContentType { get; set; }
-        #nullable disable
+#nullable disable
         public string Name { get; set; }
+
 #nullable enable
         public static FileParameter Create(string name, byte[] data, string filename, string? contentType)
 #nullable disable
@@ -69,4 +70,5 @@ namespace Moralis.SolanaApi.Models
             return fileParameter;
         }
     }
+
 }
