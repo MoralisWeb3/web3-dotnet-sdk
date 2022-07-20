@@ -10,7 +10,36 @@ using Moralis.AuthApi;
 namespace Moralis
 {
     /// <summary>
-    /// Main object used to access Moralis APIs and other functioinality.
+    /// Main object used to access Moralis APIs and other functioinality. 
+    /// 
+    /// The MoralisClient is provided as a singleto object. It need only 
+    /// be setup once within an application.
+    /// 
+    /// Before the Moralis Client can be used, it must be started (initialized). 
+    /// There are several ways to do the, however the easiest way to do so is 
+    /// to setup _MoralisClient.ConnectionData_ before doing anything else with 
+    /// the MoralisClient. The MoralisClient is self initializing provided 
+    /// _MoralisClient.ConnectionData_ has been setup with valid information.
+    /// 
+    /// For Example:
+    /// <code>
+    /// MoralisClient.ConnectionData = new ServerConnectionData()
+    /// {
+    ///     AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
+    ///     ApplicationID = "YOUR APPLICATION ID HERE",
+    ///     DappUrl = "YOUR SERVER URL HERE",
+    ///     ApiKey = "YOUR API KEY HERE",
+    ///     MasterKey = "YOUR MASTER KEY HERE",
+    ///     Web3ApiUrl = "https://deep-index.moralis.io/api/v2"
+    /// };
+    /// 
+    /// IWeb3Api apiClient = MoralisClient.Web3Api;
+    /// </code>
+    /// 
+    /// This code is perfectly valid as, since ConnectionData was instantiated properly, 
+    /// calling any public class level object on MoralisClient will, if MoralisClient
+    /// has not already been initialize, automatically initialize MoralisClient
+    /// using the information provided in ConnectionData.
     /// </summary>
     public class MoralisClient
     {

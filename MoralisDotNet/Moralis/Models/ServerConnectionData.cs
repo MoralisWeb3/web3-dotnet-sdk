@@ -3,7 +3,7 @@
 namespace Moralis.Models
 {
     /// <summary>
-    /// 
+    /// The set of properties required to access Moralis services.
     /// </summary>
     public class ServerConnectionData
     {
@@ -42,11 +42,6 @@ namespace Moralis.Models
         /// URL for Web3 Api and Solana Api
         /// </summary>
         public string Web3ApiUrl { get; set; }
-
-        /// <summary>
-        /// API version to use for Web3 API and Solana API.
-        /// </summary>
-        public string Web3ApiVersionIndicator { get; set; }
 
         /// <summary>
         /// Additional HTTP headers to be sent with network requests from the SDK.
