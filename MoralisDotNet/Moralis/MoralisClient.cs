@@ -35,6 +35,7 @@ namespace Moralis
             moralisService.ServerConnectionData.Key = connectionData.Key;
             moralisService.ServerConnectionData.ServerURI = connectionData.ServerURI;
             moralisService.ServerConnectionData.ApplicationID = connectionData.ApplicationID;
+            moralisService.ServerConnectionData.MasterKey = connectionData.MasterKey;
             moralisService.ServerConnectionData.LocalStoragePath = connectionData.LocalStoragePath;
 
             // Make sure local folder for Unity apps is used if defined.
