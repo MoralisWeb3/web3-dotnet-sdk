@@ -33,7 +33,7 @@ namespace Moralis.Platform.Services.ClientServices
         /// <returns>T - result of cloud function call.</returns>
         public async Task<T> CallFunctionAsync<T>(string name, IDictionary<string, object> parameters, string sessionToken, System.Threading.CancellationToken cancellationToken = default)
         {
-            MoralisCommand command = new MoralisCommand($"server/functions/{Uri.EscapeDataString(name)}", method: "POST", sessionToken: sessionToken, data: parameters is { } && parameters.Count > 0 ? JsonSerializer.Serialize(parameters) : "{}");
+            MoralisCommand command = new MoralisCommand($"{ServerConnectionData.ParseEndpointCloudfunctions}/{Uri.EscapeDataString(name)}", method: "POST", sessionToken: sessionToken, data: parameters is { } && parameters.Count > 0 ? JsonSerializer.Serialize(parameters) : "{}");
 
             Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
             

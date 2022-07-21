@@ -79,7 +79,7 @@ namespace Moralis.Platform.Services
 
             CloudFunctionService ??= new MoralisCloudFunctionService(CommandRunner, ServerConnectionData, JsonSerializer);
             //ConfigurationController ??= new ParseConfigurationController(CommandRunner, CacheController, Decoder);
-            FileService ??= new MoralisFileService(CommandRunner, JsonSerializer);
+            FileService ??= new MoralisFileService(CommandRunner, ServerConnectionData, JsonSerializer);
             ObjectService ??= new MoralisObjectService(CommandRunner, ServerConnectionData, JsonSerializer);
             QueryService ??= new MoralisQueryService(CommandRunner, this.CurrentUserService.CurrentUser.sessionToken, JsonSerializer, ObjectService);
             SessionService ??= new MoralisSessionService<TUser>(CommandRunner, JsonSerializer);

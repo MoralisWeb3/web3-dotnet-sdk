@@ -7,8 +7,14 @@ namespace Moralis.Platform
     /// <summary>
     /// Represents the configuration of the Moralis SDK.
     /// </summary>
-    public struct ServerConnectionData : IServerConnectionData
+    public class ServerConnectionData : IServerConnectionData
     {
+        // Default to Moralis Server values
+        private string moralisEndpointBase = "server";
+        private string moralisEndpointCloudfunctions = "functions";
+        private string moralisEndpointFileService = "files";
+        private string moralisEndpointClasses = "classes";
+
         public bool Test { get; set; }
 
         /// <summary>
@@ -56,6 +62,44 @@ namespace Moralis.Platform
         /// Additional HTTP headers to be sent with network requests from the SDK.
         /// </summary>
         public IDictionary<string, string> Headers { get; set; }
+
+        /// <summary>
+        /// Base endpoint for a Parse server backend
+        /// </summary>
+        public string ParseEndpointBase
+        {
+            get { return moralisEndpointBase; }
+            set { moralisEndpointBase = value; }
+        }
+
+        /// <summary>
+        /// Cloud Functions endpoint for a Parse Backend
+        /// </summary>
+        public string ParseEndpointCloudfunctions
+        {
+            get { return $"{ParseEndpointBase}/{moralisEndpointCloudfunctions}"; }
+            set { moralisEndpointCloudfunctions = value; }
+        }
+
+        /// <summary>
+        /// File Service endpoint for Parse backend
+        /// </summary>
+        public string ParseEndpointFileService
+        {
+            get { return $"{ParseEndpointBase}/{moralisEndpointFileService}"; }
+            set { moralisEndpointFileService = value; }
+        }
+
+        /// <summary>
+        /// Classes endpoint for a Parse Backend
+        /// </summary>
+        public string ParseEndpointClasses
+        {
+            get { return $"{ParseEndpointBase}/{moralisEndpointClasses}"; }
+            set { moralisEndpointClasses = value; }
+        }
+
+
     }
 
 }

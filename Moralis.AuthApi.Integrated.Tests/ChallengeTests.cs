@@ -65,7 +65,7 @@ namespace Moralis.AuthApi.Integrated.Tests
                 Uri = "https://1155project.com/"
             };
 
-            resp = await authApi.AuthEndpoint.Challenge(req);
+            resp = await authApi.AuthEndpoint.Challenge(req, ChainNetworkType.evm);
 
             return resp;
         }

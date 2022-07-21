@@ -26,7 +26,7 @@ namespace Moralis.Platform.Services.ClientServices
 
         public async Task<TUser> SignUpAsync(IObjectState state, IDictionary<string, IMoralisFieldOperation> operations, CancellationToken cancellationToken = default)
         {
-            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("server/classes/_User", method: "POST", data: JsonSerializer.Serialize(operations)), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointClasses}/_User", method: "POST", data: JsonSerializer.Serialize(operations)), cancellationToken: cancellationToken);
 
             TUser resp = default;
 
@@ -43,7 +43,7 @@ namespace Moralis.Platform.Services.ClientServices
         public async Task<TUser> LogInAsync(string username, string password, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
         {
             TUser result = default;
-            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/login?{MoralisService<TUser>.BuildQueryString(new Dictionary<string, object> { [nameof(username)] = username, [nameof(password)] = password })}", method: "GET", data: null), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/login?{MoralisService<TUser>.BuildQueryString(new Dictionary<string, object> { [nameof(username)] = username, [nameof(password)] = password })}", method: "GET", data: null), cancellationToken: cancellationToken);
             if ((int)cmdResp.Item1 < 300)
             {
                 result = JsonSerializer.Deserialize<TUser>(cmdResp.Item2.ToString());
@@ -65,7 +65,7 @@ namespace Moralis.Platform.Services.ClientServices
                 [authType] = data
             };
 
-            MoralisCommand cmd = new MoralisCommand("server/users", method: "POST", data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(authData)] = authData }));
+            MoralisCommand cmd = new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/users", method: "POST", data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(authData)] = authData }));
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(cmd, cancellationToken: cancellationToken);
 
             if ((int)cmdResp.Item1 < 300)
@@ -88,7 +88,7 @@ namespace Moralis.Platform.Services.ClientServices
         public async Task<TUser> GetUserAsync(string sessionToken, IServiceHub<TUser> serviceHub, CancellationToken cancellationToken = default)
         {
             TUser user = default;
-            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("server/users/me", method: "GET", sessionToken: sessionToken, data: default), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/users/me", method: "GET", sessionToken: sessionToken, data: default), cancellationToken: cancellationToken);
             if ((int)cmdResp.Item1 < 300)
             {
                 user = JsonSerializer.Deserialize<TUser>(cmdResp.Item2.ToString());
@@ -101,7 +101,7 @@ namespace Moralis.Platform.Services.ClientServices
 
         public async Task RequestPasswordResetAsync(string email, CancellationToken cancellationToken = default)
         {
-            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand("server/requestPasswordReset", method: "POST", data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(email)] = email })), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/requestPasswordReset", method: "POST", data: JsonSerializer.Serialize(new Dictionary<string, object> { [nameof(email)] = email })), cancellationToken: cancellationToken);
         }
     }
 }

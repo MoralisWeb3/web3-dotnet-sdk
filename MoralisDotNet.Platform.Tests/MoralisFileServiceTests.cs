@@ -28,7 +28,14 @@ namespace Moralis.Platform.Tests
                 mediatype = "image/png"
             };
 
-            MoralisFileService controller = new MoralisFileService(mockRunner.Object, new NewtonsoftJsonSerializer());
+            ServerConnectionData conData = new ServerConnectionData()
+            {
+                ApplicationID = "APPLICATION ID",
+                ServerURI = "SERVER URI",
+                MasterKey = "SERVER MASTER KEY"
+            };
+
+            MoralisFileService controller = new MoralisFileService(mockRunner.Object, conData, new NewtonsoftJsonSerializer());
             return controller.SaveAsync(state, dataStream: new MemoryStream(), sessionToken: null, progress: null).ContinueWith(t => Assert.IsTrue(t.IsFaulted));
         }
 
@@ -44,7 +51,14 @@ namespace Moralis.Platform.Tests
                 mediatype = "image/png"
             };
 
-            MoralisFileService controller = new MoralisFileService(mockRunner.Object, new NewtonsoftJsonSerializer());
+            ServerConnectionData conData = new ServerConnectionData()
+            {
+                ApplicationID = "APPLICATION ID",
+                ServerURI = "SERVER URI",
+                MasterKey = "SERVER MASTER KEY"
+            };
+
+            MoralisFileService controller = new MoralisFileService(mockRunner.Object, conData, new NewtonsoftJsonSerializer());
             return controller.SaveAsync(state, dataStream: new MemoryStream(), sessionToken: null, progress: null).ContinueWith(t => Assert.IsTrue(t.IsFaulted));
         }
 
@@ -60,7 +74,14 @@ namespace Moralis.Platform.Tests
                 mediatype = "image/png"
             };
 
-            MoralisFileService controller = new MoralisFileService(mockRunner.Object, new NewtonsoftJsonSerializer());
+            ServerConnectionData conData = new ServerConnectionData()
+            {
+                ApplicationID = "APPLICATION ID",
+                ServerURI = "SERVER URI",
+                MasterKey = "SERVER MASTER KEY"
+            };
+
+            MoralisFileService controller = new MoralisFileService(mockRunner.Object, conData, new NewtonsoftJsonSerializer());
             return controller.SaveAsync(state, dataStream: new MemoryStream(), sessionToken: null, progress: null).ContinueWith(t => Assert.IsTrue(t.IsFaulted));
         }
 
@@ -74,7 +95,14 @@ namespace Moralis.Platform.Tests
                 mediatype = "image/png"
             };
 
-            return new MoralisFileService(CreateMockRunner(new Tuple<HttpStatusCode, string>(HttpStatusCode.Accepted, " {\"name\":\"newBekti.png\", \"url\":\"https://www.parse.com/newBekti.png\" }")).Object, new NewtonsoftJsonSerializer()).SaveAsync(state, dataStream: new MemoryStream(), sessionToken: null, progress: null).ContinueWith(t =>
+            ServerConnectionData conData = new ServerConnectionData()
+            {
+                ApplicationID = "APPLICATION ID",
+                ServerURI = "SERVER URI",
+                MasterKey = "SERVER MASTER KEY"
+            };
+
+            return new MoralisFileService(CreateMockRunner(new Tuple<HttpStatusCode, string>(HttpStatusCode.Accepted, " {\"name\":\"newBekti.png\", \"url\":\"https://www.parse.com/newBekti.png\" }")).Object, conData, new NewtonsoftJsonSerializer()).SaveAsync(state, dataStream: new MemoryStream(), sessionToken: null, progress: null).ContinueWith(t =>
             {
                 Assert.IsFalse(t.IsFaulted);
                 MoralisFileState newState = t.Result;

@@ -78,14 +78,14 @@ namespace Moralis.Platform.Services.Infrastructure
 
         async Task<string> FindAsync(string className, IDictionary<string, object> parameters, string sessionToken, CancellationToken cancellationToken = default)
         {
-            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/classes/{Uri.EscapeDataString(className)}?{MoralisService<MoralisUser>.BuildQueryString(parameters)}", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/classes/{Uri.EscapeDataString(className)}?{MoralisService<MoralisUser>.BuildQueryString(parameters)}", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
 
             return cmdResult.Item2;
         }
 
         async Task<string> AggregateAsync(string className, IDictionary<string, object> parameters, string sessionToken, CancellationToken cancellationToken = default)
         {
-            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/aggregate/{Uri.EscapeDataString(className)}?{MoralisService<MoralisUser>.BuildQueryString(parameters)}", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ObjectService.ServerConnectionData.ParseEndpointBase}/aggregate/{Uri.EscapeDataString(className)}?{MoralisService<MoralisUser>.BuildQueryString(parameters)}", method: "GET", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
 
             return cmdResult.Item2;
         }

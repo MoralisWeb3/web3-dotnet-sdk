@@ -19,7 +19,9 @@ namespace Moralis.Platform.Services.ClientServices
 
         IJsonSerializer JsonSerializer { get; }
 
-        public MoralisFileService(IMoralisCommandRunner commandRunner, IJsonSerializer jsonSerializer) => (CommandRunner, JsonSerializer) = (commandRunner, jsonSerializer);
+        IServerConnectionData ServerConnectionData { get; }
+
+        public MoralisFileService(IMoralisCommandRunner commandRunner, IServerConnectionData serverConnectionData, IJsonSerializer jsonSerializer) => (CommandRunner, ServerConnectionData, JsonSerializer) = (commandRunner, serverConnectionData, jsonSerializer);
 
         public async Task<MoralisFileState> SaveAsync(MoralisFileState state, Stream dataStream, string sessionToken, IProgress<IDataTransferLevel> progress, CancellationToken cancellationToken = default)
         {
@@ -31,7 +33,7 @@ namespace Moralis.Platform.Services.ClientServices
 
             long oldPosition = dataStream.Position;
 
-            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"server/files/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ServerConnectionData.ParseEndpointFileService}/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken);
                 
             cancellationToken.ThrowIfCancellationRequested();
             MoralisFileState fileState = default;

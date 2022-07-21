@@ -44,5 +44,25 @@ namespace Moralis.Platform.Abstractions
         /// Additional HTTP headers to be sent with network requests from the SDK.
         /// </summary>
         IDictionary<string, string> Headers { get; set; }
+
+        /// <summary>
+        /// Base endpoint for a Parse server backend
+        /// </summary>
+        string ParseEndpointBase { get; set; }
+
+        /// <summary>
+        /// Cloud Functions endpoint for a Parse Backend
+        /// </summary>
+        string ParseEndpointCloudfunctions { get; set; }
+
+        /// <summary>
+        /// File Service endpoint for Parse backend
+        /// </summary>
+        string ParseEndpointFileService { get; set; }
+
+        /// <summary>
+        /// Classes endpoint for a Parse Backend
+        /// </summary>
+        string ParseEndpointClasses { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace Moralis.Platform.Abstractions
 {
     public interface IObjectService
     {
+        IServerConnectionData ServerConnectionData { get; }
+
         Task<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject;
 
         Task<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default);

@@ -18,8 +18,9 @@ namespace Moralis.AuthApi.Integrated.Tests
                 ServerConnectionData connectionData = new ServerConnectionData()
                 {
                     AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
-                    ApplicationID = "APP_ID",
-                    ServerURI = "SERVER URL"
+                    ApplicationID = "foCDSL08ibUWfLHunP6RrCxPGKE6HpwYiiLa5QPV", //"APPLICATION ID",
+                    ServerURI = "https://ltvaqg1whdgl.usemoralis.com:2053/server", // "SERVER URI",
+                    MasterKey = "RU70zK1m50qEuaLNHBTM2PlqOQ7OzYuVeImcMq4w" //"SERVER MASTER KEY"
                 };
 
                 Moralis.MoralisClient client = new Moralis.MoralisClient(connectionData, new AuthApiClient(),null, null,new NewtonsoftJsonSerializer());

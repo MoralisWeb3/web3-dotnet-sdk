@@ -59,7 +59,7 @@ namespace Moralis.Platform.Services
         public IQueryService QueryService => LateInitializer.GetValue(() => new MoralisQueryService(CommandRunner, this.CurrentUserService.CurrentUser?.sessionToken, JsonSerializer, ObjectService));
         public ISessionService<TUser> SessionService => LateInitializer.GetValue(() => new MoralisSessionService<TUser>(CommandRunner, JsonSerializer));
         public ICloudFunctionService CloudFunctionService => LateInitializer.GetValue(() => new MoralisCloudFunctionService(CommandRunner, ServerConnectionData, JsonSerializer));
-        public IFileService FileService => LateInitializer.GetValue(() => new MoralisFileService(CommandRunner, JsonSerializer));
+        public IFileService FileService => LateInitializer.GetValue(() => new MoralisFileService(CommandRunner, ServerConnectionData, JsonSerializer));
         
 
         public bool Reset() => LateInitializer.Used && LateInitializer.Reset();
