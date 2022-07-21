@@ -38,7 +38,12 @@ namespace Moralis.Platform.Abstractions
         /// <summary>
         /// Used to 
         /// </summary>
-        public string LocalStoragePath { get; set; }
+        string LocalStoragePath { get; set; }
+
+        /// <summary>
+        /// Auth 2.0 server endpoint URL
+        /// </summary>
+        string AuthenticationApiUrl { get; set; }
 
         /// <summary>
         /// Additional HTTP headers to be sent with network requests from the SDK.

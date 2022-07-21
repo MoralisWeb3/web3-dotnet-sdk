@@ -37,6 +37,15 @@ namespace Moralis
             moralisService.ServerConnectionData.ApplicationID = connectionData.ApplicationID;
             moralisService.ServerConnectionData.MasterKey = connectionData.MasterKey;
             moralisService.ServerConnectionData.LocalStoragePath = connectionData.LocalStoragePath;
+            moralisService.ServerConnectionData.ParseEndpointBase = connectionData.ParseEndpointBase;
+            moralisService.ServerConnectionData.ParseEndpointClasses = connectionData.ParseEndpointClasses;
+            moralisService.ServerConnectionData.ParseEndpointCloudfunctions = connectionData.ParseEndpointCloudfunctions;
+            moralisService.ServerConnectionData.ParseEndpointFileService = connectionData.ParseEndpointFileService;
+            moralisService.ServerConnectionData.LiveQueryServerURI = connectionData.LiveQueryServerURI;
+            moralisService.ServerConnectionData.ApiKey = connectionData.ApiKey;
+            moralisService.ServerConnectionData.Headers = connectionData.Headers;
+            moralisService.ServerConnectionData.AuthenticationApiUrl = connectionData.AuthenticationApiUrl;
+            
 
             // Make sure local folder for Unity apps is used if defined.
             MoralisCacheService<MoralisUser>.BaseFilePath = connectionData.LocalStoragePath;

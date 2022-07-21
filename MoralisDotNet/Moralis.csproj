@@ -12,13 +12,13 @@
     <PackageProjectUrl>https://www.moralis.io</PackageProjectUrl>
     <Copyright>Copyright (c) 2022 Moralis</Copyright>
     <AssemblyOriginatorKeyFile>moralis_sdk.sn.snk</AssemblyOriginatorKeyFile>
-    <FileVersion>1.0.4.2</FileVersion>
-	<Version>1.0.4.2</Version>
-    <AssemblyVersion>1.0.4.2</AssemblyVersion>
+    <FileVersion>1.0.4.3</FileVersion>
+	<Version>1.0.4.3</Version>
+    <AssemblyVersion>1.0.4.3</AssemblyVersion>
     <RepositoryUrl>https://github.com/MoralisWeb3/web3-dotnet-sdk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>Final Moralis w/Parse Support C# SDK Release</PackageReleaseNotes>
+    <PackageReleaseNotes>See CHANGELOG at https://github.com/MoralisWeb3/web3-dotnet-sdk/blob/v1.0.4/CHANGELOG.md</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

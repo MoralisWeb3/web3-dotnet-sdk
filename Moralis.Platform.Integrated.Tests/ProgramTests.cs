@@ -23,7 +23,8 @@ namespace Moralis.Platform.Integrated.Tests
                 {
                     ApplicationID = "APPLICATION ID",
                     ServerURI = "SERVER URI",
-                    MasterKey = "SERVER MASTER KEY"
+                    MasterKey = "SERVER MASTER KEY",
+                    LiveQueryServerURI = "LIVE QUERY SERVER URI"
                 };
 
                 //MoralisClient.Initialize(true, "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"); // "https://arw2wxg84h6b.moralishost.com:2053/server");

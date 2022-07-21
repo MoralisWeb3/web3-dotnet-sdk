@@ -77,7 +77,7 @@ namespace Moralis.Platform
         /// </summary>
         public string ParseEndpointCloudfunctions
         {
-            get { return $"{ParseEndpointBase}/{moralisEndpointCloudfunctions}"; }
+            get { return moralisEndpointCloudfunctions; }
             set { moralisEndpointCloudfunctions = value; }
         }
 
@@ -86,7 +86,7 @@ namespace Moralis.Platform
         /// </summary>
         public string ParseEndpointFileService
         {
-            get { return $"{ParseEndpointBase}/{moralisEndpointFileService}"; }
+            get { return moralisEndpointFileService; }
             set { moralisEndpointFileService = value; }
         }
 
@@ -95,7 +95,7 @@ namespace Moralis.Platform
         /// </summary>
         public string ParseEndpointClasses
         {
-            get { return $"{ParseEndpointBase}/{moralisEndpointClasses}"; }
+            get { return moralisEndpointClasses; }
             set { moralisEndpointClasses = value; }
         }
 

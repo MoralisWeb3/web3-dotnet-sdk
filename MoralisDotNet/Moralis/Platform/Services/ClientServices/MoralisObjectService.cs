@@ -30,7 +30,7 @@ namespace Moralis.Platform.Services.ClientServices
 
         public async Task<T> FetchAsync<T>(T item, string sessionToken, CancellationToken cancellationToken = default) where T : MoralisObject
         {
-            MoralisCommand command = new MoralisCommand($"{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.objectId)}", method: "GET", sessionToken: sessionToken, data: default);
+            MoralisCommand command = new MoralisCommand($"{ServerConnectionData.ParseEndpointBase}/{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}/{Uri.EscapeDataString(item.objectId)}", method: "GET", sessionToken: sessionToken, data: default);
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
          
             T resp = default;
@@ -46,7 +46,7 @@ namespace Moralis.Platform.Services.ClientServices
 
         public async Task<string> SaveAsync(MoralisObject item, IDictionary<string, IMoralisFieldOperation> operations, string sessionToken, CancellationToken cancellationToken = default)
         {
-            MoralisCommand command = new MoralisCommand(item.objectId == null ? $"{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}" : $"{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}/{item.objectId}", method: item.objectId is null ? "POST" : "PUT", sessionToken: sessionToken, data: operations is { } && operations.Count > 0 ? JsonSerializer.Serialize(operations, JsonSerializer.DefaultOptions).JsonInsertParseDate() : JsonSerializer.Serialize(item, JsonSerializer.DefaultOptions).JsonInsertParseDate());
+            MoralisCommand command = new MoralisCommand(item.objectId == null ? $"{ServerConnectionData.ParseEndpointBase}/{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}" : $"{ServerConnectionData.ParseEndpointBase}/{ServerConnectionData.ParseEndpointClasses}/{Uri.EscapeDataString(item.ClassName)}/{item.objectId}", method: item.objectId is null ? "POST" : "PUT", sessionToken: sessionToken, data: operations is { } && operations.Count > 0 ? JsonSerializer.Serialize(operations, JsonSerializer.DefaultOptions).JsonInsertParseDate() : JsonSerializer.Serialize(item, JsonSerializer.DefaultOptions).JsonInsertParseDate());
             Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(command, cancellationToken: cancellationToken);
             
             string resp = default;
@@ -65,7 +65,7 @@ namespace Moralis.Platform.Services.ClientServices
 
         public async Task DeleteAsync(MoralisObject item, string sessionToken, CancellationToken cancellationToken = default)
         {
-            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ServerConnectionData.ParseEndpointClasses}/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResp = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ServerConnectionData.ParseEndpointBase}/{ServerConnectionData.ParseEndpointClasses}/{item.ClassName}/{item.objectId}", method: "DELETE", sessionToken: sessionToken, data: null), cancellationToken: cancellationToken);
          }
                
         int MaximumBatchSize { get; } = 50;

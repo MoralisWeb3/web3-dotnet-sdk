@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
-using Moralis.Platform.Services.ClientServices;
-using Moralis.Platform.Utilities;
 using System.Threading.Tasks;
 using Moralis.Platform.Abstractions;
 using Moralis.Platform.Exceptions;
@@ -33,7 +30,7 @@ namespace Moralis.Platform.Services.ClientServices
 
             long oldPosition = dataStream.Position;
 
-            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ServerConnectionData.ParseEndpointFileService}/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken);
+            Tuple<HttpStatusCode, string> cmdResult = await CommandRunner.RunCommandAsync(new MoralisCommand($"{ServerConnectionData.ParseEndpointBase}/{ServerConnectionData.ParseEndpointFileService}/{state.name}", method: "POST", sessionToken: sessionToken, contentType: state.mediatype, stream: dataStream), uploadProgress: progress, cancellationToken: cancellationToken);
                 
             cancellationToken.ThrowIfCancellationRequested();
             MoralisFileState fileState = default;
