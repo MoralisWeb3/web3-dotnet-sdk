@@ -62,7 +62,7 @@ namespace Moralis.AuthApi.Api
 		/// <value>An instance of the ApiClient</value>
 		public ApiClient ApiClient { get; set; }
 
-		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request)
+		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request, ChainNetworkType network)
         {
 			var headerParams = new Dictionary<String, String>();
 			//headerParams["Content-Type"] = "application/json";
@@ -71,7 +71,7 @@ namespace Moralis.AuthApi.Api
 			// Verify the required parameter 'request' is set
 			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling Challenge");
 
-			var path = "/challenge";
+			var path = $"/challenge/request/{network}";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { }; // "ApiKeyAuth" };
@@ -94,14 +94,14 @@ namespace Moralis.AuthApi.Api
 			}
 		}
 
-        public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request)
+        public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request, ChainNetworkType network)
         {
 			var headerParams = new Dictionary<String, String>();
 
 			// Verify the required parameter 'request' is set
 			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling CompleteChallenge");
 
-			var path = "/challenge/complete";
+			var path = $"/challenge/verify/{network}";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };

@@ -12,13 +12,13 @@
     <PackageProjectUrl>https://www.moralis.io</PackageProjectUrl>
     <Copyright>Copyright (c) 2022 Moralis</Copyright>
     <AssemblyOriginatorKeyFile>moralis_sdk.sn.snk</AssemblyOriginatorKeyFile>
-    <FileVersion>1.0.4.1</FileVersion>
-	<Version>1.0.4.1</Version>
-    <AssemblyVersion>1.0.4.1</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
+	<Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/MoralisWeb3/web3-dotnet-sdk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>Updated BETA version of Moralis Authentication 2.0 in parallel to current authentication model.\n- Updated API Models.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated BETA version of Moralis Authentication 2.0.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
