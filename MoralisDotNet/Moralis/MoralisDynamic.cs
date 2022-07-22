@@ -10,7 +10,6 @@ using System.Threading;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
 using Moralis.SolanaApi.Interfaces;
-using System.Threading.Tasks;
 
 namespace Moralis
 {
@@ -31,7 +30,18 @@ namespace Moralis
             moralisService = new MoralisService<TUser>(connectionData.ApplicationID, connectionData.ServerURI, connectionData.Key, jsonSerializer);
             moralisService.ServerConnectionData.Key = connectionData.Key;
             moralisService.ServerConnectionData.ServerURI = connectionData.ServerURI;
-            moralisService.ServerConnectionData.ApplicationID = connectionData.ApplicationID; moralisService.ServerConnectionData.LocalStoragePath = connectionData.LocalStoragePath;
+            moralisService.ServerConnectionData.ApplicationID = connectionData.ApplicationID;
+            moralisService.ServerConnectionData.MasterKey = connectionData.MasterKey;
+            moralisService.ServerConnectionData.LocalStoragePath = connectionData.LocalStoragePath;
+            moralisService.ServerConnectionData.ParseEndpointBase = connectionData.ParseEndpointBase;
+            moralisService.ServerConnectionData.ParseEndpointClasses = connectionData.ParseEndpointClasses;
+            moralisService.ServerConnectionData.ParseEndpointCloudfunctions = connectionData.ParseEndpointCloudfunctions;
+            moralisService.ServerConnectionData.ParseEndpointFileService = connectionData.ParseEndpointFileService;
+            moralisService.ServerConnectionData.LiveQueryServerURI = connectionData.LiveQueryServerURI;
+            moralisService.ServerConnectionData.ApiKey = connectionData.ApiKey;
+            moralisService.ServerConnectionData.Headers = connectionData.Headers;
+            moralisService.ServerConnectionData.AuthenticationApiUrl = connectionData.AuthenticationApiUrl;
+            moralisService.ServerConnectionData.ParseAuthenticationHandler = connectionData.ParseAuthenticationHandler;
 
             // Make sure local folder for Unity apps is used if defined.
             MoralisCacheService<TUser>.BaseFilePath = connectionData.LocalStoragePath;
@@ -247,7 +257,7 @@ namespace Moralis
         /// <returns>Task<TUser></returns>
         public Task<TUser> LogInAsync(IDictionary<string, object> data, CancellationToken cancellationToken)
         {
-            return this.ServiceHub.LogInWithAsync("moralisEth", data, cancellationToken);
+            return this.ServiceHub.LogInWithAsync(moralisService.ServerConnectionData.ParseAuthenticationHandler, data, cancellationToken);
         }
 
         /// <summary>

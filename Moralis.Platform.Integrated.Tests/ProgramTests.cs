@@ -50,7 +50,7 @@ namespace Moralis.Platform.Integrated.Tests
 
             groups.Add(new CreateObjectTests());
             groups.Add(new QueryTests());
-            groups.Add(new LiveQueryTests());
+            groups.Add(new UserTests());
 
             return groups;
         }

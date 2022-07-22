@@ -1,4 +1,6 @@
 ﻿# Change Log
+## 1.0.4.4
+- Modified ServerConnectionData and MoralisClient to support specification of the Parse Auth Handler.
 
 ## 1.0.4.3
 - Modified MoralisClient constructor and capture all ServerConnectionData passed in.

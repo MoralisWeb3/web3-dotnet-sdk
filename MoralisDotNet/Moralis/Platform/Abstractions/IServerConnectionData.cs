@@ -2,6 +2,9 @@
 
 namespace Moralis.Platform.Abstractions
 {
+    /// <summary>
+    /// Defines data values used to connect to Moralis / Parse standalone servers.
+    /// </summary>
     public interface IServerConnectionData
     {
         /// <summary>
@@ -69,5 +72,12 @@ namespace Moralis.Platform.Abstractions
         /// Classes endpoint for a Parse Backend
         /// </summary>
         string ParseEndpointClasses { get; set; }
+
+        /// <summary>
+        /// The Authentication module to use in the Parse Server, the 
+        /// module must be defined in Parse 
+        /// node_modules/parse-server/lib/Adapters/Auth
+        /// </summary>
+        string ParseAuthenticationHandler { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Moralis.Platform.Integrated.Tests
 {
-    class IntegratedTestResult
+    public class IntegratedTestResult
     {
 
         public IDictionary<string, string> FailedTests { get; set; }

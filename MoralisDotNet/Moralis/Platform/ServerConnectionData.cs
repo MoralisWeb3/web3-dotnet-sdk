@@ -14,6 +14,7 @@ namespace Moralis.Platform
         private string moralisEndpointCloudfunctions = "functions";
         private string moralisEndpointFileService = "files";
         private string moralisEndpointClasses = "classes";
+        private string parseAuthenticationHandler = "moralisEth";
 
         public bool Test { get; set; }
 
@@ -99,7 +100,16 @@ namespace Moralis.Platform
             set { moralisEndpointClasses = value; }
         }
 
-
+        /// <summary>
+        /// The Authentication module to use in the Parse Server, the 
+        /// module must be defined in Parse 
+        /// node_modules/parse-server/lib/Adapters/Auth
+        /// </summary>
+        public string ParseAuthenticationHandler
+        {
+            get { return parseAuthenticationHandler; }
+            set { parseAuthenticationHandler = value; }
+        }
     }
 
 }

@@ -11,7 +11,6 @@ using System.Threading;
 using Moralis.Web3Api.Interfaces;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.Platform.Services.Infrastructure;
-using System.Threading.Tasks;
 using Moralis.AuthApi.Interfaces;
 using Moralis.Network;
 
@@ -45,7 +44,8 @@ namespace Moralis
             moralisService.ServerConnectionData.ApiKey = connectionData.ApiKey;
             moralisService.ServerConnectionData.Headers = connectionData.Headers;
             moralisService.ServerConnectionData.AuthenticationApiUrl = connectionData.AuthenticationApiUrl;
-            
+            moralisService.ServerConnectionData.ParseAuthenticationHandler = connectionData.ParseAuthenticationHandler;
+
 
             // Make sure local folder for Unity apps is used if defined.
             MoralisCacheService<MoralisUser>.BaseFilePath = connectionData.LocalStoragePath;
@@ -244,7 +244,7 @@ namespace Moralis
         /// <returns>Task<MoralisUser></returns>
         public Task<MoralisUser> LogInAsync(IDictionary<string, object> data, CancellationToken cancellationToken)
         {
-            return this.ServiceHub.LogInWithAsync("moralisEth", data, cancellationToken);
+            return this.ServiceHub.LogInWithAsync(moralisService.ServerConnectionData.ParseAuthenticationHandler, data, cancellationToken);
         }
 
         /// <summary>
