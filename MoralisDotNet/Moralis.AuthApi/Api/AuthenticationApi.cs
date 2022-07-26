@@ -74,7 +74,7 @@ namespace Moralis.AuthApi.Api
 			var path = $"/challenge/request/{network}";
 
 			// Authentication setting, if any
-			String[] authSettings = new String[] { }; // "ApiKeyAuth" };
+			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = JsonConvert.SerializeObject(request);
 

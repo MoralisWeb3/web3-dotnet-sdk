@@ -59,13 +59,13 @@ namespace Moralis.AuthApi.Integrated.Tests
                 Domain = "1155project.com",
                 ExpirationTime = DateTime.UtcNow.AddMinutes(60),
                 NotBefore = DateTime.UtcNow,
-                Resources = new string[] { "Boy Howdy" },
-                Timeout = 15,
+                Resources = new string[] { "https://www.moralis.io" },
+                Timeout = 120,
                 Statement = "Please confirm",
                 Uri = "https://1155project.com/"
             };
 
-            resp = await authApi.AuthEndpoint.Challenge(req);
+            resp = await authApi.AuthEndpoint.Challenge(req, ChainNetworkType.evm);
 
             return resp;
         }
