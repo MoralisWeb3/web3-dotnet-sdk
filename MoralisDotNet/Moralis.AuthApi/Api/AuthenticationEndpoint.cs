@@ -65,8 +65,6 @@ namespace Moralis.AuthApi.Api
 		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request, ChainNetworkType network)
         {
 			var headerParams = new Dictionary<String, String>();
-			//headerParams["Content-Type"] = "application/json";
-			//headerParams["accept"] = "application/json";
 
 			// Verify the required parameter 'request' is set
 			if (request == null) throw new ApiException(400, "Missing required parameter 'request' when calling Challenge");
@@ -74,7 +72,7 @@ namespace Moralis.AuthApi.Api
 			var path = $"/challenge/request/{network}";
 
 			// Authentication setting, if any
-			String[] authSettings = new String[] { }; // "ApiKeyAuth" };
+			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			string bodyData = JsonConvert.SerializeObject(request);
 
