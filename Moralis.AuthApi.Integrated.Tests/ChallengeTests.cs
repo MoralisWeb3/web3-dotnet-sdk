@@ -59,7 +59,7 @@ namespace Moralis.AuthApi.Integrated.Tests
                 Domain = "1155project.com",
                 ExpirationTime = DateTime.UtcNow.AddMinutes(60),
                 NotBefore = DateTime.UtcNow,
-                Resources = new string[] { "Boy Howdy" },
+                Resources = new string[] { "https://www.moralis.io" },
                 Timeout = 15,
                 Statement = "Please confirm",
                 Uri = "https://1155project.com/"
