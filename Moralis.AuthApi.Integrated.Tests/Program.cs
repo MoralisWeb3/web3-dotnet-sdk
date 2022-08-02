@@ -16,10 +16,8 @@ namespace Moralis.AuthApi.Integrated.Tests
 
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
-                AuthenticationApiUrl = "AUTHENTICATION API URL",
-                ApplicationID = "APPLICATION ID",
-                DappUrl = "SERVER UL",
-                ApiKey = "WEB3 API",
+                AuthenticationApiUrl = "https://authapi.moralis.io",
+                ApiKey = "WEB3API KEY",
                 MasterKey = "MASTER KEY"
             };
 

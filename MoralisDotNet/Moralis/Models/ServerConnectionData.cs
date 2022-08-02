@@ -13,16 +13,6 @@ namespace Moralis.Models
         }
 
         /// <summary>
-        /// The App ID of your app.
-        /// </summary>
-        public string ApplicationID { get; set; }
-
-        /// <summary>
-        /// A URI pointing to the target Moralis Server instance hosting the app targeted by <see cref="ApplicationID"/>.
-        /// </summary>
-        public string DappUrl { get; set; }
-
-        /// <summary>
         /// The Web3Api key, must be supplied to initialize Web3Api to use 
         /// standard REST server.
         /// </summary>

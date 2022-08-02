@@ -7,12 +7,10 @@ Moralis C# .NET Software Development Kit (SDK) used to enable applications to ea
 Configuration for server connection information is handled in the `ServerConnectionData` object. Before using Moralis, create an instance of this object to pass into the moralis initialization method.
 
 #### General Configuration Parameters.
-- ApplicationID `string`: The Moralis DappID. This value must be supplied if using either Moralis Server. 
 - ApiKey `string`: The Web3Api key, must be supplied to initialize Web3Api to use standard REST server. Required if you are going to use the Authentication API, Web3Api, or Solana API.
 - AuthenticationApiUrl `string`: Moralis Authentication 2.0 server endpoint URL. Required if you are going to use the Authentication API
 - Headers `IDictionary<string, string>`:  Additional HTTP headers to be sent with network requests from the SDK.
 - MasterKey `string`: The Master Key for the Moralis app. _Important, must be kept secret!_. This value must be supplied if using Moralis Server functionality. 
-- DappUrl `string`: A URI pointing to the target Moralis Server instance hosting the app. This value must be supplied if using Moralis Server functionality. 
 - Web3ApiUrl - URL for Web3 Api and Solana Api
 
 
@@ -24,11 +22,10 @@ Starting Moralis is as simple as setting up configuration and creating an instan
 ```
 ServerConnectionData conData = new ServerConnectionData()
 {
-    AuthenticationApiUrl = "MORALIS AUTH API URL"
-    ApplicationID = "APPLICATION_ID",
-    DappUrl = "MORALIS SERVER URL",
+    AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/"
     ApiKey = "WEB3 API AND SOLANA API KEY",
     MasterKey = "MASTER_KEY",
+    Web3ApiUrl = "https://deep-index.moralis.io/api/v2"
 };
 ```
 
@@ -83,7 +80,7 @@ CompleteChallengeRequestDto completeReq = new CompleteChallengeRequestDto()
 	Signature = clientRequest.Signature
 };
 
-CompleteChallengeResponseDto completeResp = await MoralisClient.AuthenticationClient.AuthEndpoint.CompleteChallenge(completeReq, ChainNetworkType.evm);
+CompleteChallengeResponseDto completeResp = await MoralisClient.AuthenticationApi.AuthEndpoint.CompleteChallenge(completeReq, ChainNetworkType.evm);
 
 // ---------------------------------------------------------------------------------
 // Here is where you would save authentication information to the database.

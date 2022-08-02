@@ -16,10 +16,8 @@ namespace Moralis.Web3Api.Integrated.Tests
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
                 AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
-                ApplicationID = "foCDSL08ibUWfLHunP6RrCxPGKE6HpwYiiLa5QPV",
-                DappUrl = "https://ltvaqg1whdgl.usemoralis.com:2053/server",
-                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns",
-                MasterKey = "RU70zK1m50qEuaLNHBTM2PlqOQ7OzYuVeImcMq4w",
+                ApiKey = "WEB3API KEY",
+                MasterKey = "MASTER KEY",
                 Web3ApiUrl = "https://deep-index.moralis.io/api/v2"
             };
 
