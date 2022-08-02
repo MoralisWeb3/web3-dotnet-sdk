@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using System.Reflection;
 
 namespace Moralis.Network
 {
@@ -25,7 +26,8 @@ namespace Moralis.Network
         public ApiClient(String basePath = "http://localhost:3063/api/v2")
         {
             BasePath = basePath;
-            //HttpClient = new HttpClient()
+            _defaultHeaderMap.Add("x-moralis-platform", "C# SDK");
+            _defaultHeaderMap.Add("x-moralis-platform-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
         }
 
         /// <summary>
