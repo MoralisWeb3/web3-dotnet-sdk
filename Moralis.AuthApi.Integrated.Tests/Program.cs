@@ -14,12 +14,7 @@ namespace Moralis.AuthApi.Integrated.Tests
         {
             List<IIntegratedTest> testGroups = TestGroups();
 
-            MoralisClient.ConnectionData = new ServerConnectionData()
-            {
-                AuthenticationApiUrl = "https://authapi.moralis.io",
-                ApiKey = "WEB3API KEY",
-                MasterKey = "MASTER KEY"
-            };
+            MoralisClient.ConnectionData = new ServerConnectionData();
 
             foreach (IIntegratedTest test in testGroups)
             {
