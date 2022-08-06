@@ -267,7 +267,7 @@ namespace Moralis.Web3Api.Integrated.Tests
                     Params = new { id = "15310200874782" }
                 };
 
-                string resp  = await web3Api.Native.RunContractFunction("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", rcd, ChainList.mumbai);
+                string resp  = await web3Api.Native.RunContractFunction<string>("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "uri", rcd, ChainList.mumbai);
 
                 result = resp is { };
             }
@@ -278,7 +278,21 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             return result;
         }
-        
+        class bob
+        {
+            /*
+"offerId": "1",
+  "id": "1",
+  "user": "0x383cAe6B39ad82305242EFcfDa6EC5B2a52B4620",
+  "price": "1000000000000000000",
+  "fulfilled": false
+             */
+            public string offerId { get; set; }
+            public string id { get; set; }
+            public string user { get; set; }
+            public string price { get; set; }
+            public bool fulfilled { get; set; }
+        }
         private async Task<bool> RunContractFunction1(IWeb3Api web3Api)
         {
             bool result = true;
@@ -309,7 +323,7 @@ namespace Moralis.Web3Api.Integrated.Tests
                     Params = new { id="1" }
                 };
 
-                string resp = await web3Api.Native.RunContractFunction("0x383cAe6B39ad82305242EFcfDa6EC5B2a52B4620", "offers", rcd, ChainList.mumbai);
+                bob resp = await web3Api.Native.RunContractFunction<bob>("0x383cAe6B39ad82305242EFcfDa6EC5B2a52B4620", "offers", rcd, ChainList.mumbai);
 
                 result = resp is { };
             }

@@ -164,13 +164,6 @@ namespace Moralis
         /// <exception cref="ArgumentNullException"></exception>
         private MoralisClient(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IWeb3Api web3Api = null)
         {
-            // Api Key is required
-            if (string.IsNullOrEmpty(connectionData.ApiKey)) throw new ArgumentNullException(nameof(connectionData.ApiKey));
-            // Master Key is required.
-            if (string.IsNullOrEmpty(connectionData.MasterKey)) throw new ArgumentNullException(nameof(connectionData.MasterKey));
-            // Auth 2.0 Api URI is required.
-            if (string.IsNullOrEmpty(connectionData.AuthenticationApiUrl)) throw new ArgumentNullException(nameof(connectionData.AuthenticationApiUrl));
-
             ConnectionData = connectionData;
 
             // --------------------------------------------------------------------------------

@@ -8,8 +8,11 @@ namespace Moralis.Models
     public class ServerConnectionData
     {
         public ServerConnectionData()
-        { 
+        {
+            ApiKey = "NOT SET";
+            AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/";
             Web3ApiUrl = "https://deep-index.moralis.io/api/v2";
+            MasterKey = "NOT SET";
         }
 
         /// <summary>
