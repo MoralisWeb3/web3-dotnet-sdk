@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
-	public class NativeErc20Price
+	public class NativeErc20Price : NativeTokenBalanceBase
 	{
 		/// <summary>
 		/// The native price of the token
@@ -24,7 +24,7 @@ namespace Moralis.Web3Api.Models
 		/// </summary>
 		[DataMember(Name = "decimals", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "decimals")]
-		public int? Decimals { get; set; }
+		public override int Decimals { get; set; }
 
 		/// <summary>
 		/// The Name of the token
@@ -69,5 +69,13 @@ namespace Moralis.Web3Api.Models
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
+		/// <summary>
+		/// Used by base class to access the raw WEI string value.
+		/// </summary>
+		/// <returns></returns>
+		protected override string RawBalance()
+		{
+			return Value;
+		}
 	}
 }

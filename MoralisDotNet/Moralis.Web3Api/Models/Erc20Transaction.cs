@@ -8,8 +8,13 @@ using Newtonsoft.Json;
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
-	public class Erc20Transaction
+	public class Erc20Transaction : NativeTokenBalanceBase
 	{
+		public Erc20Transaction()
+		{
+			this.Decimals = 18;
+		}
+
 		/// <summary>
 		/// The transaction hash
 		/// example: 0x2d30ca6f024dbc1307ac8a1a44ca27de6f797ec22ef20627a1307243b0ab7d09
@@ -91,6 +96,7 @@ namespace Moralis.Web3Api.Models
 			sb.Append("  ToAddress ").Append(ToAddress).Append("\n");
 			sb.Append("  FromAddress ").Append(FromAddress).Append("\n");
 			sb.Append("  Value ").Append(Value).Append("\n");
+			sb.Append("  NativeBalance ").Append(NativeTokenBalance).Append("\n");
 			sb.Append("}");
 
 			return sb.ToString();
@@ -105,5 +111,13 @@ namespace Moralis.Web3Api.Models
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
+		/// <summary>
+		/// Used by base class to access the raw WEI string value.
+		/// </summary>
+		/// <returns></returns>
+		protected override string RawBalance()
+		{
+			return Value;
+		}
 	}
 }
