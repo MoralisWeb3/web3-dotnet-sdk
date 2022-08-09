@@ -24,7 +24,7 @@ namespace Moralis.Web3Api.Models
 		/// </summary>
 		[DataMember(Name = "decimals", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "decimals")]
-		public override int Decimals { get; set; }
+		public override int? Decimals { get; set; }
 
 		/// <summary>
 		/// The Name of the token

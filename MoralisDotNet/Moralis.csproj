@@ -12,13 +12,13 @@
     <PackageProjectUrl>https://www.moralis.io</PackageProjectUrl>
     <Copyright>Copyright (c) 2022 Moralis</Copyright>
     <AssemblyOriginatorKeyFile>moralis_sdk.sn.snk</AssemblyOriginatorKeyFile>
-    <FileVersion>2.0.3</FileVersion>
-	<Version>2.0.3-beta</Version>
-    <AssemblyVersion>2.0.3</AssemblyVersion>
+    <FileVersion>2.0.4</FileVersion>
+	<Version>2.0.4-beta</Version>
+    <AssemblyVersion>2.0.4</AssemblyVersion>
     <RepositoryUrl>https://github.com/MoralisWeb3/web3-dotnet-sdk</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackageReleaseNotes>Added utility functions around chain values.</PackageReleaseNotes>
+    <PackageReleaseNotes>Handle null decimal and balance values during serialization.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

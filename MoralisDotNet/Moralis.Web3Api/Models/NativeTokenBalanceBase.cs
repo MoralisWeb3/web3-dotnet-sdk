@@ -13,7 +13,7 @@ namespace Moralis.Web3Api.Models
         /// <summary>
         /// The number of decimals to express WEI as Native Token.
         /// </summary>
-        public virtual int Decimals
+        public virtual int? Decimals
         {
             get
             {
@@ -21,7 +21,10 @@ namespace Moralis.Web3Api.Models
             }
             set
             {
-                _decimals = value;
+                if (value.HasValue)
+                {
+                    _decimals = value.Value;
+                }
 
                 if (_decimals > 0)
                 {
