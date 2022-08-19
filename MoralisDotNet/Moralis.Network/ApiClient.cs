@@ -38,12 +38,6 @@ namespace Moralis.Network
         public string BasePath { get; set; }
 
         /// <summary>
-        /// Gets or sets the RestClient.
-        /// </summary>
-        /// <value>An instance of the RestClient</value>
-        //public HttpClient RestClient { get; set; }
-
-        /// <summary>
         /// Gets the default header.
         /// </summary>
         public Dictionary<String, String> DefaultHeader
@@ -62,7 +56,7 @@ namespace Moralis.Network
         /// <param name="formParams">Form parameters.</param>
         /// <param name="fileParams">File parameters.</param>
         /// <param name="authSettings">Authentication settings.</param>
-        /// <returns>Object</returns>
+        /// <returns>HttpResponseMessage</returns>
         public async Task<HttpResponseMessage> CallApi(String path, HttpMethod method, Dictionary<String, String> queryParams, String postBody,
             Dictionary<String, String> headerParams, Dictionary<String, String> formParams,
             Dictionary<String, FileParameter> fileParams, String[] authSettings)
@@ -167,7 +161,6 @@ namespace Moralis.Network
         /// </summary>
         /// <param name="key">Header field name.</param>
         /// <param name="value">Header field value.</param>
-        /// <returns></returns>
         public void AddDefaultHeader(string key, string value)
         {
             _defaultHeaderMap.Add(key, value);

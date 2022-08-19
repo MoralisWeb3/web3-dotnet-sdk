@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.AuthApi.Integrated.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.Sdk.UnitTests", "Moralis.Sdk.UnitTests\Moralis.Sdk.UnitTests.csproj", "{6BE69C10-101E-4DD2-B295-396363F79808}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.SolanaApi.Integrated.Tests", "Moralis.SolanaApi.Integrated.Tests\Moralis.SolanaApi.Integrated.Tests.csproj", "{C16C99D7-BCE1-49B8-B58A-B76025571CEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6BE69C10-101E-4DD2-B295-396363F79808}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE69C10-101E-4DD2-B295-396363F79808}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE69C10-101E-4DD2-B295-396363F79808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16C99D7-BCE1-49B8-B58A-B76025571CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C16C99D7-BCE1-49B8-B58A-B76025571CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C16C99D7-BCE1-49B8-B58A-B76025571CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C16C99D7-BCE1-49B8-B58A-B76025571CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

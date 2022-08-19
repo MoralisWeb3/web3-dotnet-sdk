@@ -4,6 +4,9 @@ using Moralis.Network;
 
 namespace Moralis.AuthApi.Client
 {
+    /// <summary>
+    /// Provides public exposure of the Authentication Api Endpoint.
+    /// </summary>
     public class AuthApiClient : IAuthClientApi
     {
 

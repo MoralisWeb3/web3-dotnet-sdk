@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Moralis.AuthApi.Api
 {
+	/// <summary>
+	/// Defines a client endpoint the enables application to execute Moralis Authentication Api operations.
+	/// </summary>
     public class AuthenticationApi : IAuthenticationApi
     {
 
@@ -18,7 +21,6 @@ namespace Moralis.AuthApi.Api
 		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
 		/// </summary>
 		/// <param name="apiClient"> an instance of ApiClient (optional)</param>
-		/// <returns></returns>
 		public AuthenticationApi(ApiClient apiClient = null)
 		{
 			if (apiClient == null) // use the default one in Configuration
@@ -30,7 +32,6 @@ namespace Moralis.AuthApi.Api
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
 		/// </summary>
-		/// <returns></returns>
 		public AuthenticationApi(String basePath)
 		{
 			this.ApiClient = new ApiClient(basePath);
@@ -62,6 +63,13 @@ namespace Moralis.AuthApi.Api
 		/// <value>An instance of the ApiClient</value>
 		public ApiClient ApiClient { get; set; }
 
+		/// <summary>
+		/// Calls the Moralis Authentication Api Challenge operation to generate an authentication message.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="network"></param>
+		/// <returns>ChallengeResponseDto</returns>
+		/// <exception cref="ApiException"></exception>
 		public async Task<ChallengeResponseDto> Challenge(ChallengeRequestDto request, ChainNetworkType network)
         {
 			var headerParams = new Dictionary<String, String>();
@@ -92,7 +100,14 @@ namespace Moralis.AuthApi.Api
 			}
 		}
 
-        public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request, ChainNetworkType network)
+		/// <summary>
+		/// After a message is signed this operation is used to call the Moralis Authentication Challenge Verify operation to validate the signature.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="network"></param>
+		/// <returns>CompleteChallengeResponseDto</returns>
+		/// <exception cref="ApiException"></exception>
+		public async Task<CompleteChallengeResponseDto> CompleteChallenge(CompleteChallengeRequestDto request, ChainNetworkType network)
         {
 			var headerParams = new Dictionary<String, String>();
 
@@ -122,7 +137,12 @@ namespace Moralis.AuthApi.Api
 			}
 		}
 
-        public async Task<HealthCheckResponse> HealthCheck()
+		/// <summary>
+		/// Exposes the HealthCheck operation of the Moralis Authentication API which enables client applications a way to determine that the Moralis Authentrication Api is available.
+		/// </summary>
+		/// <returns>HealthCheckResponse</returns>
+		/// <exception cref="ApiException"></exception>
+		public async Task<HealthCheckResponse> HealthCheck()
         {
 			var headerParams = new Dictionary<String, String>();
 

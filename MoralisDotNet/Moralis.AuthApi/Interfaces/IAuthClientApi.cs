@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Moralis.AuthApi.Interfaces
 {
+    /// <summary>
+    /// Defines methods and properties of an Authentication Api Client
+    /// </summary>
     public interface IAuthClientApi
     {
         /// <summary>

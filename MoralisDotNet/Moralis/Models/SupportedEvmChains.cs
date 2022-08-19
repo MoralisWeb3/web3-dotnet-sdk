@@ -29,10 +29,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moralis.Models;
 using Moralis.Web3Api.Models;
 
-namespace Moralis.Moralis.Models
+namespace Moralis.Models
 {    /// <summary>
      /// Provides a easy way to get detail about an EVM chain for all EVM chains 
      /// supported by the Moralis Web3API
@@ -58,7 +57,7 @@ namespace Moralis.Moralis.Models
         /// Retrieve an chain entry by enum value.
         /// </summary>
         /// <param name="target"></param>
-        /// <returns></returns>
+        /// <returns>Moralis.Models.ChainEntry</returns>
         public static ChainEntry FromChainList(ChainList target)
         {
             ChainEntry result = null;
@@ -76,7 +75,7 @@ namespace Moralis.Moralis.Models
         /// Retrieve an chain entry by enum value.
         /// </summary>
         /// <param name="target"></param>
-        /// <returns></returns>
+        /// <returns>Moralis.Models.ChainEntry</returns>
         public static ChainEntry FromChainList(string target)
         {
             ChainEntry result = null;
@@ -94,7 +93,7 @@ namespace Moralis.Moralis.Models
         /// Retrieve an chain entry by enum value.
         /// </summary>
         /// <param name="target"></param>
-        /// <returns></returns>
+        /// <returns>Moralis.Models.ChainEntry</returns>
         public static ChainEntry FromChainList(int target)
         {
             ChainEntry result = null;
@@ -139,7 +138,7 @@ namespace Moralis.Moralis.Models
         /// <summary>
         /// Define extra information about the EVM chanis supported by Moralis.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Dictionary<string, Dictionary<string, object>></returns>
         private static Dictionary<string, Dictionary<string, object>> GetChainDetails()
         {
             Dictionary<string, Dictionary<string, object>> resp = new Dictionary<string, Dictionary<string, object>>();

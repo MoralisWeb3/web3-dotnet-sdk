@@ -25,12 +25,7 @@ namespace Moralis
     /// <code>
     /// MoralisClient.ConnectionData = new ServerConnectionData()
     /// {
-    ///     AuthenticationApiUrl = "https://auth-api.do-prod-1.moralis.io/",
-    ///     ApplicationID = "YOUR APPLICATION ID HERE",
-    ///     DappUrl = "YOUR SERVER URL HERE",
-    ///     ApiKey = "YOUR API KEY HERE",
-    ///     MasterKey = "YOUR MASTER KEY HERE",
-    ///     Web3ApiUrl = "https://deep-index.moralis.io/api/v2"
+    ///     ApiKey = "YOUR API KEY HERE"
     /// };
     /// 
     /// IWeb3Api apiClient = MoralisClient.Web3Api;
@@ -119,17 +114,15 @@ namespace Moralis
         /// <summary>
         /// Default initializer of the Moralis Client
         /// </summary>
-        /// <exception cref="ArgumentNullException">ConnectionData must be supplied.</exception>
         public static void Start()
         {
-            if (ConnectionData is { })
+            if (ConnectionData == null)
             {
-                Start(ConnectionData);
+                // Default to default instance.
+                ConnectionData = new ServerConnectionData();
             }
-            else
-            {
-                throw new ArgumentNullException(nameof(ConnectionData));
-            }
+
+            Start(ConnectionData);
         }
         #endregion
 

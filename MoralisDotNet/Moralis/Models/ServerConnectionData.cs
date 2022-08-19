@@ -7,6 +7,9 @@ namespace Moralis.Models
     /// </summary>
     public class ServerConnectionData
     {
+        /// <summary>
+        /// Default constructor - sets default configuration values.
+        /// </summary>
         public ServerConnectionData()
         {
             ApiKey = "NOT SET";

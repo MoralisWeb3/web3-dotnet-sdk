@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
 
 namespace Moralis.Unit
 {
@@ -10,6 +8,9 @@ namespace Moralis.Unit
     /// </summary>
     internal class UnitConversion
     {
+        /// <summary>
+        /// Define Ethereum divisional units.
+        /// </summary>
         public enum EthUnit
         {
             Wei,
@@ -40,6 +41,9 @@ namespace Moralis.Unit
 
         private static UnitConversion _convert;
 
+        /// <summary>
+        /// Current unit of conversion
+        /// </summary>
         public static UnitConversion Convert
         {
             get
@@ -76,26 +80,55 @@ namespace Moralis.Unit
             return (decimal)new BigDecimal(value, decimalPlacesToUnit * -1);
         }
 
+        /// <summary>
+        /// Convert WEI value to BigDecimal.
+        /// </summary>
+        /// <param name="value">BigInteger</param>
+        /// <param name="decimalPlacesToUnit">int</param>
+        /// <returns>BigDecimal</returns>
         public BigDecimal FromWeiToBigDecimal(BigInteger value, int decimalPlacesToUnit)
         {
             return new BigDecimal(value, decimalPlacesToUnit * -1);
         }
 
+        /// <summary>
+        /// Convert WEI value to BigDecimal.
+        /// </summary>
+        /// <param name="value">BigInteger</param>
+        /// <param name="toUnit">EthUnit</param>
+        /// <returns>BigDecimal</returns>
         public BigDecimal FromWeiToBigDecimal(BigInteger value, EthUnit toUnit = EthUnit.Ether)
         {
             return FromWeiToBigDecimal(value, GetEthUnitValue(toUnit));
         }
 
+        /// <summary>
+        /// Convert WEI value to BigDecimal.
+        /// </summary>
+        /// <param name="value">BigInteger</param>
+        /// <param name="toUnit">BigInteger</param>
+        /// <returns>BigDecimal</returns>
         public BigDecimal FromWeiToBigDecimal(BigInteger value, BigInteger toUnit)
         {
             return FromWeiToBigDecimal(value, GetEthUnitValueLength(toUnit));
         }
 
+        /// <summary>
+        /// returns length of value.
+        /// </summary>
+        /// <param name="unitValue">BigInteger</param>
+        /// <returns>int</returns>
         private int GetEthUnitValueLength(BigInteger unitValue)
         {
             return unitValue.ToStringInvariant().Length - 1;
         }
 
+        /// <summary>
+        /// Numeric value of EthUnit
+        /// </summary>
+        /// <param name="ethUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public BigInteger GetEthUnitValue(EthUnit ethUnit)
         {
             switch (ethUnit)
@@ -151,18 +184,35 @@ namespace Moralis.Unit
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Valdiate that value in paower of 10
+        /// </summary>
+        /// <param name="ethUnit">BigInteger</param>
+        /// <returns>bool</returns>
+        /// <exception cref="Exception"></exception>
         public bool TryValidateUnitValue(BigInteger ethUnit)
         {
             if (ethUnit.ToStringInvariant().Trim('0') == "1") return true;
             throw new Exception("Invalid unit value, it should be a power of 10 ");
         }
 
+        /// <summary>
+        /// Convert decimal from unit
+        /// </summary>
+        /// <param name="amount">decimal</param>
+        /// <param name="fromUnit">BigInteger</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWeiFromUnit(decimal amount, BigInteger fromUnit)
         {
             return ToWeiFromUnit((BigDecimal)amount, fromUnit);
         }
 
+        /// <summary>
+        /// Convert BigDecimal from unit
+        /// </summary>
+        /// <param name="amount">BigDecimal</param>
+        /// <param name="fromUnit">BigInteger</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWeiFromUnit(BigDecimal amount, BigInteger fromUnit)
         {
             TryValidateUnitValue(fromUnit);
@@ -171,17 +221,35 @@ namespace Moralis.Unit
             return conversion.Floor().Mantissa;
         }
 
+        /// <summary>
+        /// Convert BigDecimal value to WEI
+        /// </summary>
+        /// <param name="amount">BigDecimal</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(BigDecimal amount, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWeiFromUnit(amount, GetEthUnitValue(fromUnit));
         }
 
+        /// <summary>
+        /// Convert BigDecimal value to WEI
+        /// </summary>
+        /// <param name="amount">BigDecimal</param>
+        /// <param name="decimalPlacesFromUnit">int</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(BigDecimal amount, int decimalPlacesFromUnit)
         {
             if (decimalPlacesFromUnit == 0) ToWei(amount, 1);
             return ToWeiFromUnit(amount, BigInteger.Pow(10, decimalPlacesFromUnit));
         }
 
+        /// <summary>
+        /// Convert decimal value to WEI
+        /// </summary>
+        /// <param name="amount">decimal</param>
+        /// <param name="decimalPlacesFromUnit">int</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(decimal amount, int decimalPlacesFromUnit)
         {
             if (decimalPlacesFromUnit == 0) ToWei(amount, 1);
@@ -189,37 +257,79 @@ namespace Moralis.Unit
         }
 
 
+        /// <summary>
+        /// Convert decimal value to WEI
+        /// </summary>
+        /// <param name="amount">decinmal</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(decimal amount, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWeiFromUnit(amount, GetEthUnitValue(fromUnit));
         }
 
 
+        /// <summary>
+        /// Convert BigInteger value to WEI
+        /// </summary>
+        /// <param name="value">BigInteger</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(BigInteger value, EthUnit fromUnit = EthUnit.Ether)
         {
             return value * GetEthUnitValue(fromUnit);
         }
 
+        /// <summary>
+        /// Convert int value to WEI
+        /// </summary>
+        /// <param name="value">int</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(int value, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWei(new BigInteger(value), fromUnit);
         }
 
+        /// <summary>
+        /// Convert double value to WEI
+        /// </summary>
+        /// <param name="value">double</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(double value, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWei(System.Convert.ToDecimal(value), fromUnit);
         }
 
+        /// <summary>
+        /// Convert float value to WEI
+        /// </summary>
+        /// <param name="value">float</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(float value, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWei(System.Convert.ToDecimal(value), fromUnit);
         }
 
+        /// <summary>
+        /// Convert long value to WEI
+        /// </summary>
+        /// <param name="value">long</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(long value, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWei(new BigInteger(value), fromUnit);
         }
 
+        /// <summary>
+        /// Convert string value to WEI
+        /// </summary>
+        /// <param name="value">string</param>
+        /// <param name="fromUnit">EthUnit</param>
+        /// <returns>BigInteger</returns>
         public BigInteger ToWei(string value, EthUnit fromUnit = EthUnit.Ether)
         {
             return ToWei(decimal.Parse(value), fromUnit);

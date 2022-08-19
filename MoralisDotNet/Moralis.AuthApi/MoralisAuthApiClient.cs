@@ -18,7 +18,6 @@ namespace Moralis.AuthApi
         /// <summary>
         /// Initialize Moralis Web3API. 
         /// </summary>
-        /// <param name="useStandardServer">If true enforces use of the standard REST server</param>
         /// <param name="apiKey">Required if useStandardServer is true</param>
         /// <param name="url">Optional server url. If not provided default standard server Url is used.</param>
         public static void Initialize(string url, string apiKey)

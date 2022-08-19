@@ -6,7 +6,7 @@ using Moralis.Network;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
 
-namespace Moralis.Moralis.SolanaApi.Api
+namespace Moralis.SolanaApi.Api
 {
     public class TokenApi : ITokenApi
     {

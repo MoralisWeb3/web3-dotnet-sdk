@@ -23,11 +23,21 @@ namespace Moralis.Unit
         /// </summary>
         public const int Precision = 50;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="bigDecimal"></param>
+        /// <param name="alwaysTruncate"></param>
         public BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
             bigDecimal.Exponent, alwaysTruncate)
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="alwaysTruncate"></param>
         public BigDecimal(decimal value, bool alwaysTruncate = false) : this((BigDecimal)value, alwaysTruncate)
         {
         }
@@ -53,9 +63,22 @@ namespace Moralis.Unit
                 Truncate();
         }
 
+        /// <summary>
+        /// The significant digits of a floating-point number or a number in scientific notation
+        /// </summary>
         public BigInteger Mantissa { get; internal set; }
+
+        /// <summary>
+        /// A number denoting the power to which that number, symbol, or expression is to be raised.
+        /// </summary>
         public int Exponent { get; internal set; }
 
+        /// <summary>
+        /// Defines a general comparison operator.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>int</returns>
+        /// <exception cref="ArgumentException"></exception>
         public int CompareTo(object obj)
         {
             if (ReferenceEquals(obj, null) || !(obj is BigDecimal))
@@ -63,11 +86,19 @@ namespace Moralis.Unit
             return CompareTo((BigDecimal)obj);
         }
 
+        /// <summary>
+        /// Defines a comparison operator to compare against other BigDecimals.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>int</returns>
         public int CompareTo(BigDecimal other)
         {
             return this < other ? -1 : (this > other ? 1 : 0);
         }
 
+        /// <summary>
+        /// Uses Mantissa to normalize when exponent is greater than zero.
+        /// </summary>
         public void NormaliseExponentBiggerThanZero()
         {
             if (Exponent > 0)
@@ -78,7 +109,7 @@ namespace Moralis.Unit
         }
 
         /// <summary>
-        ///     Removes trailing zeros on the mantissa
+        /// Removes trailing zeros on the mantissa
         /// </summary>
         public void Normalize()
         {
@@ -105,7 +136,7 @@ namespace Moralis.Unit
         }
 
         /// <summary>
-        ///     Truncate the number to the given precision by removing the least significant digits.
+        /// Truncate the number to the given precision by removing the least significant digits.
         /// </summary>
         /// <returns>The truncated number</returns>
         internal BigDecimal Truncate(int precision = Precision)
@@ -150,7 +181,7 @@ namespace Moralis.Unit
         }
 
         /// <summary>
-        ///     Truncate the number, removing all decimal digits.
+        /// Truncate the number, removing all decimal digits.
         /// </summary>
         /// <returns>The truncated number</returns>
         public BigDecimal Floor()
@@ -163,6 +194,10 @@ namespace Moralis.Unit
             return value.NumberOfDigits();
         }
 
+        /// <summary>
+        /// Provides a ToString operation
+        /// </summary>
+        /// <returns>string</returns>
         public override string ToString()
         {
             Normalize();
@@ -184,6 +219,11 @@ namespace Moralis.Unit
             return isNegative ? $"-{s}" : s;
         }
 
+        /// <summary>
+        /// Provides equality operator against other BigDecimal objects.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>bool</returns>
         public bool Equals(BigDecimal other)
         {
             var first = this;
@@ -193,6 +233,11 @@ namespace Moralis.Unit
             return second.Mantissa.Equals(first.Mantissa) && second.Exponent == first.Exponent;
         }
 
+        /// <summary>
+        /// Provides a general equality operation
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>bool</returns>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -200,6 +245,10 @@ namespace Moralis.Unit
             return obj is BigDecimal && Equals((BigDecimal)obj);
         }
 
+        /// <summary>
+        /// Provides GetHashCode operation.
+        /// </summary>
+        /// <returns>int</returns>
         public override int GetHashCode()
         {
             unchecked
@@ -209,17 +258,28 @@ namespace Moralis.Unit
         }
 
         #region Conversions
-
+        /// <summary>
+        /// Convert int to BigDecimal
+        /// </summary>
+        /// <param name="value">int</param>
         public static implicit operator BigDecimal(int value)
         {
             return new BigDecimal(value, 0);
         }
 
+        /// <summary>
+        /// Convert BigInteger to BigDecimal
+        /// </summary>
+        /// <param name="value">BigInteger</param>
         public static implicit operator BigDecimal(BigInteger value)
         {
             return new BigDecimal(value, 0);
         }
 
+        /// <summary>
+        /// Convert double to BigDecimal
+        /// </summary>
+        /// <param name="value">double</param>
         public static implicit operator BigDecimal(double value)
         {
             var mantissa = (long)value;
@@ -235,6 +295,10 @@ namespace Moralis.Unit
             return new BigDecimal(mantissa, exponent);
         }
 
+        /// <summary>
+        /// Convert decimal to BigDecimal
+        /// </summary>
+        /// <param name="value">decimal</param>
         public static implicit operator BigDecimal(decimal value)
         {
             var mantissa = (BigInteger)value;
@@ -250,26 +314,46 @@ namespace Moralis.Unit
             return new BigDecimal(mantissa, exponent);
         }
 
+        /// <summary>
+        /// Convert BigDecimal to double - possible data loss
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
         public static explicit operator double(BigDecimal value)
         {
             return double.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Convert BigDecimal to float - possible data loss
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
         public static explicit operator float(BigDecimal value)
         {
             return float.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Convert BigDecimal to decimal - possible data loss
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
         public static explicit operator decimal(BigDecimal value)
         {
             return decimal.Parse(value.ToString(), CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Convert BigDecimal to int - possible data loss
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
         public static explicit operator int(BigDecimal value)
         {
             return Convert.ToInt32((decimal)value);
         }
 
+        /// <summary>
+        /// Convert BigDecimal to uint - possible data loss
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
         public static explicit operator uint(BigDecimal value)
         {
             return Convert.ToUInt32((decimal)value);
@@ -279,32 +363,64 @@ namespace Moralis.Unit
 
         #region Operators
 
+        /// <summary>
+        /// Defines addition operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator +(BigDecimal value)
         {
             return value;
         }
 
+        /// <summary>
+        /// Defines subtraction operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator -(BigDecimal value)
         {
             value.Mantissa *= -1;
             return value;
         }
 
+        /// <summary>
+        /// Defines increment operation for BigDecimal value.
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator ++(BigDecimal value)
         {
             return value + 1;
         }
 
+        /// <summary>
+        /// Defines decrement operation for BigDecimal value.
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator --(BigDecimal value)
         {
             return value - 1;
         }
 
+        /// <summary>
+        /// Defines addtion operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator +(BigDecimal left, BigDecimal right)
         {
             return Add(left, right);
         }
 
+        /// <summary>
+        /// Defines subtraction operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator -(BigDecimal left, BigDecimal right)
         {
             return Add(left, -right);
@@ -317,11 +433,23 @@ namespace Moralis.Unit
                 : new BigDecimal(AlignExponent(right, left) + left.Mantissa, left.Exponent);
         }
 
+        /// <summary>
+        /// Defines multiplication operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator *(BigDecimal left, BigDecimal right)
         {
             return new BigDecimal(left.Mantissa * right.Mantissa, left.Exponent + right.Exponent);
         }
 
+        /// <summary>
+        /// Defines division operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="dividend">BigDecimal</param>
+        /// <param name="divisor">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal operator /(BigDecimal dividend, BigDecimal divisor)
         {
             var exponentChange = Precision - (NumberOfDigits(dividend.Mantissa) - NumberOfDigits(divisor.Mantissa));
@@ -332,16 +460,34 @@ namespace Moralis.Unit
                 dividend.Exponent - divisor.Exponent - exponentChange);
         }
 
+        /// <summary>
+        /// Defines equality operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator ==(BigDecimal left, BigDecimal right)
         {
             return left.Exponent == right.Exponent && left.Mantissa == right.Mantissa;
         }
 
+        /// <summary>
+        /// Defines not equal operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator !=(BigDecimal left, BigDecimal right)
         {
             return left.Exponent != right.Exponent || left.Mantissa != right.Mantissa;
         }
 
+        /// <summary>
+        /// Defines less than operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator <(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
@@ -349,6 +495,12 @@ namespace Moralis.Unit
                 : left.Mantissa < AlignExponent(right, left);
         }
 
+        /// <summary>
+        /// Defines greater than operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator >(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
@@ -356,6 +508,12 @@ namespace Moralis.Unit
                 : left.Mantissa > AlignExponent(right, left);
         }
 
+        /// <summary>
+        /// Defines less than or equal to operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="left">BigDecimal</param>
+        /// <param name="right">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator <=(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
@@ -363,6 +521,11 @@ namespace Moralis.Unit
                 : left.Mantissa <= AlignExponent(right, left);
         }
 
+        /// <summary>
+        /// Defines greater than or equal to operation for two BigDecimal values.
+        /// </summary>
+        /// <param name="value">BigDecimal</param>
+        /// <returns>BigDecimal</returns>
         public static bool operator >=(BigDecimal left, BigDecimal right)
         {
             return left.Exponent > right.Exponent
@@ -370,6 +533,11 @@ namespace Moralis.Unit
                 : left.Mantissa >= AlignExponent(right, left);
         }
 
+        /// <summary>
+        /// Provide a way to convert valid numeric strings to BigDecimal
+        /// </summary>
+        /// <param name="value">string</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal Parse(string value)
         {
             //todo culture format
@@ -395,6 +563,11 @@ namespace Moralis.Unit
 
         #region Additional mathematical functions
 
+        /// <summary>
+        /// Applies exponent to BigDecimal.
+        /// </summary>
+        /// <param name="exponent">double</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal Exp(double exponent)
         {
             var tmp = (BigDecimal)1;
@@ -408,6 +581,12 @@ namespace Moralis.Unit
             return tmp * Math.Exp(exponent);
         }
 
+        /// <summary>
+        /// Provide a Power operation
+        /// </summary>
+        /// <param name="basis">double</param>
+        /// <param name="exponent">double</param>
+        /// <returns>BigDecimal</returns>
         public static BigDecimal Pow(double basis, double exponent)
         {
             var tmp = (BigDecimal)1;
@@ -425,6 +604,13 @@ namespace Moralis.Unit
 
         #region Formatting
 
+        /// <summary>
+        /// Formated string
+        /// </summary>
+        /// <param name="formatSpecifier">string</param>
+        /// <param name="format">IFormatProvider</param>
+        /// <returns>string</returns>
+        /// <exception cref="NotImplementedException"></exception>
         public string ToString(string formatSpecifier, IFormatProvider format)
         {
             char fmt = NumberFormatting.ParseFormatSpecifier(formatSpecifier, out int digits);

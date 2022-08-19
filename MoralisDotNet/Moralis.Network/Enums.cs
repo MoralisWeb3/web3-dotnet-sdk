@@ -1,6 +1,9 @@
 ﻿
 namespace Moralis.Network
 {
+    /// <summary>
+    /// Indicates Main or test networks.
+    /// </summary>
     public enum NetworkTypes { mainnet, testnet };
 
     /// <summary>

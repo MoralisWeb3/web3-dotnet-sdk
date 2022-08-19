@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace Moralis.AuthApi.Models
 {
+    /// <summary>
+    /// Request object for the Challenge operation.
+    /// </summary>
     public class ChallengeRequestDto
     {
         /// <summary>

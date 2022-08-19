@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace Moralis.Unit
 {
+    /// <summary>
+    /// Defines formatting utility functions.
+    /// </summary>
     public static class FormattingExtensions
     {
         /// <summary>
