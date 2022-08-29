@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
-	public class Erc20TokenBalance
+	public class Erc20TokenBalance : NativeTokenBalanceBase
 	{
 		/// <summary>
 		/// The address of the token contract
@@ -56,7 +56,7 @@ namespace Moralis.Web3Api.Models
 		/// </summary>
 		[DataMember(Name = "decimals", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "decimals")]
-		public string Decimals { get; set; }
+		public override int? Decimals { get; set; }
 
 		/// <summary>
 		/// Timestamp of when the contract was last synced with the node
@@ -65,7 +65,6 @@ namespace Moralis.Web3Api.Models
 		[DataMember(Name = "balance", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "balance")]
 		public string Balance { get; set; }
-
 
 		/// <summary>
 		/// Get the string presentation of the object
@@ -82,6 +81,7 @@ namespace Moralis.Web3Api.Models
 			sb.Append("  Thumbnail ").Append(Thumbnail).Append("\n");
 			sb.Append("  Decimals ").Append(Decimals).Append("\n");
 			sb.Append("  Balance ").Append(Balance).Append("\n");
+			sb.Append("  NativeBalance ").Append(NativeTokenBalance).Append("\n");
 			sb.Append("}");
 
 			return sb.ToString();
@@ -96,5 +96,13 @@ namespace Moralis.Web3Api.Models
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
+		/// <summary>
+		/// Used by base class to access the raw WEI string value.
+		/// </summary>
+		/// <returns></returns>
+		protected override string RawBalance()
+		{
+			return Balance;
+		}
 	}
 }

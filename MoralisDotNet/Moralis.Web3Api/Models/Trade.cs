@@ -8,8 +8,13 @@ using Newtonsoft.Json;
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
-	public class Trade
+	public class Trade : NativeTokenBalanceBase
 	{
+		public Trade()
+		{
+			this.Decimals = 18;
+		}
+
 		/// <summary>
 		/// The transaction hash
 		/// example: 0x057Ec652A4F150f7FF94f089A38008f49a0DF88e
@@ -121,5 +126,13 @@ namespace Moralis.Web3Api.Models
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
+		/// <summary>
+		/// Used by base class to access the raw WEI string value.
+		/// </summary>
+		/// <returns></returns>
+		protected override string RawBalance()
+		{
+			return Price;
+		}
 	}
 }

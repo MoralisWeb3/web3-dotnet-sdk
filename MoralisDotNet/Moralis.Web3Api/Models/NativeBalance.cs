@@ -7,8 +7,13 @@ using Newtonsoft.Json;
 namespace Moralis.Web3Api.Models
 {
 	[DataContract]
-	public class NativeBalance
+	public class NativeBalance : NativeTokenBalanceBase
 	{
+		public NativeBalance()
+		{
+			this.Decimals = 18;
+		}
+
 		/// <summary>
 		/// The balance
 		/// example: 1234567890
@@ -26,6 +31,7 @@ namespace Moralis.Web3Api.Models
 			var sb = new StringBuilder();
 			sb.Append("class NativeBalance{");
 			sb.Append("  Balance ").Append(Balance).Append("\n");
+			sb.Append("  NativeBalance ").Append(NativeTokenBalance).Append("\n");
 			sb.Append("}");
 
 			return sb.ToString();
@@ -40,5 +46,13 @@ namespace Moralis.Web3Api.Models
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 
+		/// <summary>
+		/// Used by base class to access the raw WEI string value.
+		/// </summary>
+		/// <returns></returns>
+		protected override string RawBalance()
+		{
+			return Balance;
+		}
 	}
 }

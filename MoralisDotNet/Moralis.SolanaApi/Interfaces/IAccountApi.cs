@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Moralis.Network;
 using Moralis.SolanaApi.Models;
 
 namespace Moralis.SolanaApi.Interfaces

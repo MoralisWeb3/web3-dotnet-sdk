@@ -33,8 +33,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
-using Moralis.Web3Api.Client;
-using Moralis.Web3Api.Core;
+using Moralis.Network;
 using Moralis.Web3Api.Interfaces;
 using Moralis.Web3Api.Models;
 using System.Net.Http;
@@ -452,7 +451,7 @@ namespace Moralis.Web3Api.Api
 		/// <param name="subdomain">The subdomain of the moralis server to use (Only use when selecting local devchain as chain)</param>
 		/// <param name="providerUrl">web3 provider url to user when using local dev chain</param>
 		/// <returns>Returns response of the function executed</returns>
-		public async Task<string> RunContractFunction (string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
+		public async Task<T> RunContractFunction <T>(string address, string functionName, RunContractDto abi, ChainList chain, string subdomain=null, string providerUrl=null)
 		{
 			// Verify the required parameter 'address' is set
 			if (address == null) throw new ApiException(400, "Missing required parameter 'address' when calling RunContractFunction");
@@ -492,7 +491,7 @@ namespace Moralis.Web3Api.Api
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return (string)ApiClient.Deserialize(data, typeof(string), headers);
+				return (T)ApiClient.Deserialize(data, typeof(T), headers);
 			}
 			else
 			{
