@@ -128,7 +128,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -196,7 +196,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -247,7 +247,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -293,7 +293,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -342,7 +342,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -411,7 +411,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -466,7 +466,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -539,7 +539,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -605,7 +605,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -657,7 +657,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -706,7 +706,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -759,7 +759,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -804,7 +804,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -855,7 +855,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -912,7 +912,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -968,7 +968,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
@@ -1016,7 +1016,7 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				return true;
 			}
@@ -1051,12 +1051,12 @@ namespace Moralis.Web3Api.Api
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
-			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : null;
+			string bodyData = postBody.Count > 0 ? JsonConvert.SerializeObject(postBody) : "{ }";
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Put, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
-			if (HttpStatusCode.OK.Equals(response.StatusCode))
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				return true;
 			}

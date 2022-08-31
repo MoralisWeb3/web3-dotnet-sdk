@@ -13,7 +13,7 @@ namespace Moralis.Web3Api.Integrated.Tests
         public async Task<IntegratedTestResult> RunTests(IWeb3Api web3Api, string address)
         {
             testResults = new IntegratedTestResult();
-
+            
             Console.WriteLine("Running test GetAllTokenIds");
             if (await GetAllTokenIds(web3Api))
             {
@@ -106,7 +106,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             await Task.Delay(500);
 
             Console.WriteLine("Running test GetTokenAdressTransfers");
-            if (await GetTokenAdressTransfers(web3Api))
+            if (await GetTokenAddressTransfers(web3Api))
             {
                 testResults.PassedTests.Add("GetTokenAdressTransfers", "PASSED");
             }
@@ -220,6 +220,32 @@ namespace Moralis.Web3Api.Integrated.Tests
                 Console.WriteLine("\tFAILED");
             }
             
+            await Task.Delay(500);
+
+            Console.WriteLine("Running test ReSyncMetadata");
+            if (await ReSyncMetadata(web3Api))
+            {
+                testResults.PassedTests.Add("ReSyncMetadata", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("ReSyncMetadata", "FAILED");
+                Console.WriteLine("\tFAILED");
+            }
+
+            await Task.Delay(500);
+
+            Console.WriteLine("Running test SyncNFTContract");
+            if (await SyncNFTContract(web3Api))
+            {
+                testResults.PassedTests.Add("SyncNFTContract", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("SyncNFTContract", "FAILED");
+                Console.WriteLine("\tFAILED");
+            }
+
             return testResults;
         }
 
@@ -318,7 +344,7 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, null, "", 10);
+                TradeCollection resp = await web3Api.Token.GetNFTTrades("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, "", null, null, null, null, null, null, 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -344,12 +370,12 @@ namespace Moralis.Web3Api.Integrated.Tests
             return result;
         }
 
-        private async Task<bool> GetTokenAdressTransfers(IWeb3Api web3Api)
+        private async Task<bool> GetTokenAddressTransfers(IWeb3Api web3Api)
         {
             bool result = true;
             try
             {
-                Erc20TransactionCollection resp = await web3Api.Token.GetTokenAddressTransfers("0x06012c8cf97BEaD5deAe237070F9587f8E7A266d", ChainList.eth, null, null, null, null, null, 0, 10);
+                Erc20TransactionCollection resp = await web3Api.Token.GetTokenAddressTransfers("0x6b175474e89094c44da98b954eedeac495271d0f", ChainList.eth, null, null, null, null, null, null, 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
@@ -479,10 +505,44 @@ namespace Moralis.Web3Api.Integrated.Tests
             bool result = true;
             try
             {
-                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Apes", ChainList.eth, null, null, null, null, null, null, "", 10);
+                NftMetadataCollection resp = await web3Api.Token.SearchNFTs("Moralis", ChainList.mumbai, "", null, null, null, null, null, null, 10);
                 result = resp is { };
             }
             catch (Exception exp) { result = false; }
+            return result;
+        }
+
+        private async Task<bool> ReSyncMetadata(IWeb3Api web3Api)
+        {
+            bool result = true;
+
+            try
+            {
+                bool resp = await web3Api.Token.ReSyncMetadata("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", "15310200874782", ChainList.mumbai);
+                result = resp;
+            }
+            catch (Exception exp)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        private async Task<bool> SyncNFTContract(IWeb3Api web3Api)
+        {
+            bool result = true;
+
+            try
+            {
+                bool resp = await web3Api.Token.SyncNFTContract("0x698d7D745B7F5d8EF4fdB59CeB660050b3599AC3", ChainList.mumbai);
+                result = resp;
+            }
+            catch (Exception exp)
+            {
+                result = false;
+            }
+
             return result;
         }
 
