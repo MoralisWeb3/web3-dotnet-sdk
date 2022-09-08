@@ -18,7 +18,7 @@ namespace Moralis.Sdk.UnitTests
 
             Assert.IsNotNull(sr);
             Assert.AreEqual("0xdeadbeef", sr.SecretKey);
-            Assert.AreEqual("eu-central-1", sr.Cluster);
+            Assert.AreEqual("eu-central-1", sr.Region);
         }
     }
 }

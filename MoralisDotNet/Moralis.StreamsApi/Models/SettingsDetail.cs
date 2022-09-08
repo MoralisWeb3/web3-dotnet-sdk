@@ -8,28 +8,28 @@ namespace Moralis.StreamsApi.Models
 {
     public class SettingsDetail
     {
-        private static List<string> clusters = new List<string>(new string[] { "us-east-1", "us-west-2", "eu-central-1", "ap-southeast-1" });
-        private string cluster = clusters[0];
+        private static List<string> regions = new List<string>(new string[] { "us-east-1", "us-west-2", "eu-central-1", "ap-southeast-1" });
+        private string region = regions[0];
 
         [DataMember(Name = "secretKey", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "secretKey")]
         public string SecretKey { get; set; }
 
-        [DataMember(Name = "cluster", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "cluster")]
+        [DataMember(Name = "region", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "region")]
         //public ClusterType Cluster { get; set; }
-        public string Cluster
+        public string Region
         {
-            get { return cluster; }
+            get { return region; }
             set
             {
-                if (!string.IsNullOrEmpty(value) && clusters.Contains(value))
+                if (!string.IsNullOrEmpty(value) && regions.Contains(value))
                 {
-                    cluster = value;
+                    region = value;
                 }
                 else
                 {
-                    throw new ArgumentException($"Valid values for Cluster are: [{string.Join(',', clusters)}]");
+                    throw new ArgumentException($"Valid values for Cluster are: [{string.Join(',', regions)}]");
                 }
             }
         }

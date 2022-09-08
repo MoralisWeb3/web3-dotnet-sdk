@@ -6,6 +6,8 @@ using Moralis.Models;
 using Moralis.SolanaApi;
 using Moralis.Web3Api;
 using Moralis.AuthApi;
+using Moralis.StreamsApi.Interfaces;
+using Moralis.StreamsApi;
 
 namespace Moralis
 {
@@ -41,6 +43,7 @@ namespace Moralis
         #region Instance variables
         private IAuthClientApi AuthenticationApiClient { get; set; }
         private ISolanaApi SolanaApiClient { get; set; }
+        private IStreamsApiClient StreamsApiClient { get; set; }
         private IWeb3Api Web3ApiClient { get; set; }
         #endregion
 
@@ -95,6 +98,23 @@ namespace Moralis
         }
 
         /// <summary>
+        /// Instance of the Streams Api
+        /// </summary>
+        public static IStreamsApiClient StreamsApi
+        {
+            get
+            {
+                // Initialize Moralis using default values if it has not been initialized.
+                if (!IsInitialized)
+                {
+                    Start();
+                }
+
+                return instance.StreamsApiClient;
+            }
+        }
+
+        /// <summary>
         /// Instance of the Web3 Api
         /// </summary>
         public static IWeb3Api Web3Api
@@ -132,7 +152,7 @@ namespace Moralis
         /// <param name="connectionData"></param>
         public static void Start(ServerConnectionData connectionData)
         { 
-            Start(connectionData, null, null, null);
+            Start(connectionData, null, null, null, null);
         }
 
         /// <summary>
@@ -140,11 +160,11 @@ namespace Moralis
         /// </summary>
         /// <param name="connectionData"></param>
         /// <param name="authApi"></param>
-        /// <param name="solanaApi"></param>
+        /// <param name="streamsApi"></param>
         /// <param name="web3Api"></param>
-        public static void Start(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IWeb3Api web3Api = null)
+        public static void Start(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IStreamsApiClient streamsApi = null, IWeb3Api web3Api = null)
         { 
-            instance = new MoralisClient(connectionData, authApi, solanaApi, web3Api);  
+            instance = new MoralisClient(connectionData, authApi, solanaApi, streamsApi, web3Api);  
         }
 
         /// <summary>
@@ -152,10 +172,10 @@ namespace Moralis
         /// </summary>
         /// <param name="connectionData"></param>
         /// <param name="authApi"></param>
-        /// <param name="solanaApi"></param>
+        /// <param name="streamsApi"></param>
         /// <param name="web3Api"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        private MoralisClient(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IWeb3Api web3Api = null)
+        private MoralisClient(ServerConnectionData connectionData, IAuthClientApi authApi = null, ISolanaApi solanaApi = null, IStreamsApiClient streamsApi = null, IWeb3Api web3Api = null)
         {
             ConnectionData = connectionData;
 
@@ -192,6 +212,26 @@ namespace Moralis
                 MoralisSolanaApiClient.Initialize(connectionData.Web3ApiUrl, connectionData.ApiKey);
 
                 SolanaApiClient = MoralisSolanaApiClient.SolanaApi;
+            }
+
+
+            // --------------------------------------------------------------------------------
+            // Setup Streams Api
+            // --------------------------------------------------------------------------------
+            StreamsApiClient = streamsApi;
+
+            if (StreamsApiClient is { })
+            {
+                StreamsApiClient.Initialize();
+            }
+            else
+            {
+                // Api URI is required.
+                if (string.IsNullOrEmpty(connectionData.Web3ApiUrl)) throw new ArgumentNullException(nameof(connectionData.Web3ApiUrl));
+
+                MoralisStreamsApiClient.Initialize(connectionData.StreamsApiUrl, connectionData.ApiKey);
+
+                StreamsApiClient = MoralisStreamsApiClient.StreamsApiClient;
             }
 
             // --------------------------------------------------------------------------------

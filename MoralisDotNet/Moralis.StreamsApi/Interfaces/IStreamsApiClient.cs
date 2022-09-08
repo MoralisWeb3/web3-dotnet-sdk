@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace Moralis.StreamsApi.Interfaces
 {
     public interface IStreamsApiClient
     {
         /// <summary>
-        /// Target Authentication Endpoint.
+        /// Target Logger Endpoint.
         /// </summary>
-        IStreamsApi StreamsEndpoint { get; }
+        public ILoggerApi LoggerEndpoint { get; }
+
+        /// <summary>
+        /// Target Settings Endpoint
+        /// </summary>
+        public ISettingsApi SettingsEndpoint { get; }
+
+        /// <summary>
+        /// Target Streams Endpoint
+        /// </summary>
+        public IStreamsApi StreamsEndpoint { get; }
 
         /// <summary>
         /// Indicates that the client has been initialized.

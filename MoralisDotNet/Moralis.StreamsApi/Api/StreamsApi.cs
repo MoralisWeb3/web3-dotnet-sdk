@@ -9,7 +9,7 @@ using Moralis.StreamsApi.Interfaces;
 using Moralis.StreamsApi.Models;
 using Newtonsoft.Json;
 
-namespace Moralis.Moralis.StreamsApi.Api
+namespace Moralis.StreamsApi.Api
 {
     public  class StreamsApi : IStreamsApi
     {

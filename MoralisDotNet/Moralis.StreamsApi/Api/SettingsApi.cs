@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moralis.Moralis.StreamsApi.Api
+namespace Moralis.StreamsApi.Api
 {
     public class SettingsApi : ISettingsApi
     {
@@ -104,7 +104,6 @@ namespace Moralis.Moralis.StreamsApi.Api
 			if (req == null) throw new ApiException(400, "Missing required parameter 'req' when calling PostSettings");
 
 			var headerParams = new Dictionary<String, String>();
-			var postBody = new Dictionary<String, String>();
 
 			var path = "/settings";
 

@@ -81,7 +81,7 @@ namespace Moralis.StreamsApi.Api
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, null, headerParams, null, null, authSettings);
 
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
