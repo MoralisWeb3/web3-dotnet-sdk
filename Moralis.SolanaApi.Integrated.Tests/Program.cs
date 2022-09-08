@@ -1,10 +1,10 @@
 ﻿using Moralis.Models;
-using Moralis.Web3Api.Interfaces;
+using Moralis.SolanaApi.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Moralis.Web3Api.Integrated.Tests
+namespace Moralis.SolanaApi.Integrated.Tests
 {
     class ProgramTests
     {
@@ -21,11 +21,11 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             foreach (IIntegratedTest test in testGroups)
             {
-                string addr = "0xBa878d88c71E0091613798C53B6c72aDd9b9A6a7".ToLower();
+                string addr = "BmfULm77maxvByX6Yjh4NPV7cou5DVrTDU2uWHxsNkAk"; //.ToLower();
 
                 Console.WriteLine($"Executing test set: {test.GetType().Name} ...\n-----------------------------------------");
 
-                IWeb3Api apiClient = MoralisClient.Web3Api;
+                ISolanaApi apiClient = MoralisClient.SolanaApi;
 
                 Task<IntegratedTestResult> testTask =
                     Task.Run(() => test.RunTests(apiClient, addr));
@@ -42,7 +42,7 @@ namespace Moralis.Web3Api.Integrated.Tests
         {
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
-            //groups.Add(new AccountTests());
+            groups.Add(new AccountTests());
             //groups.Add(new InfoTests());
             //groups.Add(new DefiTests());
             //groups.Add(new NativeTests());

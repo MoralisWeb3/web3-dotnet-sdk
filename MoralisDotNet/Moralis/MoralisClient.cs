@@ -209,7 +209,7 @@ namespace Moralis
                 // Api URI is required.
                 if (string.IsNullOrEmpty(connectionData.Web3ApiUrl)) throw new ArgumentNullException(nameof(connectionData.Web3ApiUrl));
 
-                MoralisSolanaApiClient.Initialize(connectionData.Web3ApiUrl, connectionData.ApiKey);
+                MoralisSolanaApiClient.Initialize(connectionData.SolanaApiUrl, connectionData.ApiKey);
 
                 SolanaApiClient = MoralisSolanaApiClient.SolanaApi;
             }

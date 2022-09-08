@@ -17,7 +17,8 @@ namespace Moralis.StreamsApi.Integrated.Tests
             testResults = new IntegratedTestResult();
 
             Console.WriteLine("Running test BindStream");
-            if (await BindStream(streamsApi))
+            string streamId = await BindStream(streamsApi);
+            if (!String.IsNullOrEmpty(streamId))
             {
                 testResults.PassedTests.Add("BindStream", "PASSED");
             }
@@ -82,9 +83,9 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return testResults;
         }
 
-        public async Task<bool> BindStream(IStreamsApiClient streamsApi)
+        public async Task<string> BindStream(IStreamsApiClient streamsApi)
         {
-            bool result = true;
+            string result = String.Empty;
 
             try
             {
@@ -101,10 +102,15 @@ namespace Moralis.StreamsApi.Integrated.Tests
                 };
 
                 StreamBindingDto resp = await streamsApi.StreamsEndpoint.BindStream(dto);
+
+                if (resp != null && !String.IsNullOrEmpty(resp.StreamId))
+                { 
+                    result = resp.StreamId;
+                }
             }
             catch (Exception exp)
             {
-                result = false;
+                result = String.Empty;
             }
 
             return result;
