@@ -72,7 +72,7 @@ namespace Moralis.StreamsApi.Api
 
 			var headerParams = new Dictionary<String, String>();
 
-			var path = "/settings";
+			var path = "/streams/evm";
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
@@ -111,7 +111,7 @@ namespace Moralis.StreamsApi.Api
 
 			var headerParams = new Dictionary<String, String>();
 
-			var path = "/streams/{id}";
+			var path = "/streams/evm/{id}";
 			path = path.Replace("{" + "id" + "}", streamId);
 
 			// Authentication setting, if any
@@ -140,7 +140,7 @@ namespace Moralis.StreamsApi.Api
 		/// <param name="streamId"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-        public async Task<StreamBindingDto> GetStream(string streamId)
+        public async Task<StreamBindingDto[]> GetStream(string streamId)
         {
 			// Verify stream Id is set.
 			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling GetStream");
@@ -149,7 +149,7 @@ namespace Moralis.StreamsApi.Api
 
 			var headerParams = new Dictionary<String, String>();
 
-			var path = "/streams/{id}";
+			var path = "/streams/evm/{id}";
 			path = path.Replace("{" + "id" + "}", streamId);
 
 			// Authentication setting, if any
@@ -163,7 +163,7 @@ namespace Moralis.StreamsApi.Api
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
+				return (StreamBindingDto[])ApiClient.Deserialize(data, typeof(StreamBindingDto[]), headers);
 			}
 			else
 			{
@@ -176,24 +176,28 @@ namespace Moralis.StreamsApi.Api
 		/// </summary>
 		/// <returns>StreamBindingDto List</returns>
 		/// <exception cref="NotImplementedException"></exception>
-		public async Task<List<StreamBindingDto>> GetStreams()
+		public async Task<StreamsResponse> GetStreams(int limit, string cursor = "")
         {
 			var headerParams = new Dictionary<String, String>();
+			var queryParams = new Dictionary<String, String>();
 
-			var path = "/streams";
+			var path = "/streams/evm";
+
+			queryParams.Add("limit", ApiClient.ParameterToString(limit));
+			if (cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
 
 			// Authentication setting, if any
 			String[] authSettings = new String[] { "ApiKeyAuth" };
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, null, headerParams, null, null, authSettings);
 
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return (List<StreamBindingDto>)ApiClient.Deserialize(data, typeof(List<StreamBindingDto>), headers);
+				return (StreamsResponse)ApiClient.Deserialize(data, typeof(StreamsResponse), headers);
 			}
 			else
 			{
@@ -218,7 +222,7 @@ namespace Moralis.StreamsApi.Api
 			
 			var headerParams = new Dictionary<String, String>();
 
-			var path = "/streams/{id}";
+			var path = "/streams/evm/{id}";
 			path = path.Replace("{" + "id" + "}", req.StreamId);
 
 			// Make sure the the streamId in the request is null - this is passed in the path only.
@@ -230,7 +234,7 @@ namespace Moralis.StreamsApi.Api
 			string bodyData = JsonConvert.SerializeObject(req);
 
 			HttpResponseMessage response =
-				await ApiClient.CallApi(path, HttpMethod.Put, null, bodyData, headerParams, null, null, authSettings);
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
 
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{

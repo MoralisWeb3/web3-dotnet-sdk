@@ -1,10 +1,6 @@
-﻿using Moralis.StreamsApi.Interfaces;
+﻿using Moralis.Abi;
+using Moralis.StreamsApi.Interfaces;
 using Moralis.StreamsApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moralis.StreamsApi.Integrated.Tests
 {
@@ -30,27 +26,27 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             await Task.Delay(250);
 
-            Console.WriteLine("Running test DeleteStream");
-            if (await DeleteStream(streamsApi))
-            {
-                testResults.PassedTests.Add("DeleteStream", "PASSED");
-            }
-            else
-            {
-                testResults.FailedTests.Add("DeleteStream", "FAILED");
-                Console.WriteLine("\tFAILED");
-            }
-
-            await Task.Delay(250);
-
             Console.WriteLine("Running test GetStream");
-            if (await GetStream(streamsApi))
+            if (await GetStream(streamsApi, streamId))
             {
                 testResults.PassedTests.Add("GetStream", "PASSED");
             }
             else
             {
                 testResults.FailedTests.Add("GetStream", "FAILED");
+                Console.WriteLine("\tFAILED");
+            }
+
+            await Task.Delay(250);
+
+            Console.WriteLine("Running test UpdateStream");
+            if (await UpdateStream(streamsApi, streamId))
+            {
+                testResults.PassedTests.Add("UpdateStream", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("UpdateStream", "FAILED");
                 Console.WriteLine("\tFAILED");
             }
 
@@ -69,21 +65,33 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             await Task.Delay(250);
 
-            Console.WriteLine("Running test UpdateStream");
-            if (await UpdateStream(streamsApi))
+            Console.WriteLine("Running test DeleteStream");
+            if (await DeleteStream(streamsApi, streamId))
             {
-                testResults.PassedTests.Add("UpdateStream", "PASSED");
+                testResults.PassedTests.Add("DeleteStream", "PASSED");
             }
             else
             {
-                testResults.FailedTests.Add("UpdateStream", "FAILED");
+                testResults.FailedTests.Add("DeleteStream", "FAILED");
                 Console.WriteLine("\tFAILED");
             }
 
+            await Task.Delay(250);
+
+            Console.WriteLine("Running test GetStreamsAfterDelerte");
+            if (await GetStreamsAfterDelete(streamsApi))
+            {
+                testResults.PassedTests.Add("GetStreamsAfterDelerte", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("GetStreamsAfterDelerte", "FAILED");
+                Console.WriteLine("\tFAILED");
+            }
             return testResults;
         }
 
-        public async Task<string> BindStream(IStreamsApiClient streamsApi)
+        private async Task<string> BindStream(IStreamsApiClient streamsApi)
         {
             string result = String.Empty;
 
@@ -92,11 +100,13 @@ namespace Moralis.StreamsApi.Integrated.Tests
                 StreamBindingDto dto = new StreamBindingDto()
                 {
                     Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
-                    ChainId = "mumbai",
+                    ChainIds = new List<string>(new string[] { "0x1" }),
+                    IncludeNativeTxs = true,
+                    Abi = AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()),
                     Description = "Bob wuz ere",
                     TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
-                    Topic = "mint",
-                    Type = "tx",
+                    Topic = "grantRole",
+                    Type = "contract",
                     Tag = "my first stream",
                     WebHookUrl = "https://127.0.0.1:8080"
                 };
@@ -116,24 +126,15 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return result;
         }
 
-        /// <summary>
-        /// Delete a specific stream.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<bool> DeleteStream(IStreamsApiClient streamsApi)
+        private async Task<bool> DeleteStream(IStreamsApiClient streamsApi, string streamId)
         {
             bool result = true;
 
             try
             {
-                SettingsDetail settings = new SettingsDetail()
-                {
-                    Region = "eu-central-1",
-                    SecretKey = MoralisClient.ConnectionData.MasterKey
-                };
+                StreamBindingDto resp = await streamsApi.StreamsEndpoint.DeleteStream(streamId);
 
-                result = await streamsApi.SettingsEndpoint.PostSettings(settings);
+                result = (resp != null && !String.IsNullOrEmpty(resp.StreamId));
             }
             catch (Exception exp)
             {
@@ -143,24 +144,16 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return result;
         }
 
-        /// <summary>
-        /// Get a specific stream.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<bool> GetStream(IStreamsApiClient streamsApi)
+        private async Task<bool> GetStream(IStreamsApiClient streamsApi, string streamId)
         {
             bool result = true;
 
             try
             {
-                SettingsDetail settings = new SettingsDetail()
-                {
-                    Region = "eu-central-1",
-                    SecretKey = MoralisClient.ConnectionData.MasterKey
-                };
+                StreamBindingDto[] resp = await streamsApi.StreamsEndpoint.GetStream(streamId);
 
-                result = await streamsApi.SettingsEndpoint.PostSettings(settings);
+                result = (resp != null && resp.Length > 0 &&
+                    !String.IsNullOrEmpty(resp[0].StreamId));
             }
             catch (Exception exp)
             {
@@ -170,23 +163,15 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return result;
         }
 
-        /// <summary>
-        /// Get all the streams for the current project based on the project api-key.
-        /// </summary>
-        /// <returns>List<StreamBindingDto></returns>
-        public async Task<bool> GetStreams(IStreamsApiClient streamsApi)
+        private async Task<bool> GetStreams(IStreamsApiClient streamsApi)
         {
             bool result = true;
 
             try
             {
-                SettingsDetail settings = new SettingsDetail()
-                {
-                    Region = "eu-central-1",
-                    SecretKey = MoralisClient.ConnectionData.MasterKey
-                };
+                StreamsResponse resp = await streamsApi.StreamsEndpoint.GetStreams(5, "");
 
-                result = await streamsApi.SettingsEndpoint.PostSettings(settings);
+                result = (resp is { } && resp.Total > 0);
             }
             catch (Exception exp)
             {
@@ -196,24 +181,30 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return result;
         }
 
-        /// <summary>
-        /// Updates a specific stream.
-        /// </summary>
-        /// <param name="req"></param>
-        /// <returns></returns>
-        public async Task<bool> UpdateStream(IStreamsApiClient streamsApi)
+        private async Task<bool> UpdateStream(IStreamsApiClient streamsApi, string streamId)
         {
             bool result = true;
 
             try
             {
-                SettingsDetail settings = new SettingsDetail()
+                StreamBindingDto dto = new StreamBindingDto()
                 {
-                    Region = "eu-central-1",
-                    SecretKey = MoralisClient.ConnectionData.MasterKey
+                    Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
+                    ChainIds = new List<string>(new string[] { "0x1" }),
+                    IncludeNativeTxs = true,
+                    Abi = AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()),
+                    Description = "OOP",
+                    TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
+                    Topic = "grantRole",
+                    Type = "contract",
+                    Tag = "my first stream",
+                    WebHookUrl = "https://127.0.0.1:8080",
+                    StreamId = streamId
                 };
 
-                result = await streamsApi.SettingsEndpoint.PostSettings(settings);
+                StreamBindingDto resp = await streamsApi.StreamsEndpoint.UpdateStream(dto);
+
+                result = (resp != null && resp.Description.Equals("OOP"));
             }
             catch (Exception exp)
             {
@@ -221,6 +212,29 @@ namespace Moralis.StreamsApi.Integrated.Tests
             }
 
             return result;
+        }
+
+        private async Task<bool> GetStreamsAfterDelete(IStreamsApiClient streamsApi)
+        {
+            bool result = true;
+
+            try
+            {
+                StreamsResponse resp = await streamsApi.StreamsEndpoint.GetStreams(5, "");
+
+                result = (resp is { } && resp.Total == 0);
+            }
+            catch (Exception exp)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        private string GetAbiJson()
+        {
+            return "[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]";
         }
     }
 }

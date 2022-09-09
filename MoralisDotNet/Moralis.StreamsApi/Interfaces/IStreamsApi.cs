@@ -27,14 +27,14 @@ namespace Moralis.StreamsApi.Interfaces
 		/// Get a specific stream.
 		/// </summary>
 		/// <param name="id"></param>
-		/// <returns></returns>
-		public Task<StreamBindingDto> GetStream(string id);
+		/// <returns>StreamBindingDto[]</returns>
+		public Task<StreamBindingDto[]> GetStream(string id);
 
 		/// <summary>
 		/// Get all the streams for the current project based on the project api-key.
 		/// </summary>
 		/// <returns>List<StreamBindingDto></returns>
-		public Task<List<StreamBindingDto>> GetStreams();
+		public Task<StreamsResponse> GetStreams(int limit, string cursor);
 
 		/// <summary>
 		/// Updates a specific stream.

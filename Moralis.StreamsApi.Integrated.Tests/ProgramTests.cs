@@ -44,7 +44,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
             //groups.Add(new LoggerTests());
-            groups.Add(new SettingsTests());
+            //groups.Add(new SettingsTests());
             groups.Add(new StreamsTests());
 
             return groups;

@@ -13,7 +13,7 @@ namespace Moralis.Sdk.UnitTests
         [Test]
         public void Json_DeserializesToSettingsRequest()
         {
-            string json = "{\"secretKey\":\"0xdeadbeef\", \"cluster\": \"eu-central-1\"}";
+            string json = "{\"secretKey\":\"0xdeadbeef\", \"region\": \"eu-central-1\"}";
             SettingsDetail sr = JsonConvert.DeserializeObject<SettingsDetail>(json);
 
             Assert.IsNotNull(sr);

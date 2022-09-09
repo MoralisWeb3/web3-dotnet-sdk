@@ -1,10 +1,5 @@
 ﻿using Moralis.StreamsApi.Interfaces;
 using Moralis.StreamsApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moralis.StreamsApi.Integrated.Tests
 {
@@ -30,7 +25,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
             return testResults;
         }
 
-        public async Task<bool> GetLogs(IStreamsApiClient streamsApi)
+        private async Task<bool> GetLogs(IStreamsApiClient streamsApi)
         {
             bool result = true;
 
