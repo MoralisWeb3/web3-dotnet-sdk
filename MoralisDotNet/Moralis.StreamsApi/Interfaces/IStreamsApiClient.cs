@@ -4,9 +4,9 @@ namespace Moralis.StreamsApi.Interfaces
     public interface IStreamsApiClient
     {
         /// <summary>
-        /// Target Logger Endpoint.
+        /// 
         /// </summary>
-        public ILoggerApi LoggerEndpoint { get; }
+        public IHistoryApi HistoryEndpoint { get; }
 
         /// <summary>
         /// Target Settings Endpoint
@@ -29,5 +29,13 @@ namespace Moralis.StreamsApi.Interfaces
         /// </summary>
         /// <param name="serverUrl"></param>
         void Initialize(string serverUrl = null);
+
+        /// <summary>
+        /// Verifies that a WebHook message was sent by Moralis using sha3(REQUEST_BODY + WEB3_API_KEY);
+        /// </summary>
+        /// <param name="signature"></param>
+        /// <param name="requestBody"></param>
+        /// <returns>bool</returns>
+        bool VerifySignature(string signature, string requestBody);
     }
 }

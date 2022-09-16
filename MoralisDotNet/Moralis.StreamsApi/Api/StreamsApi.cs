@@ -92,7 +92,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling BindStream: {response.ReasonPhrase}");
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace Moralis.StreamsApi.Api
 		/// <param name="streamId"></param>
 		/// <returns></returns>
 		/// <exception cref="NotImplementedException"></exception>
-        public async Task<StreamBindingDto[]> GetStream(string streamId)
+        public async Task<StreamBindingDto> GetStream(string streamId)
         {
 			// Verify stream Id is set.
 			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling GetStream");
@@ -163,11 +163,11 @@ namespace Moralis.StreamsApi.Api
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return (StreamBindingDto[])ApiClient.Deserialize(data, typeof(StreamBindingDto[]), headers);
+				return (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Authentication Health Check: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling DeleteStream: {response.ReasonPhrase}");
 			}
 		}
 
@@ -176,7 +176,7 @@ namespace Moralis.StreamsApi.Api
 		/// </summary>
 		/// <returns>StreamBindingDto List</returns>
 		/// <exception cref="NotImplementedException"></exception>
-		public async Task<StreamsResponse> GetStreams(int limit, string cursor = "")
+		public async Task<StreamsResponse> GetStreams(long limit, string cursor = "")
         {
 			var headerParams = new Dictionary<String, String>();
 			var queryParams = new Dictionary<String, String>();
@@ -201,7 +201,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Authentication Health Check: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetStreams: {response.ReasonPhrase}");
 			}
 		}
 
@@ -246,7 +246,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling UpdateStream: {response.ReasonPhrase}");
 			}
 		}
 

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Moralis.StreamsApi.Api
 {
-    public class LoggerApi : ILoggerApi
-	{       
+    public class HistoryApi : IHistoryApi
+	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
+		/// Initializes a new instance of the <see cref="HistoryApi"/> class.
 		/// </summary>
 		/// <param name="apiClient"> an instance of ApiClient (optional)</param>
-		public LoggerApi(ApiClient apiClient = null)
+		public HistoryApi(ApiClient apiClient = null)
 		{
 			if (apiClient == null) // use the default one in Configuration
 				this.ApiClient = Configuration.DefaultApiClient;
@@ -25,9 +25,9 @@ namespace Moralis.StreamsApi.Api
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
+		/// Initializes a new instance of the <see cref="HistoryApi"/> class.
 		/// </summary>
-		public LoggerApi(String basePath)
+		public HistoryApi(String basePath)
 		{
 			this.ApiClient = new ApiClient(basePath);
 		}
@@ -59,22 +59,20 @@ namespace Moralis.StreamsApi.Api
 		public ApiClient ApiClient { get; set; }
 
 		/// <summary>
-		/// Retrieves stream logs.
+		/// Retrieves history.
 		/// </summary>
 		/// <param name="limit">double</param>
-		/// <param name="logType">string</param>
 		/// <param name="cursor">string</param>
 		/// <returns>LogResponse</returns>
 		/// <exception cref="ApiException"></exception>
-		public async Task<LogResponse> GetLogs(double limit, string logType, string cursor)
+		public async Task<HistoryResponse> GetHistory(long limit, string cursor)
 		{
 			var headerParams = new Dictionary<String, String>();
 
-			var path = "/logger";
+			var path = "/history";
 			var queryParams = new Dictionary<String, String>();
 
 			queryParams.Add("limit", ApiClient.ParameterToString(limit));
-			if (logType != null) queryParams.Add("logType", ApiClient.ParameterToString(logType));
 			if (cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
 			 
 			// Authentication setting, if any
@@ -88,11 +86,11 @@ namespace Moralis.StreamsApi.Api
 				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				return (LogResponse)ApiClient.Deserialize(data, typeof(LogResponse), headers);
+				return (HistoryResponse)ApiClient.Deserialize(data, typeof(HistoryResponse), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Authentication Health Check: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetHistory: {response.ReasonPhrase}");
 			}
 		}
 	}

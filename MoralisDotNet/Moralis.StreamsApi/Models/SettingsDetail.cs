@@ -11,13 +11,8 @@ namespace Moralis.StreamsApi.Models
         private static List<string> regions = new List<string>(new string[] { "us-east-1", "us-west-2", "eu-central-1", "ap-southeast-1" });
         private string region = regions[0];
 
-        [DataMember(Name = "secretKey", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "secretKey")]
-        public string SecretKey { get; set; }
-
         [DataMember(Name = "region", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "region")]
-        //public ClusterType Cluster { get; set; }
         public string Region
         {
             get { return region; }

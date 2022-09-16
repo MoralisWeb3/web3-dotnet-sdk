@@ -3,7 +3,7 @@ using Moralis.StreamsApi.Models;
 
 namespace Moralis.StreamsApi.Integrated.Tests
 {
-    internal class LoggerTests : IIntegratedTest
+    internal class HistoryTests : IIntegratedTest
     {
 
         private IntegratedTestResult testResults;
@@ -11,27 +11,27 @@ namespace Moralis.StreamsApi.Integrated.Tests
         {
             testResults = new IntegratedTestResult();
 
-            Console.WriteLine("Running test GetLogs");
-            if (await GetLogs(streamsApi))
+            Console.WriteLine("Running test GetHistory");
+            if (await GetHistory(streamsApi))
             {
-                testResults.PassedTests.Add("GetLogs", "PASSED");
+                testResults.PassedTests.Add("GetHistory", "PASSED");
             }
             else
             {
-                testResults.FailedTests.Add("GetLogs", "FAILED");
+                testResults.FailedTests.Add("GetHistory", "FAILED");
                 Console.WriteLine("\tFAILED");
             }
 
             return testResults;
         }
 
-        private async Task<bool> GetLogs(IStreamsApiClient streamsApi)
+        private async Task<bool> GetHistory(IStreamsApiClient streamsApi)
         {
             bool result = true;
 
             try
             {
-                LogResponse resp = await streamsApi.LoggerEndpoint.GetLogs(10, "debug", null);
+                HistoryResponse resp = await streamsApi.HistoryEndpoint.GetHistory(10, null);
 
                 result = resp is { };
             }

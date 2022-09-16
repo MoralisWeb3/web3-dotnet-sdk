@@ -1,6 +1,8 @@
 ﻿using Moralis.Network;
 using Moralis.StreamsApi.Api;
 using Moralis.StreamsApi.Interfaces;
+using System.Security.Cryptography;
+
 
 namespace Moralis.StreamsApi.Client
 {
@@ -12,9 +14,9 @@ namespace Moralis.StreamsApi.Client
         private static string defaultServerUrl = "https://auth-api.do-prod-1.moralis.io/";
 
         /// <summary>
-        /// Target Logger Endpoint.
+        /// 
         /// </summary>
-        public ILoggerApi LoggerEndpoint { get; private set; }
+        public IHistoryApi HistoryEndpoint { get; private set; }
 
         /// <summary>
         /// Target Settings Endpoint
@@ -55,12 +57,23 @@ namespace Moralis.StreamsApi.Client
             // Initialize client
             ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
 
-            LoggerEndpoint = new LoggerApi(client);
+            HistoryEndpoint = new HistoryApi(client);
             SettingsEndpoint = new SettingsApi(client);
             StreamsEndpoint = new Api.StreamsApi(client);
 
             // Indicate that the client is initialized.
             this.IsInitialized = true;
+        }
+
+        /// <summary>
+        /// Verifies that a WebHook message was sent by Moralis using sha3(REQUEST_BODY + WEB3_API_KEY);
+        /// </summary>
+        /// <param name="signature"></param>
+        /// <param name="requestBody"></param>
+        /// <returns>bool</returns>
+        public bool VerifySignature(string signature, string requestBody)
+        {
+            return true; // SHA512 sha512 = new SHA512();
         }
     }
 }

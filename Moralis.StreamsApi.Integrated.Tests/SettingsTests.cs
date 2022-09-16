@@ -46,7 +46,6 @@ namespace Moralis.StreamsApi.Integrated.Tests
             {
                 SettingsDetail resp = await streamsApi.SettingsEndpoint.GetSettings();
                 result = (resp is { } &&
-                    resp.SecretKey.Equals(MoralisClient.ConnectionData.MasterKey) &&
                     resp.Region.Equals("eu-central-1"));
             }
             catch (Exception exp)
@@ -65,8 +64,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
             {
                 SettingsDetail settings = new SettingsDetail()
                 { 
-                    Region = "eu-central-1",
-                    SecretKey = MoralisClient.ConnectionData.MasterKey
+                    Region = "eu-central-1"
                 };
                 
                 result = await streamsApi.SettingsEndpoint.PostSettings(settings);

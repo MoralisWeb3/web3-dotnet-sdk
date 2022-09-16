@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.Sdk.UnitTests", "Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.SolanaApi.Integrated.Tests", "Moralis.SolanaApi.Integrated.Tests\Moralis.SolanaApi.Integrated.Tests.csproj", "{C16C99D7-BCE1-49B8-B58A-B76025571CEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moralis.StreamsApi.Integrated.Tests", "Moralis.StreamsApi.Integrated.Tests\Moralis.StreamsApi.Integrated.Tests.csproj", "{0462EB2B-3FC1-4758-92DC-CF3BD2C2C4A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moralis.StreamsApi.Integrated.Tests", "Moralis.StreamsApi.Integrated.Tests\Moralis.StreamsApi.Integrated.Tests.csproj", "{0462EB2B-3FC1-4758-92DC-CF3BD2C2C4A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamsDemo", "StreamsDemo\StreamsDemo.csproj", "{EA03784E-4281-47AD-B172-532CB5491ADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0462EB2B-3FC1-4758-92DC-CF3BD2C2C4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0462EB2B-3FC1-4758-92DC-CF3BD2C2C4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0462EB2B-3FC1-4758-92DC-CF3BD2C2C4A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA03784E-4281-47AD-B172-532CB5491ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA03784E-4281-47AD-B172-532CB5491ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA03784E-4281-47AD-B172-532CB5491ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA03784E-4281-47AD-B172-532CB5491ADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

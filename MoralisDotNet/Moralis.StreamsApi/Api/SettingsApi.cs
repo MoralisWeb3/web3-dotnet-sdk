@@ -86,7 +86,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Authentication Health Check: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetSettings: {response.ReasonPhrase}");
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling PostSettings: {response.ReasonPhrase}");
 			}
 
 			return result;

@@ -150,10 +150,10 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             try
             {
-                StreamBindingDto[] resp = await streamsApi.StreamsEndpoint.GetStream(streamId);
+                StreamBindingDto resp = await streamsApi.StreamsEndpoint.GetStream(streamId);
 
-                result = (resp != null && resp.Length > 0 &&
-                    !String.IsNullOrEmpty(resp[0].StreamId));
+                result = (resp != null &&
+                    !String.IsNullOrEmpty(resp.StreamId));
             }
             catch (Exception exp)
             {
