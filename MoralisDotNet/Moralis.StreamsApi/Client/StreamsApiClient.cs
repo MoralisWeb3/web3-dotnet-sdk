@@ -16,6 +16,11 @@ namespace Moralis.StreamsApi.Client
         /// <summary>
         /// 
         /// </summary>
+        public IBetaApi BetaEndpoint { get; private set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IHistoryApi HistoryEndpoint { get; private set; }
 
         /// <summary>
@@ -57,6 +62,7 @@ namespace Moralis.StreamsApi.Client
             // Initialize client
             ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
 
+            BetaEndpoint = new BetaApi(client);
             HistoryEndpoint = new HistoryApi(client);
             SettingsEndpoint = new SettingsApi(client);
             StreamsEndpoint = new Api.StreamsApi(client);

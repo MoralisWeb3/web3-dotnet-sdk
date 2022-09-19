@@ -6,6 +6,11 @@ namespace Moralis.StreamsApi.Interfaces
         /// <summary>
         /// 
         /// </summary>
+        public IBetaApi BetaEndpoint { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IHistoryApi HistoryEndpoint { get; }
 
         /// <summary>

@@ -108,7 +108,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
                     Topic = "grantRole",
                     Type = "contract",
                     Tag = "my first stream",
-                    WebHookUrl = "https://127.0.0.1:8080"
+                    WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA=="
                 };
 
                 StreamBindingDto resp = await streamsApi.StreamsEndpoint.BindStream(dto);
@@ -198,7 +198,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
                     Topic = "grantRole",
                     Type = "contract",
                     Tag = "my first stream",
-                    WebHookUrl = "https://127.0.0.1:8080",
+                    WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA==",
                     StreamId = streamId
                 };
 
