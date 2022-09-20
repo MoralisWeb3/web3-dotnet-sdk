@@ -1,44 +1,43 @@
-﻿//using Newtonsoft.Json;
-//using System;
-//using System.Collections.Generic;
-//using System.Runtime.Serialization;
-//using System.Text;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Text;
 
-//namespace Moralis.StreamsApi.Models
-//{
-//    public class Log
-//    {
-//        private static List<string> logTypes = new List<string>(new string[] { "debug", "info", "warn", "error" });
-//        private string logType = logTypes[0];
+namespace Moralis.StreamsApi.Models
+{
+    public class Log
+    {
+        [DataMember(Name = "logIndex", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "logIndex")]
+        public string LogIndex { get; set; }
 
-//        [DataMember(Name = "date", EmitDefaultValue = false)]
-//        [JsonProperty(PropertyName = "date")]
-//        public string Date { get; set; }
+        [DataMember(Name = "transactionHash", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "transactionHash")]
+        public string TransactionHash { get; set; }
 
-//        [DataMember(Name = "block", EmitDefaultValue = false)]
-//        [JsonProperty(PropertyName = "block")]
-//        public string Block { get; set; }
+        [DataMember(Name = "address", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "address")]
+        public string Address { get; set; }
 
-//        [DataMember(Name = "message", EmitDefaultValue = false)]
-//        [JsonProperty(PropertyName = "message")]
-//        public string Message { get; set; }
+        [DataMember(Name = "data", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "data")]
+        public string Data { get; set; }
 
-//        [DataMember(Name = "type", EmitDefaultValue = false)]
-//        [JsonProperty(PropertyName = "type")]
-//        public string LogType
-//        {
-//            get { return logType; }
-//            set
-//            {
-//                if (!string.IsNullOrEmpty(value) && logTypes.Contains(value))
-//                {
-//                    logType = value;
-//                }
-//                else
-//                {
-//                    throw new ArgumentException($"Valid values for Log Type are: [{string.Join(',', logTypes)}]");
-//                }
-//            }
-//        }
-//    }
-//}
+        [DataMember(Name = "topic0", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "topic0")]
+        public string Topic0 { get; set; }
+
+        [DataMember(Name = "topic1", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "topic1")]
+        public string Topic1 { get; set; }
+
+        [DataMember(Name = "topic2", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "topic2")]
+        public string Topic2 { get; set; }
+
+        [DataMember(Name = "topic3", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "topic3")]
+        public string Topic3 { get; set; }
+    }
+}
