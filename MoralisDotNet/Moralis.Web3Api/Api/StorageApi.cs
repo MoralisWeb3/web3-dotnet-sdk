@@ -121,16 +121,17 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Post, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (List<IpfsFile>)ApiClient.Deserialize(data, typeof(List<IpfsFile>), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling UploadFolder: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling UploadFolder: {response.ReasonPhrase} {data}");
 			}
 		}
 	}

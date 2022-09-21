@@ -1,11 +1,11 @@
 ﻿
-using Moralis.Web3Api.Interfaces;
+using Moralis.SolanaApi.Interfaces;
 using System.Threading.Tasks;
 
-namespace Moralis.Web3Api.Integrated.Tests
+namespace Moralis.SolanaApi.Integrated.Tests
 {
     interface IIntegratedTest
     {
-        Task<IntegratedTestResult> RunTests(IWeb3Api web3Api, string address);
+        Task<IntegratedTestResult> RunTests(ISolanaApi solanaApi, string address);
     }
 }

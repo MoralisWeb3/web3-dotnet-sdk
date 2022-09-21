@@ -15,7 +15,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
-                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"
+                ApiKey = "MY API KEY"
             };
 
 
@@ -43,12 +43,12 @@ namespace Moralis.Web3Api.Integrated.Tests
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
             groups.Add(new AccountTests());
-            //groups.Add(new InfoTests());
-            //groups.Add(new DefiTests());
-            //groups.Add(new NativeTests());
-            //groups.Add(new ResolveTests());
-            //groups.Add(new StorageTests());
-            //groups.Add(new TokenTests());
+            groups.Add(new InfoTests());
+            groups.Add(new DefiTests());
+            groups.Add(new NativeTests());
+            groups.Add(new ResolveTests());
+            groups.Add(new StorageTests());
+            groups.Add(new TokenTests());
 
             return groups;
         }

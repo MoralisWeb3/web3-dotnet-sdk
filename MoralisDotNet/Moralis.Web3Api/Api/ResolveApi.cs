@@ -124,16 +124,17 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (Resolve)ApiClient.Deserialize(data, typeof(Resolve), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling ResolveDomain: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling ResolveDomain: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -166,16 +167,17 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (Ens)ApiClient.Deserialize(data, typeof(Ens), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling ResolveAddress: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling ResolveAddress: {response.ReasonPhrase} {data}");
 			}
 		}
 	}

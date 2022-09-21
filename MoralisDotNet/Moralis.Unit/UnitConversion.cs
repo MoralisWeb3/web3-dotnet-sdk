@@ -6,7 +6,7 @@ namespace Moralis.Unit
     /// <summary>
     /// <see cref="Nethereum.Util.UnitConversion">https://github.com/Nethereum</see>
     /// </summary>
-    internal class UnitConversion
+    public class UnitConversion
     {
         /// <summary>
         /// Define Ethereum divisional units.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Moralis.Web3Api.Integrated.Tests
+namespace Moralis.SolanaApi.Integrated.Tests
 {
     class IntegratedTestResult
     {
