@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Moralis.Moralis.StreamsApi.Models
+namespace Moralis.StreamsApi.Models
 {
     public enum StateMutabilityTypes
     {
@@ -20,4 +20,10 @@ namespace Moralis.Moralis.StreamsApi.Models
         Fallback
     }
 
+    public enum StreamStatusTypes
+    { 
+        Active,
+        Paused,
+        Error
+    }
 }

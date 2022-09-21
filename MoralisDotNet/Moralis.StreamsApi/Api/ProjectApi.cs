@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Moralis.StreamsApi.Api
 {
-    public class SettingsApi : ISettingsApi
+    public class ProjectApi : IProjectApi
     {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
 		/// </summary>
 		/// <param name="apiClient"> an instance of ApiClient (optional)</param>
-		public SettingsApi(ApiClient apiClient = null)
+		public ProjectApi(ApiClient apiClient = null)
 		{
 			if (apiClient == null) // use the default one in Configuration
 				this.ApiClient = Configuration.DefaultApiClient;
@@ -28,7 +28,7 @@ namespace Moralis.StreamsApi.Api
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AuthenticationApi"/> class.
 		/// </summary>
-		public SettingsApi(String basePath)
+		public ProjectApi(String basePath)
 		{
 			this.ApiClient = new ApiClient(basePath);
 		}

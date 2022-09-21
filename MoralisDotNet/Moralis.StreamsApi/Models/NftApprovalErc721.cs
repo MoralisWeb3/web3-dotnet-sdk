@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Moralis.StreamsApi.Models
 {
-    public class Erc20Transfer
+    public class NftApprovalErc721
     {
         [DataMember(Name = "transactionHash", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "transactionHash")]
@@ -24,25 +24,21 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "tag")]
         public string Tag { get; set; }
 
-        [DataMember(Name = "from", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "from")]
-        public string From { get; set; }
+        [DataMember(Name = "owner", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "owner")]
+        public string Owner { get; set; }
 
-        [DataMember(Name = "to", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "to")]
-        public string To { get; set; }
-
-        [DataMember(Name = "amount", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "amount")]
-        public string Amount { get; set; }
+        [DataMember(Name = "spender", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "spender")]
+        public string Spender { get; set; }
 
         [DataMember(Name = "value", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "value")]
         public string Value { get; set; }
 
-        [DataMember(Name = "tokenDecimals", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "tokenDecimals")]
-        public string TokenDecimals { get; set; }
+        [DataMember(Name = "tokenContractType", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "tokenContractType")]
+        public string TokenContractType { get; set; }
 
         [DataMember(Name = "tokenName", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "tokenName")]
@@ -51,10 +47,5 @@ namespace Moralis.StreamsApi.Models
         [DataMember(Name = "tokenSymbol", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "tokenSymbol")]
         public string TokenSymbol { get; set; }
-
-        [DataMember(Name = "valueWithDecimals", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "valueWithDecimals")]
-        public string ValueWithDecimals { get; set; }
-
     }
 }

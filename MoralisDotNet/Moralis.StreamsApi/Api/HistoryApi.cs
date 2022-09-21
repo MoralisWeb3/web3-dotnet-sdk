@@ -94,5 +94,33 @@ namespace Moralis.StreamsApi.Api
 				throw new ApiException((int)response.StatusCode, $"Error calling GetHistory: {response.ReasonPhrase} {data}");
 			}
 		}
+
+		public async Task<HistoryDetail> ReplayHistory(string id)
+		{
+			var headerParams = new Dictionary<String, String>();
+
+			var path = "/history/replay/{id}";
+
+			path = path.Replace("{" + "id" + "}", ApiClient.ParameterToString(id));
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
+
+			string data = await response.ExtractContentAsString();
+
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
+			{
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (HistoryDetail)ApiClient.Deserialize(data, typeof(HistoryDetail), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetHistory: {response.ReasonPhrase} {data}");
+			}
+		}
 	}
 }

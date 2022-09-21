@@ -15,7 +15,7 @@ namespace Moralis.Web3Api.Integrated.Tests
 
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
-                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns"
+                ApiKey = "MY API KEY"
             };
 
 

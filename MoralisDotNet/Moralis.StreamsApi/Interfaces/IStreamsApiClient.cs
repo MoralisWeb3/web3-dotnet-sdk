@@ -16,7 +16,7 @@ namespace Moralis.StreamsApi.Interfaces
         /// <summary>
         /// Target Settings Endpoint
         /// </summary>
-        public ISettingsApi SettingsEndpoint { get; }
+        public IProjectApi SettingsEndpoint { get; }
 
         /// <summary>
         /// Target Streams Endpoint

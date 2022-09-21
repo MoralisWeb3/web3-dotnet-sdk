@@ -22,6 +22,18 @@ namespace Moralis.StreamsApi.Integrated.Tests
                 Console.WriteLine("\tFAILED");
             }
 
+            await Task.Delay(250);
+
+            Console.WriteLine("Running test ReplayHistory");
+            if (await ReplayHistory(streamsApi))
+            {
+                testResults.PassedTests.Add("ReplayHistory", "PASSED");
+            }
+            else
+            {
+                testResults.FailedTests.Add("ReplayHistory", "FAILED");
+                Console.WriteLine("\tFAILED");
+            }
             return testResults;
         }
 
@@ -32,6 +44,24 @@ namespace Moralis.StreamsApi.Integrated.Tests
             try
             {
                 HistoryResponse resp = await streamsApi.HistoryEndpoint.GetHistory(10, null);
+
+                result = resp is { };
+            }
+            catch (Exception exp)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        private async Task<bool> ReplayHistory(IStreamsApiClient streamsApi)
+        {
+            bool result = true;
+
+            try
+            {
+                HistoryDetail resp = await streamsApi.HistoryEndpoint.ReplayHistory("76d23139-ea6b-4231-a202-1a341fabbd4c");
 
                 result = resp is { };
             }

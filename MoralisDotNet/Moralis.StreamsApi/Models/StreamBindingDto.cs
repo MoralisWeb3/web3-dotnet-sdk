@@ -55,5 +55,31 @@ namespace Moralis.StreamsApi.Models
         [DataMember(Name = "id", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]
         public string StreamId { get; set; }
+
+        [DataMember(Name = "status", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "status", NullValueHandling = NullValueHandling.Ignore)]
+
+        private string _streamStatus = null;
+
+        [JsonIgnore]
+        public StreamStatusTypes Status
+        {
+            get 
+            {
+                if (_streamStatus == null)
+                {
+                    return StreamStatusTypes.Error;
+                }
+                else
+                {
+                    return _streamStatus.ToStreamStatusTypes();
+                }
+            }
+            set { _streamStatus = value.ToString(); }
+        }
+
+        [DataMember(Name = "statusMessage", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "statusMessage", NullValueHandling = NullValueHandling.Ignore)]
+        public string StatusMessage { get; set; }
     }
 }

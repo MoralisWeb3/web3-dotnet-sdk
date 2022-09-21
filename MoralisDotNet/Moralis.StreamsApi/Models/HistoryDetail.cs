@@ -18,7 +18,7 @@ namespace Moralis.StreamsApi.Models
 
         [DataMember(Name = "payload", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "payload")]
-        public string Payload { get; set; }
+        public Webhook Payload { get; set; }
 
         [DataMember(Name = "errorMessage", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "errorMessage")]

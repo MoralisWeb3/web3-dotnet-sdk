@@ -26,7 +26,7 @@ namespace Moralis.StreamsApi.Client
         /// <summary>
         /// Target Settings Endpoint
         /// </summary>
-        public ISettingsApi SettingsEndpoint { get; private set; }
+        public IProjectApi SettingsEndpoint { get; private set; }
 
         /// <summary>
         /// Target Streams Endpoint
@@ -64,7 +64,7 @@ namespace Moralis.StreamsApi.Client
 
             BetaEndpoint = new BetaApi(client);
             HistoryEndpoint = new HistoryApi(client);
-            SettingsEndpoint = new SettingsApi(client);
+            SettingsEndpoint = new ProjectApi(client);
             StreamsEndpoint = new Api.StreamsApi(client);
 
             // Indicate that the client is initialized.
