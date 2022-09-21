@@ -81,16 +81,17 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (HistoryResponse)ApiClient.Deserialize(data, typeof(HistoryResponse), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetHistory: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetHistory: {response.ReasonPhrase} {data}");
 			}
 		}
 	}

@@ -75,16 +75,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (SplTokenPrice)ApiClient.Deserialize(data, typeof(SplTokenPrice), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenPrice: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetTokenPrice: {response.ReasonPhrase} {data}");
 			}
 		}
     }

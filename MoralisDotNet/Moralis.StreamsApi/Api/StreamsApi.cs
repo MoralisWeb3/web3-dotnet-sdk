@@ -82,9 +82,10 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Put, null, bodyData, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				StreamBindingDto resp = (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
@@ -92,7 +93,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling BindStream: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling BindStream: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -120,9 +121,10 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Delete, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				StreamBindingDto resp = (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
@@ -130,7 +132,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairAddress: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -158,16 +160,17 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling DeleteStream: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling DeleteStream: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -192,16 +195,17 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (StreamsResponse)ApiClient.Deserialize(data, typeof(StreamsResponse), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetStreams: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetStreams: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -236,9 +240,10 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				StreamBindingDto resp = (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
@@ -246,7 +251,7 @@ namespace Moralis.StreamsApi.Api
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling UpdateStream: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling UpdateStream: {response.ReasonPhrase} {data}");
 			}
 		}
 

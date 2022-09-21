@@ -77,16 +77,17 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (SettingsDetail)ApiClient.Deserialize(data, typeof(SettingsDetail), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetSettings: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetSettings: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -115,13 +116,15 @@ namespace Moralis.StreamsApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
 			{
 				result = true;
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling PostSettings: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling PostSettings: {response.ReasonPhrase} {data}");
 			}
 
 			return result;

@@ -76,16 +76,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (NativeBalance)ApiClient.Deserialize(data, typeof(NativeBalance), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Balance: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling Balance: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -106,16 +107,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (List<SplTokenBalanace>)ApiClient.Deserialize(data, typeof(List<SplTokenBalanace>), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetSplTokens: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetSplTokens: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -136,16 +138,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (List<SplNft>)ApiClient.Deserialize(data, typeof(List<SplNft>), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTs: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTs: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -166,16 +169,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (Portfolio)ApiClient.Deserialize(data, typeof(Portfolio), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling Portfolio: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling Portfolio: {response.ReasonPhrase} {data}");
 			}
 		}
 	}

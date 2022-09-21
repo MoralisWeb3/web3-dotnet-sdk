@@ -77,16 +77,17 @@ namespace Moralis.SolanaApi.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, null, null, headerParams, null, null, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (NftMetadata)ApiClient.Deserialize(data, typeof(NftMetadata), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTMetadata: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetNFTMetadata: {response.ReasonPhrase} {data}");
 			}
 		}
 	}

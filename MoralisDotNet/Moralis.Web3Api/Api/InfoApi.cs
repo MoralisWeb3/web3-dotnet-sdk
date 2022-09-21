@@ -83,16 +83,17 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (VersionResponse)ApiClient.Deserialize(data, typeof(VersionResponse), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase} {data}");
 			}
 		}
 
@@ -119,16 +120,17 @@ namespace Moralis.Web3Api.Api
 			HttpResponseMessage response =
 				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, bodyData, headerParams, formParams, fileParams, authSettings);
 
+			string data = await response.ExtractContentAsString();
+
 			if (HttpStatusCode.OK.Equals(response.StatusCode))
 			{
-				string data = await response.Content.ReadAsStringAsync();
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
 				return (List<EndpointWeights>)ApiClient.Deserialize(data, typeof(List<EndpointWeights>), headers);
 			}
 			else
 			{
-				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase}");
+				throw new ApiException((int)response.StatusCode, $"Error calling GetPairReserves: {response.ReasonPhrase} {data}");
 			}
 		}
 	}
