@@ -15,6 +15,8 @@ namespace StreamsDemo
 
             Console.WriteLine($"Wallet Watcher Two Id: {watcherTwoId}");
 
+            await AddAddressToStream(watcherOneId, "0xc539a39719Ad4D2DE7bf6f1e16F86383B6FF59C6");
+
             return new List<string>(new string[] { watcherOneId, watcherTwoId});
         }
 
@@ -68,6 +70,22 @@ namespace StreamsDemo
 
                 Console.WriteLine($"{resp.Tag} stream will output to: {resp.WebHookUrl}");
             }
+
+            return result;
+        }
+
+        public async Task<bool> AddAddressToStream(string streamId, string address)
+        { 
+            bool result = false;
+
+            StreamsAddressRequest sar = new StreamsAddressRequest()
+            {
+                Address = address
+            };
+
+            AddressResponse resp = await MoralisClient.StreamsApi.StreamsEndpoint.AddAddressToStream(streamId, sar);
+
+            result = resp != null && !String.IsNullOrEmpty(resp.StreamId);
 
             return result;
         }
