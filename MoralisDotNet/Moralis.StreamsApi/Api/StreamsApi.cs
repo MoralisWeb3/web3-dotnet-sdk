@@ -255,6 +255,172 @@ namespace Moralis.StreamsApi.Api
 			}
 		}
 
+
+
+		/// <summary>
+		/// Updates the status of specific evm stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="req"></param>
+		/// <returns>StreamBindingDto</returns>
+		public async Task<StreamBindingDto> SetStreamStatus(string streamId, StreamsStatusUpdate req)
+		{
+			// Verify stream Id is set.
+			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling SetStreamStatus");
+			// Validate Id
+			if (!ValidateUuid(streamId)) throw new ApiException(400, "Parameter 'streamId' must be a valid UUID (RFC_4122) when calling SetStreamStatus");
+
+			var headerParams = new Dictionary<String, String>();
+
+			var path = "/streams/evm/{id}/status";
+			path = path.Replace("{" + "id" + "}", streamId);
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = JsonConvert.SerializeObject(req);
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
+
+			string data = await response.ExtractContentAsString();
+
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
+			{
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				StreamBindingDto resp = (StreamBindingDto)ApiClient.Deserialize(data, typeof(StreamBindingDto), headers);
+				return resp;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling SetStreamStatus: {response.ReasonPhrase} {data}");
+			}
+		}
+
+		/// <summary>
+		/// Get all addresses associated with a specific stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="limit"></param>
+		/// <param name="cursor"></param>
+		/// <returns></returns>
+		public async Task<StreamsResponse> GetStreamsAddresses(string streamId, long limit, string cursor = "")
+		{
+			// Verify stream Id is set.
+			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling GetStreamsAddresses");
+			// Validate Id
+			if (!ValidateUuid(streamId)) throw new ApiException(400, "Parameter 'streamId' must be a valid UUID (RFC_4122) when calling GetStreamsAddresses");
+
+			var headerParams = new Dictionary<String, String>();
+			var queryParams = new Dictionary<String, String>();
+
+			var path = "/streams/evm/{id}/address";
+			path = path.Replace("{" + "id" + "}", streamId);
+
+			queryParams.Add("limit", ApiClient.ParameterToString(limit));
+			if (cursor != null) queryParams.Add("cursor", ApiClient.ParameterToString(cursor));
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Get, queryParams, null, headerParams, null, null, authSettings);
+
+			string data = await response.ExtractContentAsString();
+
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
+			{
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				return (StreamsResponse)ApiClient.Deserialize(data, typeof(StreamsResponse), headers);
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling GetStreamsAddresses: {response.ReasonPhrase} {data}");
+			}
+		}
+
+		/// <summary>
+		/// Add a wallet or contract address to a stream.
+		/// </summary>
+		/// <param name="streamId">string</param>
+		/// <param name="address">StreamsAddressRequest</param>
+		/// <returns>AddressResponse</returns>
+		public async Task<AddressResponse> AddAddressToStream(string streamId, StreamsAddressRequest address)
+		{
+			// Verify stream Id is set.
+			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling AddAddressToStream");
+			// Validate Id
+			if (!ValidateUuid(streamId)) throw new ApiException(400, "Parameter 'streamId' must be a valid UUID (RFC_4122) when calling AddAddressToStream");
+
+			var headerParams = new Dictionary<String, String>();
+
+			var path = "/streams/evm/{id}/address";
+			path = path.Replace("{" + "id" + "}", streamId);
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			string bodyData = JsonConvert.SerializeObject(address);
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Post, null, bodyData, headerParams, null, null, authSettings);
+
+			string data = await response.ExtractContentAsString();
+
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
+			{
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				AddressResponse resp = (AddressResponse)ApiClient.Deserialize(data, typeof(AddressResponse), headers);
+				return resp;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling AddAddressToStream: {response.ReasonPhrase} {data}");
+			}
+		}
+
+		/// <summary>
+		/// Removes an address from a stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="address"></param>
+		/// <returns>AddressResponse</returns>
+		public async Task<AddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address)
+		{
+			// Verify stream Id is set.
+			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling RemoveAddressFromStream");
+			// Validate Id
+			if (!ValidateUuid(streamId)) throw new ApiException(400, "Parameter 'streamId' must be a valid UUID (RFC_4122) when calling RemoveAddressFromStream");
+
+			var headerParams = new Dictionary<String, String>();
+
+			var path = "/streams/evm/{id}/address";
+			path = path.Replace("{" + "id" + "}", streamId);
+
+			// Authentication setting, if any
+			String[] authSettings = new String[] { "ApiKeyAuth" };
+
+			HttpResponseMessage response =
+				await ApiClient.CallApi(path, HttpMethod.Delete, null, null, headerParams, null, null, authSettings);
+
+			string data = await response.ExtractContentAsString();
+
+			if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 400)
+			{
+				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
+
+				AddressResponse resp = (AddressResponse)ApiClient.Deserialize(data, typeof(AddressResponse), headers);
+				return resp;
+			}
+			else
+			{
+				throw new ApiException((int)response.StatusCode, $"Error calling RemoveAddressFromStream: {response.ReasonPhrase} {data}");
+			}
+		}
+
 		/// <summary>
 		/// Validates that the specified value qualifies as valid under [RFC_4122](https://www.rfc-editor.org/rfc/rfc4122)
 		/// </summary>

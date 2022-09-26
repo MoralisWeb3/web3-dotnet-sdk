@@ -15,7 +15,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
-                ApiKey = "MY_API_KEY"
+                ApiKey = "1kXrzei19HNrb3YvkLaBbOAuRo6SGcmGqmlZ2E6FYFZ2QnqO46rn3xsAX6eRMBns" // "MY_API_KEY"
             };
 
 
@@ -42,8 +42,8 @@ namespace Moralis.StreamsApi.Integrated.Tests
         {
             List<IIntegratedTest> groups = new List<IIntegratedTest>();
 
-            groups.Add(new HistoryTests());
-            groups.Add(new SettingsTests());
+            //groups.Add(new HistoryTests());
+            //groups.Add(new SettingsTests());
             groups.Add(new StreamsTests());
 
             return groups;
