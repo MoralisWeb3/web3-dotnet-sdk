@@ -42,6 +42,40 @@ namespace Moralis.StreamsApi.Interfaces
 		/// <param name="req"></param>
 		/// <returns></returns>
 		public Task<StreamBindingDto> UpdateStream(StreamBindingDto req);
+
+		/// <summary>
+		/// Updates the status of specific evm stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="req"></param>
+		/// <returns>StreamBindingDto</returns>
+		public Task<StreamBindingDto> SetStreamStatus(string streamId, StreamsStatusUpdate req);
+
+		/// <summary>
+		/// Get all addresses associated with a specific stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="limit"></param>
+		/// <param name="cursor"></param>
+		/// <returns></returns>
+		public Task<StreamsResponse> GetStreamsAddresses(string streamId, long limit, string cursor="");
+
+		/// <summary>
+		/// Add a wallet or contract address to a stream.
+		/// </summary>
+		/// <param name="streamId">string</param>
+		/// <param name="address">StreamsAddressRequest</param>
+		/// <returns>AddressResponse</returns>
+		public Task<AddressResponse> AddAddressToStream(string streamId, StreamsAddressRequest address);
+
+		/// <summary>
+		/// Removes an address from a stream.
+		/// </summary>
+		/// <param name="streamId"></param>
+		/// <param name="address"></param>
+		/// <returns>AddressResponse</returns>
+		public Task<AddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address);
+
 	}
 	
 }

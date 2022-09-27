@@ -15,7 +15,7 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             MoralisClient.ConnectionData = new ServerConnectionData()
             {
-                ApiKey = "MY_API_KEY"
+                ApiKey =  "MY_API_KEY"
             };
 
 
