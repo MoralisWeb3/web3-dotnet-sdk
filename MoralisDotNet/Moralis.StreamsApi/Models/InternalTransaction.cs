@@ -24,8 +24,17 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "transactionHash")]
         public string TransactionHash { get; set; }
 
-        [DataMember(Name = "id", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "id")]
+        [DataMember(Name = "gas", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "gas")]
         public string Gas { get; set; }
+
+        [DataMember(Name = "streamId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "streamId")]
+        public string StreamId { get; set; }
+
+        [DataMember(Name = "tag", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "tag")]
+        public string Tag { get; set; }
+
     }
 }

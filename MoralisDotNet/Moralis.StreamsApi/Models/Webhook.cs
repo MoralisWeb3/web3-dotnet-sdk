@@ -49,12 +49,12 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "abis")]
         public AbiItem Abis { get; set; }
 
-        [DataMember(Name = "logIndex", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "logIndex")]
+        [DataMember(Name = "retries", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "retries")]
         public BigInteger Retries { get; set; }
 
-        [DataMember(Name = "logIndex", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "logIndex")]
+        [DataMember(Name = "confirmed", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "confirmed")]
         public bool Confirmed { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Moralis.Abi;
-using Moralis.StreamsApi.Interfaces;
+﻿using Moralis.StreamsApi.Interfaces;
 using Moralis.StreamsApi.Models;
 
 namespace Moralis.StreamsApi.Integrated.Tests
@@ -97,18 +96,25 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             try
             {
+                List<AbiItem> functionAbis = new List<AbiItem>();
+                functionAbis.Add(AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()));
+
                 StreamBindingDto dto = new StreamBindingDto()
                 {
-                    Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
-                    ChainIds = new List<string>(new string[] { "0x1" }),
-                    IncludeNativeTxs = true,
-                    Abi = AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()),
+                    WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA==",
                     Description = "Bob wuz ere",
-                    TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
-                    Topic = "grantRole",
-                    Type = "contract",
                     Tag = "my first stream",
-                    WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA=="
+                    Topic = new List<string>( new string[]{ "grantRole" }),
+                    //Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
+                    AllAddresses = true,
+                    IncludeNativeTxs = true,
+                    IncludeContractLogs = true,
+                    IncludeInternalTxs = true,
+                    Abi = functionAbis,
+                    //ChainIds = new List<string>(new string[] { "0x1" }),
+                    //TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
+                    //Type = "contract",
+                    
                 };
 
                 StreamBindingDto resp = await streamsApi.StreamsEndpoint.BindStream(dto);
@@ -187,19 +193,34 @@ namespace Moralis.StreamsApi.Integrated.Tests
 
             try
             {
+                List<AbiItem> functionAbis = new List<AbiItem>();
+                functionAbis.Add(AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()));
+
                 StreamBindingDto dto = new StreamBindingDto()
                 {
-                    Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
-                    ChainIds = new List<string>(new string[] { "0x1" }),
-                    IncludeNativeTxs = true,
-                    Abi = AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()),
-                    Description = "OOP",
-                    TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
-                    Topic = "grantRole",
-                    Type = "contract",
-                    Tag = "my first stream",
                     WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA==",
-                    StreamId = streamId
+                    Description = "Bob wuz ere",
+                    Tag = "oop",
+                    Topic = new List<string>(new string[] { "grantRole" }),
+                    //Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
+                    AllAddresses = true,
+                    IncludeNativeTxs = true,
+                    IncludeContractLogs = true,
+                    IncludeInternalTxs = true,
+                    Abi = functionAbis,
+                    ChainIds = new List<string>(new string[] { "0x1" })
+
+                    //Address = "0x35ba4825204dcE15C7147eA89b31178a00750f81",
+                    //ChainIds = new List<string>(new string[] { "0x1" }),
+                    //IncludeNativeTxs = true,
+                    //Abi = AbiTools.FunctionAbiFromJson("grantRole", GetAbiJson()),
+                    //Description = "OOP",
+                    //TokenAddress = "0x62441037E626D6EdeC892838a06DF3C9D43ED482",
+                    //Topic = "grantRole",
+                    //Type = "contract",
+                    //Tag = "my first stream",
+                    //WebHookUrl = "https://davesmoralisazurefunctions.azurewebsites.net/api/RawStreamsHandler?code=BT-PQKI8vc4hA_EieKWuKgVq_GSLgo9y2cqWD6K0g_jOAzFu46pOTA==",
+                    //StreamId = streamId
                 };
 
                 StreamBindingDto resp = await streamsApi.StreamsEndpoint.UpdateStream(dto);
