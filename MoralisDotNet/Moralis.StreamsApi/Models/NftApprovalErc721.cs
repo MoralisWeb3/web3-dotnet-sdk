@@ -12,9 +12,9 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "transactionHash")]
         public string TransactionHash { get; set; }
 
-        [DataMember(Name = "tokenAddress", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "tokenAddress")]
-        public string TokenAddress { get; set; }
+        [DataMember(Name = "contract", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "contract")]
+        public string Contract { get; set; }
 
         [DataMember(Name = "logIndex", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "logIndex")]
@@ -28,13 +28,13 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "owner")]
         public string Owner { get; set; }
 
-        [DataMember(Name = "spender", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "spender")]
-        public string Spender { get; set; }
+        [DataMember(Name = "approved", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "approved")]
+        public string Approved { get; set; }
 
-        [DataMember(Name = "value", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "value")]
-        public string Value { get; set; }
+        [DataMember(Name = "tokenId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "tokenId")]
+        public string TokenId { get; set; }
 
         [DataMember(Name = "tokenContractType", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "tokenContractType")]

@@ -20,37 +20,37 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "tag")]
         public string Tag { get; set; }
 
-        [DataMember(Name = "tokenAddress", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "tokenAddress", NullValueHandling = NullValueHandling.Ignore)]
-        public string TokenAddress { get; set; }
-
         [DataMember(Name = "topic0", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "topic0", NullValueHandling = NullValueHandling.Ignore)]
-        public string Topic { get; set; }
+        public List<string> Topic { get; set; }
+
+        [DataMember(Name = "allAddresses", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "allAddresses")]
+        public bool AllAddresses { get; set; }
 
         [DataMember(Name = "includeNativeTxs", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "includeNativeTxs")]
         public bool IncludeNativeTxs { get; set; }
 
+        [DataMember(Name = "includeContractLogs", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "includeContractLogs")]
+        public bool IncludeContractLogs { get; set; }
+
+        [DataMember(Name = "includeInternalTxs", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "includeInternalTxs")]
+        public bool IncludeInternalTxs { get; set; }
+
         [DataMember(Name = "abi", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "abi", NullValueHandling = NullValueHandling.Ignore)]
-        public object Abi { get; set; }
+        public List<AbiItem> Abi { get; set; }
 
-        [DataMember(Name = "filter", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "filter", NullValueHandling = NullValueHandling.Ignore)]
-        public object Filter { get; set; }
-
-        [DataMember(Name = "address", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "address", NullValueHandling = NullValueHandling.Ignore)]
-        public string Address { get; set; }
+        [DataMember(Name = "advancedOptions", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "advancedOptions", NullValueHandling = NullValueHandling.Ignore)]
+        public List<AdvancedOptions> AdvancedOptions { get; set; }
 
         [DataMember(Name = "chainIds", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "chainIds")]
         public List<string> ChainIds { get; set; }
-
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
 
         [DataMember(Name = "id", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]

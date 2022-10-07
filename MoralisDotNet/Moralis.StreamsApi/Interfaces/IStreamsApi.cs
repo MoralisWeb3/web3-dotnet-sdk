@@ -74,7 +74,7 @@ namespace Moralis.StreamsApi.Interfaces
 		/// <param name="streamId"></param>
 		/// <param name="address"></param>
 		/// <returns>AddressResponse</returns>
-		public Task<AddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address);
+		public Task<DeleteAddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address);
 
 	}
 	

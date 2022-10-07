@@ -9,13 +9,6 @@ namespace Moralis.StreamsApi.Models
 {
     public class AbiItem
     {
-        [DataMember(Name = "stateMutability", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "stateMutability")]
-        private string _stateMutability = StateMutabilityTypes.Pure.ToString();
-
-        [DataMember(Name = "type", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "type")]
-        private string _abiType = AbiItemTypes.Event.ToString();
 
         [DataMember(Name = "anonymous", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "anonymous")]
@@ -29,6 +22,10 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "inputs")]
         public List<AbiInput> Inputs { get; set; }
 
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+
         [DataMember(Name = "outputs", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "outputs")]
         public List<AbiOutput> Outputs { get; set; }
@@ -36,6 +33,18 @@ namespace Moralis.StreamsApi.Models
         [DataMember(Name = "payable", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "payable")]
         public bool Payable { get; set; }
+
+        [DataMember(Name = "stateMutability", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "stateMutability")]
+        private string _stateMutability = StateMutabilityTypes.Pure.ToString();
+
+        [DataMember(Name = "type", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "type")]
+        private string _abiType = AbiItemTypes.Event.ToString();
+
+        [DataMember(Name = "gas", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "gas")]
+        public BigInteger Gas { get; set; }
 
         [JsonIgnore]
         public StateMutabilityTypes StateMutability
@@ -50,9 +59,5 @@ namespace Moralis.StreamsApi.Models
             get { return _abiType.ToAbiItemTypes(); }
             set { _abiType = value.ToString(); }
         }
-
-        [DataMember(Name = "gas", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "gas")]
-        public BigInteger Gas { get; set; }
     }
 }

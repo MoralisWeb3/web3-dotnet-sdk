@@ -8,6 +8,14 @@ namespace Moralis.StreamsApi.Models
 {
     public class Log
     {
+        [DataMember(Name = "tag", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "tag")]
+        public string Tag { get; set; }
+
+        [DataMember(Name = "streamId", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "streamId")]
+        public string StreamId { get; set; }
+
         [DataMember(Name = "logIndex", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "logIndex")]
         public string LogIndex { get; set; }

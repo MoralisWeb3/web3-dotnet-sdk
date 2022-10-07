@@ -388,7 +388,7 @@ namespace Moralis.StreamsApi.Api
 		/// <param name="streamId"></param>
 		/// <param name="address"></param>
 		/// <returns>AddressResponse</returns>
-		public async Task<AddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address)
+		public async Task<DeleteAddressResponse> RemoveAddressFromStream(string streamId, StreamsAddressRequest address)
 		{
 			// Verify stream Id is set.
 			if (string.IsNullOrEmpty(streamId)) throw new ApiException(400, "Missing required parameter 'streamId' when calling RemoveAddressFromStream");
@@ -412,7 +412,7 @@ namespace Moralis.StreamsApi.Api
 			{
 				List<Parameter> headers = ApiClient.ResponHeadersToParameterList(response.Headers);
 
-				AddressResponse resp = (AddressResponse)ApiClient.Deserialize(data, typeof(AddressResponse), headers);
+				DeleteAddressResponse resp = (DeleteAddressResponse)ApiClient.Deserialize(data, typeof(DeleteAddressResponse), headers);
 				return resp;
 			}
 			else

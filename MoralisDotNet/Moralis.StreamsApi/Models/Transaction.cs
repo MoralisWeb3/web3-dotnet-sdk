@@ -16,10 +16,6 @@ namespace Moralis.StreamsApi.Models
         [JsonProperty(PropertyName = "streamId")]
         public string StreamId { get; set; }
 
-        [DataMember(Name = "streamType", EmitDefaultValue = false)]
-        [JsonProperty(PropertyName = "streamType")]
-        public string StreamType { get; set; }
-
         [DataMember(Name = "hash", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "hash")]
         public string Hash { get; set; }

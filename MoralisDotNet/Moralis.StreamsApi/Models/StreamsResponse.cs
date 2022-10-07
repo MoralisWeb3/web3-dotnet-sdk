@@ -15,6 +15,8 @@ namespace Moralis.StreamsApi.Models
         /// </summary>
         public List<StreamBindingDto> Result { get; set; }
 
+        public string Cursor { get; set; }
+
         /// <summary>
         /// Total number of streams returned.
         /// </summary>

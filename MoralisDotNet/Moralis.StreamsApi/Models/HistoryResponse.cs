@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Moralis.Unit;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -14,6 +15,10 @@ namespace Moralis.StreamsApi.Models
 
         [DataMember(Name = "cursor", EmitDefaultValue = false)]
         [JsonProperty(PropertyName = "cursor")]
-        public string Cursor { get; set;}
+        public string Cursor { get; set; }
+
+        [DataMember(Name = "total", EmitDefaultValue = false)]
+        [JsonProperty(PropertyName = "total")]
+        public BigDecimal Total { get; set; }
     }
 }
