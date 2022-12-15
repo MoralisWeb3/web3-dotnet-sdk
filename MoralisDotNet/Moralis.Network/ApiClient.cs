@@ -18,14 +18,17 @@ namespace Moralis.Network
     public class ApiClient
     {
         private readonly Dictionary<String, String> _defaultHeaderMap = new Dictionary<String, String>();
+        private readonly HttpClient _httpClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
         /// </summary>
         /// <param name="basePath">The base path.</param>
-        public ApiClient(String basePath = "http://localhost:3063/api/v2")
+        /// <param name="httpClient"></param>
+        public ApiClient(string basePath = "http://localhost:3063/api/v2", HttpClient httpClient=default)
         {
             BasePath = basePath;
+            _httpClient = httpClient;
 
             _defaultHeaderMap.Add("x-moralis-platform", "C# SDK");
             _defaultHeaderMap.Add("x-moralis-platform-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -103,7 +106,7 @@ namespace Moralis.Network
                 }
             }
 
-            HttpClient client = new HttpClient();
+            HttpClient client = _httpClient ?? new HttpClient();
             client.BaseAddress = new Uri(BasePath);
 
             if (DefaultHeader != null)

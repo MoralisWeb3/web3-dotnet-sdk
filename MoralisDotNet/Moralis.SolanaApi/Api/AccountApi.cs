@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 using Moralis.Network;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.SolanaApi.Models;
-using System.Net.Http;
 
 namespace Moralis.SolanaApi.Api
 {
@@ -28,9 +28,9 @@ namespace Moralis.SolanaApi.Api
 		/// Initializes a new instance of the <see cref="AccountApi"/> class.
 		/// </summary>
 		/// <returns></returns>
-		public AccountApi(String basePath)
+		public AccountApi(string basePath, HttpClient httpClient = null)
 		{
-			this.ApiClient = new ApiClient(basePath);
+			this.ApiClient = new ApiClient(basePath, httpClient);
 		}
 
 		/// <summary>

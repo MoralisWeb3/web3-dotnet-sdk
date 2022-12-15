@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace Moralis.AuthApi.Interfaces
@@ -24,6 +25,6 @@ namespace Moralis.AuthApi.Interfaces
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        void Initialize(string serverUrl = null);
+        void Initialize(string serverUrl = null, HttpClient httpClient=null);
     }
 }

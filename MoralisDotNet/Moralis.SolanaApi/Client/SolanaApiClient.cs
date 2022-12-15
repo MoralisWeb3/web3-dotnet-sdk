@@ -1,4 +1,5 @@
-﻿using Moralis.SolanaApi.Api;
+﻿using System.Net.Http;
+using Moralis.SolanaApi.Api;
 using Moralis.SolanaApi.Interfaces;
 using Moralis.Network;
 
@@ -45,10 +46,11 @@ namespace Moralis.SolanaApi.Client
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        public void Initialize(string serverUrl=null)
+        /// <param name="httpClient"></param>
+        public void Initialize(string serverUrl=null, HttpClient httpClient=null)
         {
             // Initialize client
-            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
+            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl, httpClient);
 
             this.Account = new AccountApi(client);
             this.Nft = new NftApi(client);

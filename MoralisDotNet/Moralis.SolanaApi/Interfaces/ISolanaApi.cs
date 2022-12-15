@@ -1,4 +1,5 @@
-﻿
+﻿using System.Net.Http;
+
 namespace Moralis.SolanaApi.Interfaces
 {
     public interface ISolanaApi
@@ -23,6 +24,7 @@ namespace Moralis.SolanaApi.Interfaces
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        void Initialize(string serverUrl = null);
+        /// <param name="httpClient"></param>
+        void Initialize(string serverUrl = null, HttpClient httpClient=null);
     }
 }

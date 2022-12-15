@@ -1,4 +1,5 @@
-﻿using Moralis.Network;
+﻿using System.Net.Http;
+using Moralis.Network;
 using Moralis.Web3Api.Api;
 using Moralis.Web3Api.Interfaces;
 
@@ -70,10 +71,11 @@ namespace Moralis.Web3Api.Client
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        public void Initialize(string serverUrl=null)
+        /// <param name="httpClient"></param>
+        public void Initialize(string serverUrl = null, HttpClient httpClient = default)
         {
             // Initialize client
-            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
+            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl, httpClient);
 
             this.Account = new AccountApi(client);
             this.Defi = new DefiApi(client);

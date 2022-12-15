@@ -1,4 +1,5 @@
-﻿
+﻿using System.Net.Http;
+
 namespace Moralis.Web3Api.Interfaces
 {
     public interface IWeb3Api
@@ -48,6 +49,7 @@ namespace Moralis.Web3Api.Interfaces
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        void Initialize(string serverUrl = null);
+        /// <param name="httpClient"></param>
+        void Initialize(string serverUrl = null, HttpClient httpClient = default);
     }
 }

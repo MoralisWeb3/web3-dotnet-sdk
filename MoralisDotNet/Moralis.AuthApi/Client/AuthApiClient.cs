@@ -1,4 +1,5 @@
-﻿using Moralis.AuthApi.Api;
+﻿using System.Net.Http;
+using Moralis.AuthApi.Api;
 using Moralis.AuthApi.Interfaces;
 using Moralis.Network;
 
@@ -41,10 +42,10 @@ namespace Moralis.AuthApi.Client
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        public void Initialize(string serverUrl = null)
+        public void Initialize(string serverUrl = null, HttpClient httpClient=null)
         {
             // Initialize client
-            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
+            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl, httpClient);
 
             AuthEndpoint = new AuthenticationApi(client);
 

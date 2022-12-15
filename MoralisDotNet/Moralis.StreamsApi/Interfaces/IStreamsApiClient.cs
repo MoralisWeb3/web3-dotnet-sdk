@@ -1,4 +1,5 @@
-﻿
+﻿using System.Net.Http;
+
 namespace Moralis.StreamsApi.Interfaces
 {
     public interface IStreamsApiClient
@@ -33,7 +34,8 @@ namespace Moralis.StreamsApi.Interfaces
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        void Initialize(string serverUrl = null);
+        /// <param name="httpClient"></param>
+        void Initialize(string serverUrl = null, HttpClient httpClient=null);
 
         /// <summary>
         /// Verifies that a WebHook message was sent by Moralis using sha3(REQUEST_BODY + WEB3_API_KEY);

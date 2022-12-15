@@ -1,4 +1,5 @@
-﻿using Moralis.Network;
+﻿using System.Net.Http;
+using Moralis.Network;
 using Moralis.StreamsApi.Api;
 using Moralis.StreamsApi.Interfaces;
 using System.Security.Cryptography;
@@ -57,10 +58,11 @@ namespace Moralis.StreamsApi.Client
         /// ApiKey is passed via Configuration signleton.
         /// </summary>
         /// <param name="serverUrl"></param>
-        public void Initialize(string serverUrl = null)
+        /// <param name="httpClient"></param>
+        public void Initialize(string serverUrl = null, HttpClient httpClient=null)
         {
             // Initialize client
-            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl);
+            ApiClient client = new ApiClient(serverUrl is { } ? serverUrl : defaultServerUrl, httpClient);
 
             BetaEndpoint = new BetaApi(client);
             HistoryEndpoint = new HistoryApi(client);
