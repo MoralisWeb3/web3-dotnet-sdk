@@ -18,6 +18,7 @@ namespace Moralis.Network
     public class ApiClient
     {
         private readonly Dictionary<String, String> _defaultHeaderMap = new Dictionary<String, String>();
+        public static HttpClient DefaultHttpClient { get; set; } = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiClient" /> class.
@@ -103,7 +104,7 @@ namespace Moralis.Network
                 }
             }
 
-            HttpClient client = new HttpClient();
+            HttpClient client = DefaultHttpClient ?? new HttpClient();
             client.BaseAddress = new Uri(BasePath);
 
             if (DefaultHeader != null)
