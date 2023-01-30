@@ -1,4 +1,7 @@
 <a name='assembly'></a>
+
+> ### :warning: Deprecated: **this repository is not being mantained.**
+
 # Moralis
 
 ## Contents
