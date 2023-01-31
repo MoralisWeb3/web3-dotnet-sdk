@@ -41,6 +41,13 @@ namespace Moralis.Web3Api.Models
 		[DataMember(Name = "page_size", EmitDefaultValue = false)]
 		[JsonProperty(PropertyName = "page_size")]
 		public int? PageSize { get; set; }
+		
+		/// <summary
+		/// The cursor returned in the previous response (used for getting the next page)
+		/// </summary>
+		[DataMember(Name = "cursor", EmitDefaultValue = false)]
+		[JsonProperty(PropertyName = "cursor")]
+		public string Cursor { get; set; }
 
 		/// <summary>
 		/// </summary>
@@ -61,6 +68,7 @@ namespace Moralis.Web3Api.Models
 			sb.Append("  Total ").Append(Total).Append("\n");
 			sb.Append("  Page ").Append(Page).Append("\n");
 			sb.Append("  PageSize ").Append(PageSize).Append("\n");
+			sb.Append("  Cursor ").Append(Cursor).Append("\n");
 			sb.Append("  Result ").Append(Result).Append("\n");
 			sb.Append("}");
 
