@@ -1,6 +1,8 @@
 <a name='assembly'></a>
 
-> ### :warning: Deprecated: **this repository is not being mantained.**
+> [!IMPORTANT]
+> ### **Deprecated**: this repository is not being mantained.
+> As an alternative you can integrate Moralis by directly calling the API. Check the [Moralis Docs](https://docs.moralis.io/web3-data-api/evm/getting-started) for more info.
 
 # Moralis
 
